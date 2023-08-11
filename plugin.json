@@ -1,18 +1,18 @@
 {
-  "name": "plugin-sample",
-  "author": "Vanessa",
-  "url": "https://github.com/siyuan-note/plugin-sample",
-  "version": "0.1.12",
+  "name": "siyuan-plugin-schedule-manager",
+  "author": "uniqueink",
+  "url": "https://github.com/RogerHuHu/siyuan-plugin-schedule-manager.git",
+  "version": "0.0.1",
   "minAppVersion": "2.9.0",
   "backends": ["windows", "linux", "darwin"],
   "frontends": ["desktop"],
   "displayName": {
-    "default": "Plugin Sample",
-    "zh_CN": "插件示例"
+    "default": "Schedule Manager",
+    "zh_CN": "日程管理"
   },
   "description": {
-    "default": "This is a plugin sample",
-    "zh_CN": "这是一个插件示例"
+    "default": "This is a schedule manager plugin",
+    "zh_CN": "这是一个插日程管理插件"
   },
   "readme": {
     "default": "README.md",
