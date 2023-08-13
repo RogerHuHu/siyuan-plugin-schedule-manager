@@ -27,5 +27,13 @@
     "webpack": "^5.76.0",
     "webpack-cli": "^5.0.2",
     "zip-webpack-plugin": "^4.0.1"
+  },
+  "dependencies": {
+    "@fullcalendar/core": "^6.1.8",
+    "@fullcalendar/daygrid": "^6.1.8",
+    "@fullcalendar/interaction": "^6.1.8",
+    "@fullcalendar/list": "^6.1.8",
+    "@fullcalendar/timegrid": "^6.1.8",
+    "@fullcalendar/vue": "^6.1.8"
   }
 }
