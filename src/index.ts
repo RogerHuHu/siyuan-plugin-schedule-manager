@@ -1,11 +1,5 @@
 import { Plugin, getFrontend } from "siyuan";
 import { setI18n, setPlugin } from "./utils";
-import { Calendar } from '@fullcalendar/core'
-import FullCalendar from "@fullcalendar/vue";
-import interactionPlugin from '@fullcalendar/interaction'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import listPlugin from '@fullcalendar/list'
 import { showCalendar } from "./showcalendarview";
 
 import "./index.scss";
@@ -30,7 +24,7 @@ export default class PluginScheduleManager extends Plugin {
             position: "right",
             callback: () => {
                 if (this.isMobile) {
-                    //this.addMenu();
+                    showCalendar();
                 } else {
                     let rect = topBarElement.getBoundingClientRect();
                     // 如果被隐藏，则使用更多按钮
@@ -40,7 +34,7 @@ export default class PluginScheduleManager extends Plugin {
                     if (rect.width === 0) {
                         rect = document.querySelector("#barPlugins").getBoundingClientRect();
                     }
-                    //this.addMenu(rect);
+                    showCalendar();
                 }
             }
         });
@@ -57,7 +51,7 @@ export default class PluginScheduleManager extends Plugin {
         });
 
         //监听块菜单事件
-        this.eventBus.on("click-blockicon", showCalendar);
+        //this.eventBus.on("click-blockicon", showCalendar);
     }
 
     onunload() {
