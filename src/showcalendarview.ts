@@ -6,19 +6,14 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import listPlugin from '@fullcalendar/list'
 
 export function showCalendar() {
-   /*
-    const calendar = new Calendar(calendarEl, {
-      plugins: [dayGridPlugin],
-      initialView: 'dayGridMonth'
-   });
-   */
+   console.log("show calendar");
 
-   let calendarEl: HTMLElement = document.getElementById('calendar')!;
+   let calendarDiv = document.createElement('div');
 
-   let calendar = new Calendar(calendarEl, {
+   let calendar = new Calendar(calendarDiv, {
        plugins: [dayGridPlugin],
        initialView: 'dayGridMonth'
    });
-
+   
    calendar.render();
 }

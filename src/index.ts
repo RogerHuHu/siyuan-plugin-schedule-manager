@@ -1,12 +1,21 @@
-import { Plugin, getFrontend } from "siyuan";
+import { Plugin, getFrontend, IModel, openTab } from "siyuan";
 import { setI18n, setPlugin } from "./utils";
-import { showCalendar } from "./showcalendarview";
+//import { showCalendar } from "./showcalendarview";
+import { Calendar } from '@fullcalendar/core'
+import FullCalendar from "@fullcalendar/vue";
+import interactionPlugin from '@fullcalendar/interaction'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import listPlugin from '@fullcalendar/list'
 
 import "./index.scss";
 
 const STORAGE_NAME = "menu-config";
+const TAB_TYPE = "custom_tab";
+const DOCK_TYPE = "dock_tab";
 
 export default class PluginScheduleManager extends Plugin {
+    private customTab: () => IModel;
     public isMobile: boolean;
 
     onload() {
@@ -24,7 +33,7 @@ export default class PluginScheduleManager extends Plugin {
             position: "right",
             callback: () => {
                 if (this.isMobile) {
-                    showCalendar();
+                    this.showCalendar();
                 } else {
                     let rect = topBarElement.getBoundingClientRect();
                     // 如果被隐藏，则使用更多按钮
@@ -34,7 +43,7 @@ export default class PluginScheduleManager extends Plugin {
                     if (rect.width === 0) {
                         rect = document.querySelector("#barPlugins").getBoundingClientRect();
                     }
-                    showCalendar();
+                    this.showCalendar();
                 }
             }
         });
@@ -56,5 +65,48 @@ export default class PluginScheduleManager extends Plugin {
 
     onunload() {
         console.log("Schedule Manager unonload");
+    }
+
+    showCalendar() {
+        console.log("show calendar");
+
+        let calendarDiv = document.createElement('div');
+        console.log("show calendar1");
+        let calendar = new Calendar(calendarDiv, {
+            plugins: [dayGridPlugin],
+            initialView: 'dayGridMonth'
+        });
+        console.log("show calendar2");
+        this.customTab = this.addTab({
+            type: TAB_TYPE,
+            init() {
+                console.log("show calendar3");
+                this.element.appendChild(calendarDiv);
+                console.log(this.element);
+            },
+
+            beforeDestroy() {
+                console.log("before destroy tab:", TAB_TYPE);
+            },
+            destroy() {
+                console.log("destroy tab:", TAB_TYPE);
+            }
+        });
+
+        const tab = openTab({
+            app: this.app,
+            custom: {
+                icon: "iconCalendar",
+                title: this.i18n.scheduleManager,
+                data: {
+                    text: "This is my custom tab",
+                },
+                fn: this.customTab
+            },
+        });
+
+        console.log(tab);
+        
+        calendar.render();
     }
 }
