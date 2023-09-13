@@ -1,5 +1,11 @@
 {
   "openCalendar": "打开日历",
+  "scheduleManager": "日程管理",
+  "today": "今天",
+  "month": "月",
+  "week": "周",
+  "day": "日",
+  "list": "列表",
   "cancel": "取消",
   "save": "保存",
   "byeMenu": "再见，菜单！",
@@ -8,6 +14,5 @@
   "showDialog": "弹出一个对话框",
   "removedData": "数据已删除",
   "confirmRemove": "确认删除 ${name} 中的数据？",
-  "insertEmoji": "插入表情",
-  "scheduleManager": "日程管理"
+  "insertEmoji": "插入表情"
 }

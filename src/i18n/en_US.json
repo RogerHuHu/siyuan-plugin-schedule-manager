@@ -1,5 +1,11 @@
 {
   "openCalendar": "Open the calendar plugin",
+  "scheduleManager": "Schedule manager",
+  "today": "Today",
+  "month": "Month",
+  "week": "Week",
+  "day": "Day",
+  "list": "List",
   "cancel": "Cancel",
   "save": "Save",
   "byeMenu": "Bye, Menu!",
@@ -8,6 +14,5 @@
   "showDialog": "Show dialog",
   "removedData": "Data deleted",
   "confirmRemove": "Confirm to delete the data in ${name}?",
-  "insertEmoji": "Insert Emoji",
-  "scheduleManager": "Schedule manager"
+  "insertEmoji": "Insert Emoji"
 }

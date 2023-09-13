@@ -1,12 +1,7 @@
 import { Plugin, getFrontend, IModel, openTab } from "siyuan";
 import { setI18n, setPlugin } from "./utils";
 //import { showCalendar } from "./showcalendarview";
-import { Calendar } from '@fullcalendar/core'
-import FullCalendar from "@fullcalendar/vue";
-import interactionPlugin from '@fullcalendar/interaction'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import listPlugin from '@fullcalendar/list'
+import { ScheduleManager } from "./schedule-manager";
 
 import "./index.scss";
 
@@ -16,6 +11,8 @@ const DOCK_TYPE = "dock_tab";
 
 export default class PluginScheduleManager extends Plugin {
     private customTab: () => IModel;
+    private scheduleManager = new ScheduleManager(this.app, this.i18n);
+
     public isMobile: boolean;
 
     onload() {
@@ -68,19 +65,12 @@ export default class PluginScheduleManager extends Plugin {
     }
 
     showCalendar() {
-        console.log("show calendar");
-
         let calendarDiv = document.createElement('div');
-        console.log("show calendar1");
-        let calendar = new Calendar(calendarDiv, {
-            plugins: [dayGridPlugin],
-            initialView: 'dayGridMonth'
-        });
-        console.log("show calendar2");
+        this.scheduleManager.show(calendarDiv);
+
         this.customTab = this.addTab({
             type: TAB_TYPE,
             init() {
-                console.log("show calendar3");
                 this.element.appendChild(calendarDiv);
                 console.log(this.element);
             },
@@ -106,7 +96,7 @@ export default class PluginScheduleManager extends Plugin {
         });
 
         console.log(tab);
-        
-        calendar.render();
+
+        this.scheduleManager.render();
     }
 }
