@@ -65,13 +65,13 @@ export default class PluginScheduleManager extends Plugin {
     }
 
     showCalendar() {
-        let calendarDiv = document.createElement('div');
-        this.scheduleManager.show(calendarDiv);
+        let scheduleManagerDiv = document.createElement('div');
+        this.scheduleManager.show(scheduleManagerDiv);
 
         this.customTab = this.addTab({
             type: TAB_TYPE,
             init() {
-                this.element.appendChild(calendarDiv);
+                this.element.appendChild(scheduleManagerDiv);
                 console.log(this.element);
             },
 

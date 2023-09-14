@@ -6,6 +6,9 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import listPlugin from '@fullcalendar/list'
 import * as moment from "moment"
+import { createElement } from '@fullcalendar/core/preact';
+
+import "./schedule-manager.scss";
 
 export class ScheduleManager {
     // 字段
@@ -20,7 +23,26 @@ export class ScheduleManager {
     }
 
     show(el: HTMLElement) : void {
-        this.calendar = new Calendar(el, {
+        this.showCatagory(el);
+        this.showCalendar(el);
+    }
+
+    showCatagory(el: HTMLElement) {
+        let categoryDiv = document.createElement('div');
+        categoryDiv.setAttribute('style', "width:20%;float:left;height:100%;");
+        el.appendChild(categoryDiv);
+
+        let button:HTMLButtonElement = document.createElement('button');
+        button.textContent = 'Catagory';
+        button.setAttribute('class', "btn btn-green");
+        categoryDiv.appendChild(button);
+    }
+
+    showCalendar(el: HTMLElement) {
+        let calendarDiv = document.createElement('div');
+        calendarDiv.setAttribute('style', "width:80%;float:right;height:100%;");
+        el.appendChild(calendarDiv);
+        this.calendar = new Calendar(calendarDiv, {
             plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin],
             initialView: 'dayGridMonth', // 默认为哪个视图（月： dayGridMonth，周：timeGridWeek，日：timeGridDay）
             firstDay: 1, // 设置一周中显示的第一天是哪天，周日是 0，周一是 1， 类推
