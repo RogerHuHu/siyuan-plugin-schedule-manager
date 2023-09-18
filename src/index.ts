@@ -1,7 +1,8 @@
 import { Plugin, getFrontend, IModel, openTab } from "siyuan";
 import { setI18n, setPlugin } from "./utils";
 //import { showCalendar } from "./showcalendarview";
-import { ScheduleManager } from "./schedule-manager";
+//import { ScheduleManager } from "./schedule-manager";
+import { ScheduleManager } from "./ScheduleManager";
 
 import "./index.scss";
 
@@ -11,7 +12,8 @@ const DOCK_TYPE = "dock_tab";
 
 export default class PluginScheduleManager extends Plugin {
     private customTab: () => IModel;
-    private scheduleManager = new ScheduleManager(this.app, this.i18n);
+    //private scheduleManager = new ScheduleManager(this.app, this.i18n);
+    private scheduleManager = new ScheduleManager();
 
     public isMobile: boolean;
 
@@ -66,6 +68,7 @@ export default class PluginScheduleManager extends Plugin {
 
     showCalendar() {
         let scheduleManagerDiv = document.createElement('div');
+        scheduleManagerDiv.setAttribute("class", "schedule-app");
         this.scheduleManager.show(scheduleManagerDiv);
 
         this.customTab = this.addTab({
@@ -97,6 +100,6 @@ export default class PluginScheduleManager extends Plugin {
 
         console.log(tab);
 
-        this.scheduleManager.render();
+        this.scheduleManager.mount(scheduleManagerDiv);
     }
 }

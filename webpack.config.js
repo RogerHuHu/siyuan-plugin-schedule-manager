@@ -5,13 +5,15 @@ const {EsbuildPlugin} = require("esbuild-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const ZipPlugin = require("zip-webpack-plugin");
+const { VueLoaderPlugin } = require("vue-loader");
 
 module.exports = (env, argv) => {
     const isPro = argv.mode === "production";
     const plugins = [
         new MiniCssExtractPlugin({
             filename: isPro ? "dist/index.css" : "index.css",
-        })
+        }),
+        new VueLoaderPlugin()
     ];
     let entry = {
         "index": "./src/index.ts",
@@ -100,6 +102,10 @@ module.exports = (env, argv) => {
                             loader: "sass-loader", // compiles Sass to CSS
                         },
                     ],
+                },
+                {
+                    test: /\.vue$/,
+                    loader: 'vue-loader'
                 }
             ],
         },

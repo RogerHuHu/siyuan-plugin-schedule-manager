@@ -19,6 +19,7 @@
     "esbuild-loader": "^3.0.1",
     "eslint": "^8.42.0",
     "mini-css-extract-plugin": "2.3.0",
+    "naive-ui": "^2.34.4",
     "sass": "^1.62.1",
     "sass-loader": "^12.6.0",
     "siyuan": "0.7.9",
@@ -34,8 +35,9 @@
     "@fullcalendar/interaction": "^6.1.8",
     "@fullcalendar/list": "^6.1.8",
     "@fullcalendar/timegrid": "^6.1.8",
-    "@fullcalendar/vue": "^6.1.8",
+    "@fullcalendar/vue3": "^6.1.8",
     "moment": "^2.29.4",
-    "vue": "^2.6.12"
+    "vue": "^3.3.4",
+    "vue-loader": "^17.2.2"
   }
 }
