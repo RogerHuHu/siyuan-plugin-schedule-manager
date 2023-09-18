@@ -13,8 +13,7 @@ export class ScheduleManager {
 
     show(el: HTMLElement) : void {
         this.app = createApp(App);
-        this.app.use(naive);
-        
+        this.app.use(naive).use(i18n);
     }
 
     showCatagory(el: HTMLElement) {

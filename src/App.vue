@@ -1,7 +1,15 @@
 <template>
  <div class="schedule-app-container">
   <div class="schedule-app-sidebar">
-    <demo />
+    <n-loading-bar-privider>
+      <n-message-provider>
+        <n-notification-provider>
+          <n-dia-provider>
+            <demo />
+          </n-dia-provider>
+        </n-notification-provider>
+      </n-message-provider>
+    </n-loading-bar-privider>
   </div>
   <div class="schedule-app-main">
     <FullCalendar :options="calendarOptions"/>
@@ -43,8 +51,6 @@ b { /* used for event dates/times */
 .schedule-app-sidebar {
   width: 300px;
   line-height: 1.5;
-  background: #eaf9ff;
-  border-right: 1px solid #d3e2e8;
 }
 
 .demo-app-sidebar-section {
@@ -65,15 +71,17 @@ b { /* used for event dates/times */
 <script>
 import { i18n } from "./utils";
 import { defineComponent } from "vue";
-import Demo from "./Demo.vue";
-import { CalendarOptions, EventApi, DateSelectArg, EventClickArg } from '@fullcalendar/core'
+import Demo from "./ScheduleCategory.vue";
+
+import { CalendarOptions, EventApi, DateSelectArg, EventClickArg } from '@fullcalendar/core';
 import FullCalendar from "@fullcalendar/vue3";
 import interactionPlugin from '@fullcalendar/interaction'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import listPlugin from '@fullcalendar/list'
-import * as moment from "moment"
 import { createElement } from '@fullcalendar/core/preact';
+
+import * as moment from "moment";
 
 export default defineComponent({
   components: {
