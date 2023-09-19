@@ -36,6 +36,7 @@
     "@fullcalendar/list": "^6.1.8",
     "@fullcalendar/timegrid": "^6.1.8",
     "@fullcalendar/vue3": "^6.1.8",
+    "mitt": "^3.0.1",
     "moment": "^2.29.4",
     "vue": "^3.3.4",
     "vue-loader": "^17.2.2"
