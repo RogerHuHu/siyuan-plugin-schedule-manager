@@ -6,10 +6,10 @@ import App from "./App.vue";
 
 export class ScheduleManager {
     app : any;
+    private notebookId : string;
     
     // 构造函数
-    constructor() {
-    }
+    constructor() {}
 
     show(el: HTMLElement) : void {
         this.app = createApp(App);
@@ -35,5 +35,9 @@ export class ScheduleManager {
 
     mount(el: HTMLElement) : void {
         this.app.mount(el);
+    }
+
+    updateNotebookId(id: string) : void {
+        this.notebookId = id;
     }
 }

@@ -1,4 +1,4 @@
-import { Plugin, getFrontend, IModel, openTab } from "siyuan";
+import { Plugin, getFrontend, IModel, openTab, fetchPost } from "siyuan";
 import { setI18n, setPlugin } from "./utils";
 //import { showCalendar } from "./showcalendarview";
 //import { ScheduleManager } from "./schedule-manager";
@@ -11,6 +11,8 @@ const TAB_TYPE = "custom_tab";
 const DOCK_TYPE = "dock_tab";
 
 export default class PluginScheduleManager extends Plugin {
+    private foundNotebook: boolean = false;
+    private scheduleNotebookId: string = "";
     private customTab: () => IModel;
     //private scheduleManager = new ScheduleManager(this.app, this.i18n);
     private scheduleManager = new ScheduleManager();
@@ -25,6 +27,7 @@ export default class PluginScheduleManager extends Plugin {
         console.log("Schedule Manager onload");
         setI18n(this.i18n);
         setPlugin(this);
+        this.scheduleNotebookInit();
 
         const topBarElement = this.addTopBar({
             icon: "iconCalendar",
@@ -64,6 +67,35 @@ export default class PluginScheduleManager extends Plugin {
 
     onunload() {
         console.log("Schedule Manager unonload");
+    }
+
+    scheduleNotebookInit() {
+        this.foundNotebook = false;
+        // 获取笔记本列表
+        fetchPost("/api/notebook/lsNotebooks", {}, (response) => {
+            // 若笔记本不存在，则新建
+            if(this.isNotebookExists(response.data.notebooks, "日程管理笔记本") == false) {
+                this.createNotebook("日程管理笔记本");
+            }
+
+            this.scheduleManager.updateNotebookId(this.scheduleNotebookId);
+        });
+    }
+
+    isNotebookExists(notebooks: any, name: string) :boolean {
+        for (let notebook of notebooks) {
+            if(notebook.name === name) {
+                this.scheduleNotebookId = notebook.id;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    createNotebook(name: string) {
+        fetchPost("/api/notebook/createNotebook", {"name": name}, (response) => {
+            this.scheduleNotebookId = response.data.notebook.id;
+        });
     }
 
     showCalendar() {

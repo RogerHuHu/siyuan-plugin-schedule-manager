@@ -63,6 +63,7 @@ import { defineComponent, ref } from 'vue'
 import { useMessage } from 'naive-ui'
 import { Icon } from '@vicons/utils'
 import { DeleteOutlined } from '@vicons/antd'
+import { fetchPost } from "siyuan";
 
 export default defineComponent({
   components: {
@@ -108,15 +109,15 @@ export default defineComponent({
 
     // 日程名变更
     handleNameChange(value) {
-        this.scheduleName = value
-        //this.message.success(this.scheduleName)
-      },
+      this.scheduleName = value
+      //this.message.success(this.scheduleName)
+    },
 
-      // 颜色变更
-      handleColorUpdate(value) {
-        this.scheduleColor = value
-        //this.message.success(this.scheduleColor)
-      },
+    // 颜色变更
+    handleColorUpdate(value) {
+      this.scheduleColor = value
+      //this.message.success(this.scheduleColor)
+    }
   }
 })
 </script>
