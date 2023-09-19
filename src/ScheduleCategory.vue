@@ -64,6 +64,7 @@ import { useMessage } from 'naive-ui'
 import { Icon } from '@vicons/utils'
 import { DeleteOutlined } from '@vicons/antd'
 import { fetchPost } from "siyuan";
+import EventAggregator from "./EventAggregator";
 
 export default defineComponent({
   components: {
@@ -99,12 +100,26 @@ export default defineComponent({
 
   methods: {
     submitCallback () {
-      let newSchedule = {
-        checked: false,
-        color: this.scheduleColor,
-        name: this.scheduleName
+      let scheduleExists = false;
+      for(let sdl of this.schedules) {
+        if(sdl.name === this.scheduleName) {
+          scheduleExists = true;
+          break;
+        }
       }
-      this.schedules.push(newSchedule)
+
+      if(scheduleExists == false) {
+        let newCategory = {
+          checked: false,
+          color: this.scheduleColor,
+          name: this.scheduleName
+        };
+        this.schedules.push(newCategory);
+        EventAggregator.emit('addCategorty', {
+          "checked": newCategory.checked,
+          "color": this.scheduleColor,
+          "name": this.scheduleName});
+      }
     },
 
     // 日程名变更

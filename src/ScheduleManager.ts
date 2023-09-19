@@ -4,12 +4,16 @@ import { createApp } from "vue";
 import naive from "naive-ui";
 import App from "./App.vue";
 
+import { fetchPost } from "siyuan";
+import EventAggregator from "./EventAggregator";
+
 export class ScheduleManager {
     app : any;
-    private notebookId : string;
+    private docId : string;
     
     // 构造函数
-    constructor() {}
+    constructor() {
+    }
 
     show(el: HTMLElement) : void {
         this.app = createApp(App);
@@ -35,9 +39,38 @@ export class ScheduleManager {
 
     mount(el: HTMLElement) : void {
         this.app.mount(el);
+        this.readScheduleCategory();
+        this.listenEvents();
     }
 
-    updateNotebookId(id: string) : void {
-        this.notebookId = id;
+    updateDocId(id: string) : void {
+        this.docId = id;
+    }
+
+    readScheduleCategory() : void {
+        fetchPost("/api/block/getChildBlocks", {"id":this.docId}, (response) => {
+            for (let block of response.data) {
+                let query = "SELECT content FROM blocks WHERE id =\'" + block.id + "\'";
+                fetchPost("/api/query/sql", {"stmt":query}, (response) => {
+                    let prop = response.data[0];
+                    if(prop.content !== "") {
+                        
+                    }
+                });
+            }
+        });
+    }
+
+    listenEvents() : void {
+        EventAggregator.on('addCategorty', (p) => {
+            console.log("insert lastBlockId");
+            fetchPost("/api/block/appendBlock", {
+                "data": JSON.stringify(p),
+                "dataType": "markdown",
+                "parentID": this.docId
+            }, (response) => {
+                console.log(JSON.stringify(response));
+            });
+        });
     }
 }

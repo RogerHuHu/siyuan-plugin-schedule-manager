@@ -13,6 +13,7 @@ const DOCK_TYPE = "dock_tab";
 export default class PluginScheduleManager extends Plugin {
     private foundNotebook: boolean = false;
     private scheduleNotebookId: string = "";
+    private scheduleDocId: string = "";
     private customTab: () => IModel;
     //private scheduleManager = new ScheduleManager(this.app, this.i18n);
     private scheduleManager = new ScheduleManager();
@@ -77,8 +78,7 @@ export default class PluginScheduleManager extends Plugin {
             if(this.isNotebookExists(response.data.notebooks, "日程管理笔记本") == false) {
                 this.createNotebook("日程管理笔记本");
             }
-
-            this.scheduleManager.updateNotebookId(this.scheduleNotebookId);
+            this.createDocument(this.scheduleNotebookId, "/日程管理文档");  
         });
     }
 
@@ -95,6 +95,17 @@ export default class PluginScheduleManager extends Plugin {
     createNotebook(name: string) {
         fetchPost("/api/notebook/createNotebook", {"name": name}, (response) => {
             this.scheduleNotebookId = response.data.notebook.id;
+        });
+    }
+
+    createDocument(notebookId: string, path: string) {
+        fetchPost("/api/filetree/createDocWithMd", {
+            "notebook": notebookId,
+            "path": path,
+            "markdown": ""
+        }, (response) => {
+            this.scheduleDocId = response.data;
+            this.scheduleManager.updateDocId(this.scheduleDocId);
         });
     }
 
