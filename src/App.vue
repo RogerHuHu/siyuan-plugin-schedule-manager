@@ -1,19 +1,19 @@
 <template>
- <div class="schedule-app-container">
-  <div class="schedule-app-sidebar">
-    <n-loading-bar-privider>
-      <n-message-provider>
-        <n-notification-provider>
-          <n-dia-provider>
-            <demo />
-          </n-dia-provider>
-        </n-notification-provider>
-      </n-message-provider>
-    </n-loading-bar-privider>
-  </div>
-  <div class="schedule-app-main">
-    <FullCalendar :options="calendarOptions"/>
-  </div>
+  <div class="schedule-app-container">
+    <div class="schedule-app-sidebar">
+      <n-loading-bar-privider>
+        <n-message-provider>
+          <n-notification-provider>
+            <n-dia-provider>
+              <demo />
+            </n-dia-provider>
+          </n-notification-provider>
+        </n-message-provider>
+      </n-loading-bar-privider>
+    </div>
+    <div class="schedule-app-main">
+      <FullCalendar :options="calendarOptions"/>
+    </div>
   </div>
 </template>
 
@@ -46,20 +46,18 @@ b { /* used for event dates/times */
   width: 100%;
   font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
   font-size: 14px;
+  display: flex;
+  margin: 5px;
 }
 
 .schedule-app-sidebar {
-  width: 300px;
-  line-height: 1.5;
-}
-
-.demo-app-sidebar-section {
-  padding: 2em;
+  flex: 1;
+  height: 100%;
 }
 
 .schedule-app-main {
-  flex-grow: 1;
-  padding: 3em;
+  flex: 3;
+  padding: 1em;
 }
 
 .fc { /* the calendar root */
