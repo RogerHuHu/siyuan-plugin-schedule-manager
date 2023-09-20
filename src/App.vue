@@ -1,5 +1,5 @@
 <template>
-  <n-loading-bar-privider>
+  <n-loading-bar-provider>
     <n-message-provider>
       <n-notification-provider>
         <n-dialog-provider>
@@ -8,30 +8,76 @@
               <demo ref="scheduleCategoryRef"/>      
             </div>
             <div class="schedule-app-main">
-              <FullCalendar :options="calendarOptions"/>
+              <FullCalendar :options="calendarOptions" ref="FullCalendar"/>
+              <n-modal
+                v-model:show="showModal"
+                preset="dialog"
+                title="新建日程"
+                positive-text="确认"
+                negative-text="算了"
+                @positive-click="submitCallback"
+                @negative-click="cancelCallback"
+                style="width:600px"
+              >
+                <n-grid :cols="4" y-gap="5">
+                  <n-gi>
+                    <div>选择日程分类</div>
+                  </n-gi>
+                  <n-gi :span="3">
+                    <n-select v-model:value="selectedCategory" :options="calendarCategories" />
+                  </n-gi>
+
+                  <n-gi>
+                    <div>选择日程时间</div>
+                  </n-gi>
+                  <n-gi :span="3">
+                    <n-date-picker v-model:value="scheduleRange" type="datetimerange" clearable />
+                  </n-gi>
+
+                  <n-gi>
+                    <div>日程名</div>
+                  </n-gi>
+                  <n-gi :span="3">
+                    <n-input v-model:value="scheduleName" type="text" placeholder="基本的 Input" />
+                  </n-gi>
+
+                  <n-gi>
+                    <div>日程内容</div>
+                  </n-gi>
+                  <n-gi :span="3">
+                    <n-input
+                      v-model:value="scheduleContent"
+                      type="textarea"
+                      placeholder="基本的 Textarea"
+                    />
+                  </n-gi>
+
+                  <n-gi>
+                    <div>状态</div>
+                  </n-gi>
+                  <n-gi :span="3">
+                    <n-radio-group v-model:value="selectedScheduleStatus" name="radiogroup">
+                      <n-space>
+                        <n-radio v-for="scheduleStatus in scheduleStatusList" :key="scheduleStatus.value" :value="scheduleStatus.value">
+                          {{ scheduleStatus.label }}
+                        </n-radio>
+                      </n-space>
+                    </n-radio-group>
+                  </n-gi>
+
+                  <n-gi :span="4">
+                    <n-button type="error" :disabled="isDeleteButtonDisabled">
+                      删除日程
+                    </n-button>
+                  </n-gi>
+                </n-grid>             
+              </n-modal>
             </div>
           </div>
         </n-dialog-provider>
       </n-notification-provider>
     </n-message-provider>
-  </n-loading-bar-privider>
-  <div>
-              <n-modal v-model:show="showModal">
-                <n-card
-                  title="新建事件"
-                  :bordered="false"
-                  size="huge"
-                  role="dialog"
-                  aria-modal="true"
-                  header-style="padding: 5px;"
-                  content-style="padding: 5px;"
-                  footer-style="padding: 5px;"
-                  style="width: 600px"
-                >
-                  内容
-                </n-card>
-              </n-modal>
-          </div>
+  </n-loading-bar-provider>
 </template>
 
 <style lang='scss'>
@@ -101,6 +147,8 @@ import listPlugin from '@fullcalendar/list'
 import { createElement } from '@fullcalendar/core/preact';
 
 import * as moment from "moment";
+import EventAggregator from "./EventAggregator";
+import { format, parseISO, getTime } from 'date-fns';
 
 export default defineComponent({
   components: {
@@ -109,12 +157,36 @@ export default defineComponent({
   },
 
   setup() {
-
+    return {
+      selectedDate: "",
+      isDeleteButtonDisabled: true,
+      selectedCategory: ref(null),
+      scheduleRange: ref(null),
+      scheduleName: ref(null),
+      scheduleContent: ref(null),
+      selectedScheduleStatus: ref(null),
+      scheduleStatusList: [
+        {
+          value: 1,
+          label: "未开始"
+        },
+        {
+          value: 2,
+          label: '进行中'
+        },
+        {
+          value: 3,
+          label: '已完成'
+        }
+      ]
+    }
   },
 
   data() {
     return {
       showModal: false,
+      calendarCategories: [],
+
       calendarOptions: {
         plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin],
         initialView: 'dayGridMonth', // 默认为哪个视图（月： dayGridMonth，周：timeGridWeek，日：timeGridDay）
@@ -146,14 +218,11 @@ export default defineComponent({
         },
 
         // 事件
-        dateClick: this.handleDateClick,
-        //eventClick: this.handleEventClick, // 点击日历日程事件
+        select: this.handleDateSelect, // 选中日历格事件
+        eventClick: this.handleEventClick, // 点击日历日程事件
         //eventsSet: this.handleEvents,
-        //eventDblClick: this.handleEventDblClick, // 双击日历日程事件 (这部分是在源码中添加的)
-        //eventClickDelete: this.eventClickDelete, // 点击删除标签事件 (这部分是在源码中添加的)
         //eventDrop: this.eventDrop, // 拖动日历日程事件
         //eventResize: this.eventResize, // 修改日历日程大小事件
-        //select: this.handleDateSelect, // 选中日历格事件
         //eventDidMount: this.eventDidMount, // 安装提示事件
         // loading: this.loadingEvent, // 视图数据加载中、加载完成触发（用于配合显示/隐藏加载指示器。）
         // selectAllow: this.selectAllow, //编程控制用户可以选择的地方，返回true则表示可选择，false表示不可选择
@@ -174,8 +243,57 @@ export default defineComponent({
     }
   },
 
+  mounted() {
+    EventAggregator.on('initScheduleCategory', scheduleCategories => {
+      console.log(JSON.stringify(scheduleCategories));
+      this.calendarCategories = [];
+      for(let category of scheduleCategories) {
+        let newValue = {
+          label: category.name,
+          value: category.color
+        }
+        this.calendarCategories.push(newValue);
+      }
+    });
+
+    EventAggregator.on('addCategorty', (p) => {
+      let newValue = {
+          label: p.name,
+          value: p.color
+        }
+      this.calendarCategories.push(newValue);
+    });
+
+    EventAggregator.on('deleteCategorty', (p) => {
+      let index = 0;
+      for(let category of this.calendarCategories) {
+        if(category.label === p.name) {
+          this.calendarCategories.splice(index, 1);
+          this.selectedCategory = "";
+          this.$forceUpdate();
+          break;
+        }
+        index++;
+      }
+    });
+  },
+
   methods: {
         submitCallback () {
+          let newEvent = {
+            id: moment(),
+            title: this.scheduleName,
+            start: format(this.scheduleRange[0], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[0], 'HH:mm:ss'),
+            end: format(this.scheduleRange[1], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[1], 'HH:mm:ss'),
+            // 修改背景颜色
+            backgroundColor:this.selectedCategory,
+            // 修改边框颜色
+            borderColor:this.selectedCategory,
+            extendedProps: {
+              status: this.selectedScheduleStatus // 日程状态
+            }
+          };
+          this.$refs.FullCalendar.getApi().addEvent(newEvent);
         },
 
         cancelCallback () {
@@ -186,31 +304,26 @@ export default defineComponent({
         },
 
         handleDateSelect(selectInfo) {
-          //let title = prompt('Please enter a new title for your event')
-          let calendarApi = selectInfo.view.calendar
-
-          calendarApi.unselect() // clear date selection
-          /*
-          if (title) {
-            calendarApi.addEvent({
-              id: createEventId(),
-              title,
-              start: selectInfo.startStr,
-              end: selectInfo.endStr,
-              allDay: selectInfo.allDay
-            })
+          //let calendarApi = selectInfo.view.calendar
+          //calendarApi.unselect() // clear date selection
+          if(this.selectedDate !== "" && this.selectedDate === selectInfo.startStr) {
+            this.selectedDate = "";
+            this.isDeleteButtonDisabled = true;
+            this.showModal = true;
+          } else {
+            this.selectedDate = selectInfo.startStr;
           }
-          */
-        },
-
-        handleDateClick(clickInfo) {
-          this.showModal = "true";
         },
 
         handleEventClick(clickInfo) {
-          if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-            clickInfo.event.remove()
-          }
+          this.isDeleteButtonDisabled = false;
+          this.scheduleName = clickInfo.event.title;
+          let date = parseISO(clickInfo.event.startStr);
+          this.scheduleRange[0] = getTime(date);
+          date = parseISO(clickInfo.event.endStr);
+          this.scheduleRange[1] = getTime(date);
+          this.selectedScheduleStatus = clickInfo.event.extendedProps.status;
+          this.showModal = true;
         },
 
         handleEvents(events) {

@@ -125,7 +125,8 @@ export class ScheduleManager {
             "id": docId,
             "attrs": {
                 "custom-checked": checked ? "true" : "false",
-                "custom-color": color
+                "custom-color": color,
+                "custom-version": "1.0.0"
             }
         }, (response) => {
             
