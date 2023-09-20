@@ -4,9 +4,9 @@
       <n-loading-bar-privider>
         <n-message-provider>
           <n-notification-provider>
-            <n-dia-provider>
+            <n-dialog-provider>
               <demo />
-            </n-dia-provider>
+            </n-dialog-provider>
           </n-notification-provider>
         </n-message-provider>
       </n-loading-bar-privider>

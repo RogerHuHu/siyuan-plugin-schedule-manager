@@ -87,6 +87,10 @@ export class ScheduleManager {
             */
             this.createDocument(this.noteBookId, p);
         });
+
+        EventAggregator.on('deleteCategorty', (p) => {
+            this.deleteDocument(this.noteBookId, this.getDocumentIdByName(p.name));
+        });
     }
 
     createDocument(notebookId: string, docProp: any) : void {
@@ -97,6 +101,22 @@ export class ScheduleManager {
         }, (response) => {
             let docId = response.data;
             this.setDocumentProperty(docId, docProp.checked, docProp.color);
+
+            let document = {
+                id: docId,
+                name: docProp.name,
+                checked: docProp.checked,
+                color: docProp.color
+            }
+            this.documents.push(document);
+        });
+    }
+
+    deleteDocument(notebookId: string, docId: string) : void {
+        fetchPost("/api/filetree/removeDoc", {
+            "notebook": notebookId,
+            "path": "/" + docId + ".sy",
+        }, (response) => {
         });
     }
 
@@ -142,6 +162,14 @@ export class ScheduleManager {
                 doc.checked = response.data["custom-checked"] === "true" ? true : false;
                 doc.color = response.data["custom-color"];
             })
+        }
+    }
+
+    getDocumentIdByName(name: string) : string {
+        for(let doc of this.documents) {
+            if(doc.name === name) {
+                return doc.id;
+            }
         }
     }
 }

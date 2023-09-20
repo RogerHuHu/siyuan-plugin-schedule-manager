@@ -12,18 +12,12 @@
                 {{schedule.name}}
               </n-checkbox>
               <div :style="{backgroundColor:schedule.color, width:'15px', height:'15px'}"/>
-              <n-button quaternary circle style="padding:0px;">
+              <n-button quaternary circle style="padding:0px;" @click="handleDeleteScheduleCategory(index)">
                  <template #icon>
                    <n-icon :component="DeleteOutlined" color="#0e7a0d"/>
                  </template>
                </n-button>
             </n-space>
-                
-                  <!--n-button text style="font-size: 24px">
-                    <template>
-                      <n-icon size="20" :component="DeleteOutlined" color="#0e7a0d"/>
-                    </template>
-                  </n-button-->
           </n-list-item>
         </n-list>
       </n-grid-item>
@@ -60,7 +54,7 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
-import { useMessage } from 'naive-ui'
+import { useMessage, useDialog } from 'naive-ui'
 import { Icon } from '@vicons/utils'
 import { DeleteOutlined } from '@vicons/antd'
 import { fetchPost } from "siyuan";
@@ -94,13 +88,13 @@ export default defineComponent({
       schedules: [],
       scheduleName: '',
       scheduleColor: '#FFFFFF',
-      message: useMessage()
+      message: useMessage(),
+      dialog: useDialog()
     };
   },
 
   mounted() {
     EventAggregator.on('initScheduleCategory', scheduleCategories => {
-      this.message.info("initScheduleCategory");
       this.schedules = [];
       for(let category of scheduleCategories) {
         this.schedules.push(category);
@@ -142,6 +136,22 @@ export default defineComponent({
     handleColorUpdate(value) {
       this.scheduleColor = value
       //this.message.success(this.scheduleColor)
+    },
+
+    // 删除日程分类
+    handleDeleteScheduleCategory(index) {
+      let category = this.schedules[index];
+      this.dialog.warning({
+        title: '警告',
+        content: '确定删除日程类别' + '【' + category.name + '】？',
+        positiveText: '确定',
+        negativeText: '取消',
+        onPositiveClick: () => {
+          this.schedules.splice(index, 1);
+          this.$forceUpdate();
+          EventAggregator.emit('deleteCategorty', category);
+        }
+      })
     }
   }
 })
