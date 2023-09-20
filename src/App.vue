@@ -1,20 +1,37 @@
 <template>
-  <div class="schedule-app-container">
-    <div class="schedule-app-sidebar">
-      <n-loading-bar-privider>
-        <n-message-provider>
-          <n-notification-provider>
-            <n-dialog-provider>
-              <demo />
-            </n-dialog-provider>
-          </n-notification-provider>
-        </n-message-provider>
-      </n-loading-bar-privider>
-    </div>
-    <div class="schedule-app-main">
-      <FullCalendar :options="calendarOptions"/>
-    </div>
-  </div>
+  <n-loading-bar-privider>
+    <n-message-provider>
+      <n-notification-provider>
+        <n-dialog-provider>
+          <div class="schedule-app-container">
+            <div class="schedule-app-sidebar">
+              <demo ref="scheduleCategoryRef"/>      
+            </div>
+            <div class="schedule-app-main">
+              <FullCalendar :options="calendarOptions"/>
+            </div>
+          </div>
+        </n-dialog-provider>
+      </n-notification-provider>
+    </n-message-provider>
+  </n-loading-bar-privider>
+  <div>
+              <n-modal v-model:show="showModal">
+                <n-card
+                  title="新建事件"
+                  :bordered="false"
+                  size="huge"
+                  role="dialog"
+                  aria-modal="true"
+                  header-style="padding: 5px;"
+                  content-style="padding: 5px;"
+                  footer-style="padding: 5px;"
+                  style="width: 600px"
+                >
+                  内容
+                </n-card>
+              </n-modal>
+          </div>
 </template>
 
 <style lang='scss'>
@@ -60,6 +77,10 @@ b { /* used for event dates/times */
   padding: 1em;
 }
 
+.schedule-app-modal {
+  flex: 1;
+}
+
 .fc { /* the calendar root */
   max-width: 1100px;
   margin: 0 auto;
@@ -68,7 +89,7 @@ b { /* used for event dates/times */
 
 <script>
 import { i18n } from "./utils";
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import Demo from "./ScheduleCategory.vue";
 
 import { CalendarOptions, EventApi, DateSelectArg, EventClickArg } from '@fullcalendar/core';
@@ -86,8 +107,14 @@ export default defineComponent({
     Demo,
     FullCalendar
   },
+
+  setup() {
+
+  },
+
   data() {
     return {
+      showModal: false,
       calendarOptions: {
         plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin],
         initialView: 'dayGridMonth', // 默认为哪个视图（月： dayGridMonth，周：timeGridWeek，日：timeGridDay）
@@ -119,14 +146,14 @@ export default defineComponent({
         },
 
         // 事件
-        //dateClick: this.handleDateClick,
-        eventClick: this.handleEventClick, // 点击日历日程事件
-        eventsSet: this.handleEvents,
+        dateClick: this.handleDateClick,
+        //eventClick: this.handleEventClick, // 点击日历日程事件
+        //eventsSet: this.handleEvents,
         //eventDblClick: this.handleEventDblClick, // 双击日历日程事件 (这部分是在源码中添加的)
         //eventClickDelete: this.eventClickDelete, // 点击删除标签事件 (这部分是在源码中添加的)
         //eventDrop: this.eventDrop, // 拖动日历日程事件
         //eventResize: this.eventResize, // 修改日历日程大小事件
-        select: this.handleDateSelect, // 选中日历格事件
+        //select: this.handleDateSelect, // 选中日历格事件
         //eventDidMount: this.eventDidMount, // 安装提示事件
         // loading: this.loadingEvent, // 视图数据加载中、加载完成触发（用于配合显示/隐藏加载指示器。）
         // selectAllow: this.selectAllow, //编程控制用户可以选择的地方，返回true则表示可选择，false表示不可选择
@@ -144,17 +171,26 @@ export default defineComponent({
         selectHelper: false,
         slotEventOverlap: false // 相同时间段的多个日程视觉上是否允许重叠，默认true允许
       },
+    }
+  },
 
-      methods: {
+  methods: {
+        submitCallback () {
+        },
+
+        cancelCallback () {
+        },
+
         handleWeekendsToggle() {
           this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
         },
+
         handleDateSelect(selectInfo) {
-          let title = prompt('Please enter a new title for your event')
+          //let title = prompt('Please enter a new title for your event')
           let calendarApi = selectInfo.view.calendar
 
           calendarApi.unselect() // clear date selection
-
+          /*
           if (title) {
             calendarApi.addEvent({
               id: createEventId(),
@@ -164,17 +200,22 @@ export default defineComponent({
               allDay: selectInfo.allDay
             })
           }
+          */
         },
+
+        handleDateClick(clickInfo) {
+          this.showModal = "true";
+        },
+
         handleEventClick(clickInfo) {
           if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
             clickInfo.event.remove()
           }
         },
+
         handleEvents(events) {
           this.currentEvents = events
-        },
+        }
       }
-    }
-  }
 });
 </script>

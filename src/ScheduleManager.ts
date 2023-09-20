@@ -134,9 +134,7 @@ export class ScheduleManager {
 
     async getDocuments(notebookId: string) {
         let query = "SELECT root_id FROM blocks WHERE box =\'" + notebookId + "\'";
-        console.log(query);
         await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
-            console.log(JSON.stringify(response));
             let count = 0;
                 for(let id of response.data) {
                     if(count == 1) {

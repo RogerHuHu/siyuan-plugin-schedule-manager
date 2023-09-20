@@ -55,9 +55,7 @@
 <script>
 import { defineComponent, ref } from 'vue'
 import { useMessage, useDialog } from 'naive-ui'
-import { Icon } from '@vicons/utils'
 import { DeleteOutlined } from '@vicons/antd'
-import { fetchPost } from "siyuan";
 import EventAggregator from "./EventAggregator";
 
 export default defineComponent({
