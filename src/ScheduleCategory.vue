@@ -98,6 +98,16 @@ export default defineComponent({
     };
   },
 
+  mounted() {
+    EventAggregator.on('initScheduleCategory', scheduleCategories => {
+      this.message.info("initScheduleCategory");
+      this.schedules = [];
+      for(let category of scheduleCategories) {
+        this.schedules.push(category);
+      }
+    })
+  },
+
   methods: {
     submitCallback () {
       let scheduleExists = false;
@@ -110,7 +120,7 @@ export default defineComponent({
 
       if(scheduleExists == false) {
         let newCategory = {
-          checked: false,
+          checked: true,
           color: this.scheduleColor,
           name: this.scheduleName
         };

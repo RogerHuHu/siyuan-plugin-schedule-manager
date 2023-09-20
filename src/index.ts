@@ -78,7 +78,8 @@ export default class PluginScheduleManager extends Plugin {
             if(this.isNotebookExists(response.data.notebooks, "日程管理笔记本") == false) {
                 this.createNotebook("日程管理笔记本");
             }
-            this.createDocument(this.scheduleNotebookId, "/日程管理文档");  
+            this.scheduleManager.updateNotebookId(this.scheduleNotebookId);
+            //this.createDocument(this.scheduleNotebookId, "/日程管理文档");  
         });
     }
 
@@ -95,6 +96,7 @@ export default class PluginScheduleManager extends Plugin {
     createNotebook(name: string) {
         fetchPost("/api/notebook/createNotebook", {"name": name}, (response) => {
             this.scheduleNotebookId = response.data.notebook.id;
+            this.scheduleManager.updateNotebookId(this.scheduleNotebookId);
         });
     }
 
