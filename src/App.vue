@@ -290,6 +290,7 @@ export default defineComponent({
             // 修改边框颜色
             borderColor:this.selectedCategory,
             extendedProps: {
+              content: this.scheduleContent,
               status: this.selectedScheduleStatus // 日程状态
             }
           };
@@ -322,6 +323,7 @@ export default defineComponent({
           this.scheduleRange[0] = getTime(date);
           date = parseISO(clickInfo.event.endStr);
           this.scheduleRange[1] = getTime(date);
+          this.scheduleContent = clickInfo.event.content;
           this.selectedScheduleStatus = clickInfo.event.extendedProps.status;
           this.showModal = true;
         },
