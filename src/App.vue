@@ -22,7 +22,7 @@
                     <div>选择日程分类</div>
                   </n-gi>
                   <n-gi :span="3">
-                    <n-select v-model:value="selectedCategory" :options="calendarCategories" />
+                    <n-select v-model:value="selectedCategoryColor" :options="calendarCategories" @update:value="handleUpdateSelectedCategory" />
                   </n-gi>
 
                   <n-gi>
@@ -149,13 +149,14 @@ import Demo from "./ScheduleCategory.vue";
 
 import { CalendarOptions, EventApi, DateSelectArg, EventClickArg } from '@fullcalendar/core';
 import FullCalendar from "@fullcalendar/vue3";
-import interactionPlugin from '@fullcalendar/interaction'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import listPlugin from '@fullcalendar/list'
+import interactionPlugin from '@fullcalendar/interaction';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
 import { createElement } from '@fullcalendar/core/preact';
 
 import * as moment from "moment";
+import { useMessage, SelectOption } from 'naive-ui';
 import EventAggregator from "./EventAggregator";
 import { format, parseISO, getTime } from 'date-fns';
 
@@ -172,7 +173,8 @@ export default defineComponent({
       modalShowIcon: false,
       isUpdateButtonVisible: false,
       isSubmitButtonVisible: true,
-      selectedCategory: ref(null),
+      selectedCategoryColor: ref(null),
+      selectedCategory: null,
       scheduleRange: ref(null),
       scheduleName: ref(null),
       scheduleContent: ref(null),
@@ -197,6 +199,7 @@ export default defineComponent({
 
   data() {
     return {
+      //message: useMessage(),
       showModal: false,
       calendarCategories: [],
 
@@ -282,16 +285,24 @@ export default defineComponent({
       for(let category of this.calendarCategories) {
         if(category.label === p.name) {
           this.calendarCategories.splice(index, 1);
-          this.selectedCategory = "";
+          this.selectedCategoryColor = "";
           this.$forceUpdate();
           break;
         }
         index++;
       }
     });
+
+    EventAggregator.on('initSchedules', (p) => {
+      
+    });
   },
 
   methods: {
+    handleUpdateSelectedCategory(value, option) {
+      this.selectedCategory = option;
+    },
+
     handleCancelClick() {
       this.showModal = false;
     },
@@ -299,35 +310,67 @@ export default defineComponent({
     handleDeleteClick() {
       this.showModal = false;
       this.selectedEvent.remove();
+      EventAggregator.emit('deleteSchedule', this.selectedEvent);
     },
 
     handleUpdateClick() {
       this.showModal = false;
-      this.selectedEvent.setProp("title", this.scheduleName);
-      this.selectedEvent.setProp("backgroundColor", this.selectedCategory);
-      this.selectedEvent.setProp("borderColor", this.selectedCategory);
-      this.selectedEvent.setExtendedProp("content", this.scheduleContent);
-      this.selectedEvent.setExtendedProp("status", this.selectedScheduleStatus);
-      this.selectedEvent.setDates(new Date(Number(this.scheduleRange[0])), new Date(Number(this.scheduleRange[1])));
+
+      if(this.scheduleRange[0] == this.scheduleRange[1]) {
+        //this.message.error("开始时间和结束时间不能相同！");
+      } else {
+        let oldCategory = this.selectedEvent.extendedProps.category;
+        this.selectedEvent.setProp("title", this.scheduleName);
+        this.selectedEvent.setProp("backgroundColor", this.selectedCategoryColor);
+        this.selectedEvent.setProp("borderColor", this.selectedCategoryColor);
+        this.selectedEvent.setExtendedProp("category", this.selectedCategory.label);
+        this.selectedEvent.setExtendedProp("content", this.scheduleContent);
+        this.selectedEvent.setExtendedProp("status", this.selectedScheduleStatus);
+        this.selectedEvent.setDates(new Date(Number(this.scheduleRange[0])), new Date(Number(this.scheduleRange[1])));
+
+        let tempEvent = {
+          id: this.selectedEvent.id,
+          title: this.scheduleName,
+          start: format(this.scheduleRange[0], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[0], 'HH:mm:ss'),
+          end: format(this.scheduleRange[1], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[1], 'HH:mm:ss'),
+          // 修改背景颜色
+          backgroundColor:this.selectedCategoryColor,
+          // 修改边框颜色
+          borderColor:this.selectedCategoryColor,
+          extendedProps: {
+            category: this.selectedCategory.label,
+            content: this.scheduleContent,
+            status: this.selectedScheduleStatus // 日程状态
+          }
+        };
+
+        EventAggregator.emit('updateSchedule', { old: oldCategory, new: tempEvent });
+      }
     },
 
     handleSubmitClick() {
       this.showModal = false;
-      let newEvent = {
-        id: moment(),
-        title: this.scheduleName,
-        start: format(this.scheduleRange[0], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[0], 'HH:mm:ss'),
-        end: format(this.scheduleRange[1], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[1], 'HH:mm:ss'),
-        // 修改背景颜色
-        backgroundColor:this.selectedCategory,
-        // 修改边框颜色
-        borderColor:this.selectedCategory,
-        extendedProps: {
-          content: this.scheduleContent,
-          status: this.selectedScheduleStatus // 日程状态
-        }
-      };
-      this.$refs.FullCalendar.getApi().addEvent(newEvent);
+      if(this.scheduleRange[0] == this.scheduleRange[1]) {
+        //this.message.error("开始时间和结束时间不能相同！");
+      } else {
+        let newEvent = {
+          id: new Date().getTime().toString(),
+          title: this.scheduleName,
+          start: format(this.scheduleRange[0], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[0], 'HH:mm:ss'),
+          end: format(this.scheduleRange[1], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[1], 'HH:mm:ss'),
+          // 修改背景颜色
+          backgroundColor:this.selectedCategoryColor,
+          // 修改边框颜色
+          borderColor:this.selectedCategoryColor,
+          extendedProps: {
+            category: this.selectedCategory.label,
+            content: this.scheduleContent,
+            status: this.selectedScheduleStatus // 日程状态
+          }
+        };
+        this.$refs.FullCalendar.getApi().addEvent(newEvent);
+        EventAggregator.emit('addSchedule', newEvent);
+      }
     }, 
 
     handleWeekendsToggle() {
@@ -348,7 +391,7 @@ export default defineComponent({
     handleEventClick(clickInfo) {
       this.isUpdateButtonVisible = true;
       this.isSubmitButtonVisible = false;
-      this.selectedCategory = clickInfo.event.backgroundColor;
+      this.selectedCategoryColor = clickInfo.event.backgroundColor;
       this.scheduleName = clickInfo.event.title;
       let date = parseISO(clickInfo.event.startStr);
       this.scheduleRange[0] = getTime(date);

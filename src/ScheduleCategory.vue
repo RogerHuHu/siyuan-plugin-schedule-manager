@@ -95,6 +95,7 @@ export default defineComponent({
     EventAggregator.on('initScheduleCategory', scheduleCategories => {
       this.schedules = [];
       for(let category of scheduleCategories) {
+        category.schedules = [];
         this.schedules.push(category);
       }
     })
@@ -120,7 +121,8 @@ export default defineComponent({
         EventAggregator.emit('addCategorty', {
           "checked": newCategory.checked,
           "color": this.scheduleColor,
-          "name": this.scheduleName});
+          "name": this.scheduleName
+        });
       }
     },
 
