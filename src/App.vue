@@ -13,11 +13,9 @@
                 v-model:show="showModal"
                 preset="dialog"
                 title="新建日程"
-                positive-text="确认"
-                negative-text="算了"
-                @positive-click="submitCallback"
-                @negative-click="cancelCallback"
                 style="width:600px"
+                :closable="modalClosable"
+                :showIcon="modalShowIcon"
               >
                 <n-grid :cols="4" y-gap="5">
                   <n-gi>
@@ -66,9 +64,20 @@
                   </n-gi>
 
                   <n-gi :span="4">
-                    <n-button type="error" :disabled="isDeleteButtonDisabled">
-                      删除日程
-                    </n-button>
+                    <n-space justify="end">
+                      <n-button type="info" @click="handleCancelClick">
+                        取消
+                      </n-button>
+                      <n-button type="error" v-if="isUpdateButtonVisible" @click="handleDeleteClick">
+                        删除日程
+                      </n-button>
+                      <n-button type="success" v-if="isUpdateButtonVisible" @click="handleUpdateClick">
+                        更新
+                      </n-button>
+                      <n-button type="success" v-if="isSubmitButtonVisible" @click="handleSubmitClick">
+                        确定
+                      </n-button>
+                    </n-space>
                   </n-gi>
                 </n-grid>             
               </n-modal>
@@ -159,7 +168,10 @@ export default defineComponent({
   setup() {
     return {
       selectedDate: "",
-      isDeleteButtonDisabled: true,
+      modalClosable: false,
+      modalShowIcon: false,
+      isUpdateButtonVisible: false,
+      isSubmitButtonVisible: true,
       selectedCategory: ref(null),
       scheduleRange: ref(null),
       scheduleName: ref(null),
@@ -178,7 +190,8 @@ export default defineComponent({
           value: 3,
           label: '已完成'
         }
-      ]
+      ],
+      selectedEvent: null,
     }
   },
 
@@ -279,58 +292,77 @@ export default defineComponent({
   },
 
   methods: {
-        submitCallback () {
-          let newEvent = {
-            id: moment(),
-            title: this.scheduleName,
-            start: format(this.scheduleRange[0], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[0], 'HH:mm:ss'),
-            end: format(this.scheduleRange[1], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[1], 'HH:mm:ss'),
-            // 修改背景颜色
-            backgroundColor:this.selectedCategory,
-            // 修改边框颜色
-            borderColor:this.selectedCategory,
-            extendedProps: {
-              content: this.scheduleContent,
-              status: this.selectedScheduleStatus // 日程状态
-            }
-          };
-          this.$refs.FullCalendar.getApi().addEvent(newEvent);
-        },
+    handleCancelClick() {
+      this.showModal = false;
+    },
 
-        cancelCallback () {
-        },
+    handleDeleteClick() {
+      this.showModal = false;
+      this.selectedEvent.remove();
+    },
 
-        handleWeekendsToggle() {
-          this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
-        },
+    handleUpdateClick() {
+      this.showModal = false;
+      this.selectedEvent.setProp("title", this.scheduleName);
+      this.selectedEvent.setProp("backgroundColor", this.selectedCategory);
+      this.selectedEvent.setProp("borderColor", this.selectedCategory);
+      this.selectedEvent.setExtendedProp("content", this.scheduleContent);
+      this.selectedEvent.setExtendedProp("status", this.selectedScheduleStatus);
+      this.selectedEvent.setDates(new Date(Number(this.scheduleRange[0])), new Date(Number(this.scheduleRange[1])));
+    },
 
-        handleDateSelect(selectInfo) {
-          //let calendarApi = selectInfo.view.calendar
-          //calendarApi.unselect() // clear date selection
-          if(this.selectedDate !== "" && this.selectedDate === selectInfo.startStr) {
-            this.selectedDate = "";
-            this.isDeleteButtonDisabled = true;
-            this.showModal = true;
-          } else {
-            this.selectedDate = selectInfo.startStr;
-          }
-        },
-
-        handleEventClick(clickInfo) {
-          this.isDeleteButtonDisabled = false;
-          this.scheduleName = clickInfo.event.title;
-          let date = parseISO(clickInfo.event.startStr);
-          this.scheduleRange[0] = getTime(date);
-          date = parseISO(clickInfo.event.endStr);
-          this.scheduleRange[1] = getTime(date);
-          this.scheduleContent = clickInfo.event.content;
-          this.selectedScheduleStatus = clickInfo.event.extendedProps.status;
-          this.showModal = true;
-        },
-
-        handleEvents(events) {
-          this.currentEvents = events
+    handleSubmitClick() {
+      this.showModal = false;
+      let newEvent = {
+        id: moment(),
+        title: this.scheduleName,
+        start: format(this.scheduleRange[0], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[0], 'HH:mm:ss'),
+        end: format(this.scheduleRange[1], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[1], 'HH:mm:ss'),
+        // 修改背景颜色
+        backgroundColor:this.selectedCategory,
+        // 修改边框颜色
+        borderColor:this.selectedCategory,
+        extendedProps: {
+          content: this.scheduleContent,
+          status: this.selectedScheduleStatus // 日程状态
         }
+      };
+      this.$refs.FullCalendar.getApi().addEvent(newEvent);
+    }, 
+
+    handleWeekendsToggle() {
+      this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
+    },
+
+    handleDateSelect(selectInfo) {
+      if(this.selectedDate !== "" && this.selectedDate === selectInfo.startStr) {
+        this.selectedDate = "";
+        this.isUpdateButtonVisible = false;
+        this.isSubmitButtonVisible = true;
+        this.showModal = true;
+      } else {
+        this.selectedDate = selectInfo.startStr;
       }
+    },
+
+    handleEventClick(clickInfo) {
+      this.isUpdateButtonVisible = true;
+      this.isSubmitButtonVisible = false;
+      this.selectedCategory = clickInfo.event.backgroundColor;
+      this.scheduleName = clickInfo.event.title;
+      let date = parseISO(clickInfo.event.startStr);
+      this.scheduleRange[0] = getTime(date);
+      date = parseISO(clickInfo.event.endStr);
+      this.scheduleRange[1] = getTime(date);
+      this.scheduleContent = clickInfo.event.extendedProps.content;
+      this.selectedScheduleStatus = clickInfo.event.extendedProps.status;
+      this.selectedEvent = clickInfo.event;
+      this.showModal = true;
+    },
+
+    handleEvents(events) {
+      this.currentEvents = events
+    }
+  }
 });
 </script>
