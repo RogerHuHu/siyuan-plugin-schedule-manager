@@ -36,7 +36,7 @@
                     <div>日程名</div>
                   </n-gi>
                   <n-gi :span="3">
-                    <n-input v-model:value="scheduleName" type="text" placeholder="基本的 Input" />
+                    <n-input v-model:value="scheduleName" type="text" placeholder="请输入日程名" />
                   </n-gi>
 
                   <n-gi>
@@ -46,7 +46,7 @@
                     <n-input
                       v-model:value="scheduleContent"
                       type="textarea"
-                      placeholder="基本的 Textarea"
+                      placeholder=""
                     />
                   </n-gi>
 
@@ -242,8 +242,8 @@ export default defineComponent({
         //eventMouseEnter: this.eventMouseEnter, // 鼠标滑过
         allowContextMenu: false,
         editable: true, // 是否可以进行（拖动、缩放）修改
-        eventStartEditable: true, // Event日程开始时间可以改变，默认true，如果是false其实就是指日程块不能随意拖动，只能上下拉伸改变他的endTime
-        eventDurationEditable: true, // Event日程的开始结束时间距离是否可以改变，默认true，如果是false则表示开始结束时间范围不能拉伸，只能拖拽
+        eventStartEditable: false, // Event日程开始时间可以改变，默认true，如果是false其实就是指日程块不能随意拖动，只能上下拉伸改变他的endTime
+        eventDurationEditable: false, // Event日程的开始结束时间距离是否可以改变，默认true，如果是false则表示开始结束时间范围不能拉伸，只能拖拽
         selectable: true, // 是否可以选中日历格
         selectMirror: true,
         selectMinDistance: 0, // 选中日历格的最小距离

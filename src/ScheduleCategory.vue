@@ -141,7 +141,7 @@ export default defineComponent({
       let category = this.schedules[index];
       this.dialog.warning({
         title: '警告',
-        content: '确定删除日程类别' + '【' + category.name + '】？',
+        content: '删除日程类别会导致对应日程丢失，确定删除日程类别' + '【' + category.name + '】？',
         positiveText: '确定',
         negativeText: '取消',
         onPositiveClick: () => {
