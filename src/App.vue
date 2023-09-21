@@ -269,6 +269,30 @@ export default defineComponent({
           value: category.color
         }
         this.calendarCategories.push(newValue);
+
+        for(let schedule of category.schedules) {
+          if(schedule.content === "") {
+            continue;
+          }
+
+          let content = JSON.parse(schedule.content);
+          let newEvent = {
+            id: content.id,
+            title: content.title,
+            start: content.start,
+            end: content.end,
+            // 修改背景颜色
+            backgroundColor:'#' + content.backgroundColor,
+            // 修改边框颜色
+            borderColor:'#' + content.borderColor,
+            extendedProps: {
+              category: content.extendedProps.category,
+              content: content.extendedProps.content,
+              status: content.extendedProps.status // 日程状态
+            }
+          };
+          this.$refs.FullCalendar.getApi().addEvent(newEvent);
+        }
       }
     });
 
@@ -291,10 +315,6 @@ export default defineComponent({
         }
         index++;
       }
-    });
-
-    EventAggregator.on('initSchedules', (p) => {
-      
     });
   },
 
@@ -326,7 +346,7 @@ export default defineComponent({
         this.selectedEvent.setExtendedProp("category", this.selectedCategory.label);
         this.selectedEvent.setExtendedProp("content", this.scheduleContent);
         this.selectedEvent.setExtendedProp("status", this.selectedScheduleStatus);
-        this.selectedEvent.setDates(new Date(Number(this.scheduleRange[0])), new Date(Number(this.scheduleRange[1])));
+        this.selectedEvent.setDates(new Date(this.scheduleRange[0]), new Date(this.scheduleRange[1]));
 
         let tempEvent = {
           id: this.selectedEvent.id,
@@ -393,6 +413,9 @@ export default defineComponent({
       this.isSubmitButtonVisible = false;
       this.selectedCategoryColor = clickInfo.event.backgroundColor;
       this.scheduleName = clickInfo.event.title;
+      if(this.scheduleRange == null) {
+        this.scheduleRange = [Date.now(), Date.now() + 1];
+      }
       let date = parseISO(clickInfo.event.startStr);
       this.scheduleRange[0] = getTime(date);
       date = parseISO(clickInfo.event.endStr);

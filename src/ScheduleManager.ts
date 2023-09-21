@@ -15,6 +15,7 @@ export class ScheduleManager {
     
     // 构造函数
     constructor() {
+        this.listenEvents();
     }
 
     show(el: HTMLElement) : void {
@@ -42,7 +43,6 @@ export class ScheduleManager {
     mount(el: HTMLElement) : void {
         this.app.mount(el);
         this.readScheduleCategory();
-        this.listenEvents();
     }
 
     updateNotebookId(id: string) : void {
@@ -54,22 +54,10 @@ export class ScheduleManager {
     }
 
     async readScheduleCategory() {
-        /*
-        fetchPost("/api/block/getChildBlocks", {"id":this.docId}, (response) => {
-            for (let block of response.data) {
-                let query = "SELECT content FROM blocks WHERE id =\'" + block.id + "\'";
-                fetchPost("/api/query/sql", {"stmt":query}, (response) => {
-                    let prop = response.data[0];
-                    if(prop.content !== "") {
-                        
-                    }
-                });
-            }
-        });
-        */
         this.documents = [];
         await this.getDocuments(this.noteBookId);
         await this.getDocumentsName();
+        await this.getSchedules();
        
         EventAggregator.emit('initScheduleCategory', this.documents);
     }
@@ -85,7 +73,7 @@ export class ScheduleManager {
 
         EventAggregator.on('addSchedule', (p) => {
             fetchPost("/api/block/appendBlock", {
-                "data": JSON.stringify(p),
+                "data": JSON.stringify(p).replace(/#/g,""),
                 "dataType": "markdown",
                 "parentID": this.getDocumentIdByName(p.extendedProps.category)
             }, (response) => {
@@ -111,8 +99,9 @@ export class ScheduleManager {
                 id: docId,
                 name: docProp.name,
                 checked: docProp.checked,
-                color: docProp.color
-            }
+                color: docProp.color,
+                schedules: []
+            };
             this.documents.push(document);
         });
     }
@@ -146,7 +135,8 @@ export class ScheduleManager {
                     id: id.id,
                     name: "",
                     checked: "",
-                    color: ""
+                    color: "",
+                    schedules: []
                 }
                 this.documents.push(document);
             }
@@ -164,11 +154,13 @@ export class ScheduleManager {
     }
 
     async getSchedules() {
+        console.log("**************getSchedules***************");
         for(let doc of this.documents) {
-            await fetchSyncPost("/api/attr/getBlockAttrs", {"id":doc.id}).then(response => {
-                doc.name = response.data.title;
-                doc.checked = response.data["custom-checked"] === "true" ? true : false;
-                doc.color = response.data["custom-color"];
+            let query = "SELECT content FROM blocks WHERE parent_id =\'" + doc.id + "\'";
+            console.log(query);
+            await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
+                console.log(response);
+                doc.schedules = response.data;
             })
         }
     }
@@ -178,24 +170,22 @@ export class ScheduleManager {
 
         // 先查询得到日程的 id
         let query = "SELECT id FROM blocks WHERE content like \'%" + schedule.new.id + "%\' AND parent_id =\'" + this.getDocumentIdByName(schedule.old) + "\'";
-        //let query = "SELECT id FROM blocks WHERE content like \'%" + schedule.new.id + ",%\'";
-        console.log(query);
         await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
-            console.log(JSON.stringify(response));
             id = response.data[0].id;
         })
 
         await fetchSyncPost("/api/block/deleteBlock", {
             "id": id
         }).then(response => {
-            console.log(JSON.stringify(response));
         })
 
+        console.log("update schedule1");
         await fetchSyncPost("/api/block/appendBlock", {
-            "data": JSON.stringify(schedule.new),
+            "data": JSON.stringify(schedule.new).replace(/#/g,""),
             "dataType": "markdown",
             "parentID": this.getDocumentIdByName(schedule.new.extendedProps.category)
         }).then(response => {
+            console.log("update schedule2");
             console.log(JSON.stringify(response));
         })
     }

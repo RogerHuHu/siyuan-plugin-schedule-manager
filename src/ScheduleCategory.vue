@@ -95,7 +95,6 @@ export default defineComponent({
     EventAggregator.on('initScheduleCategory', scheduleCategories => {
       this.schedules = [];
       for(let category of scheduleCategories) {
-        category.schedules = [];
         this.schedules.push(category);
       }
     })
