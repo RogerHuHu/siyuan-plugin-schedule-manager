@@ -1,151 +1,59 @@
-[中文](https://github.com/siyuan-note/plugin-sample/blob/main/README_zh_CN.md)
+# 日程管理
 
-# SiYuan plugin sample
+## 简介
+日程管理插件通过日历的形式管理待办事项，目前支持月、周、日、列表多种视图。
 
-## Get started
+日历以标签页的方式显示，首次启动时，会自动在文档树中创建**日程管理笔记本**。
 
-* Make a copy of this repo as a template with the <kbd>Use this template</kbd> button, please note that the repo name
-  must be the same as the plugin name, the default branch must be `main`
-* Clone your repo to a local development folder. For convenience, you can place this folder in
-  your `{workspace}/data/plugins/` folder
-* Install [NodeJS](https://nodejs.org/en/download) and [pnpm](https://pnpm.io/installation), then run `pnpm i` in the
-  command line under your repo folder
-* Execute `pnpm run dev` for real-time compilation
-* Open SiYuan marketplace and enable plugin in downloaded tab
+![](asset/schedule_manager_notebook.png)
 
-## Development
+ >- **介意的谨慎使用！！！**
+ >- **请勿删除该笔记本，由于刚接触vue、typescript等，未做很多异常处理，删除可能会带来不必要的麻烦！！！**
 
-* i18n/*
-* icon.png (160*160)
-* index.css
-* index.js
-* plugin.json
-* preview.png (1024*768)
-* README*.md
-* [Fontend API](https://github.com/siyuan-note/petal)
-* [Backend API](https://github.com/siyuan-note/siyuan/blob/master/API.md)
+## 功能
+### 1. 添加日程分类
+![](asset/add_schedule_category.png)
 
-## I18n
+点击添加日程分类按钮，会弹出日程分类信息编辑窗口，可以自定义日程分类名和对应颜色。
 
-In terms of internationalization, our main consideration is to support multiple languages. Specifically, we need to
-complete the following tasks:
+添加日程分类时，会在**日程管理笔记本**下创建对应名字的文档。
 
-* Meta information about the plugin itself, such as plugin description and readme
-    * `description` and `readme` fields in plugin.json, and the corresponding README*.md file
-* Text used in the plugin, such as button text and tooltips
-    * src/i18n/*.json language configuration files
-    * Use `this.i18.key` to get the text in the code
-* Finally, declare the language supported by the plugin in the `i18n` field in plugin.json
+### 2. 删除日程分类
+点击日程分类最后的删除按钮，可以删除对应日程分类，以及**日程管理笔记本**下的对应文档。
 
-It is recommended that the plugin supports at least English and Simplified Chinese, so that more people can use it more
-conveniently.
+>- **操作需谨慎**，删除日程分类会删除对应的所有日程，且不可恢复
 
-## plugin.json
+### 3. 添加日程
+双击某个日历格，会弹出日程添加界面，可以自定义日程分类、日程起止时间、日程名、日程内容和日程的状态。
 
-```json
-{
-  "name": "plugin-sample",
-  "author": "Vanessa",
-  "url": "https://github.com/siyuan-note/plugin-sample",
-  "version": "0.1.3",
-  "minAppVersion": "2.8.8",
-  "backends": ["windows", "linux", "darwin"],
-  "frontends": ["desktop"],
-  "displayName": {
-    "default": "Plugin Sample",
-    "zh_CN": "插件示例"
-  },
-  "description": {
-    "default": "This is a plugin sample",
-    "zh_CN": "这是一个插件示例"
-  },
-  "readme": {
-    "default": "README.md",
-    "zh_CN": "README_zh_CN.md"
-  },
-  "funding": {
-    "openCollective": "",
-    "patreon": "",
-    "github": "",
-    "custom": [
-      "https://ld246.com/sponsor"
-    ]
-  }
-}
-```
+添加日程时，会在相应名字的文档中创建一条记录，**不要编辑！！！**
 
-* `name`: Plugin name, must be the same as the repo name, and must be unique globally (no duplicate plugin names in the
-  marketplace)
-* `author`: Plugin author name
-* `url`: Plugin repo URL
-* `version`: Plugin version number, it is recommended to follow the [semver](https://semver.org/) specification
-* `minAppVersion`: Minimum version number of SiYuan required to use this plugin
-* `backends`: Backend environment required by the plugin, optional values are `windows`, `linux`, `darwin`, `docker`, `android`, `ios` and `all`
-  * `windows`: Windows desktop
-  * `linux`: Linux desktop
-  * `darwin`: macOS desktop
-  * `docker`: Docker
-  * `android`: Android APP
-  * `ios`: iOS APP
-  * `all`: All environments
-* `frontends`: Frontend environment required by the plugin, optional values are `desktop`, `desktop-window`, `mobile`, `browser-desktop`, `browser-mobile` and `all`
-  * `desktop`: Desktop
-  * `desktop-window`: Desktop window converted from tab
-  * `mobile`: Mobile APP
-  * `browser-desktop`: Desktop browser
-  * `browser-mobile`: Mobile browser
-  * `all`: All environments
-* `displayName`: Template display name, mainly used for display in the marketplace list, supports multiple languages
-    * `default`: Default language, must exist
-    * `zh_CN`, `en_US` and other languages: optional, it is recommended to provide at least Chinese and English
-* `description`: Plugin description, mainly used for display in the marketplace list, supports multiple languages
-    * `default`: Default language, must exist
-    * `zh_CN`, `en_US` and other languages: optional, it is recommended to provide at least Chinese and English
-* `readme`: readme file name, mainly used to display in the marketplace details page, supports multiple languages
-    * `default`: Default language, must exist
-    * `zh_CN`, `en_US` and other languages: optional, it is recommended to provide at least Chinese and English
-* `funding`: Plugin sponsorship information
-    * `openCollective`: Open Collective name
-    * `patreon`: Patreon name
-    * `github`: GitHub login name
-    * `custom`: Custom sponsorship link list
+![](asset/add_schedule.png)
 
-## Package
+### 4. 更新日程
+单机某个日程，会弹出更新日程的界面，可以修改日程的各种信息。同时修改对应文档中记录的信息。
 
-No matter which method is used to compile and package, we finally need to generate a package.zip, which contains at
-least the following files:
+![](asset/update_schedule.png)
 
-* i18n/*
-* icon.png (160*160)
-* index.css
-* index.js
-* plugin.json
-* preview.png (1024*768)
-* README*.md
+### 5. 删除日程
+在上述日程更新界面，点击删除日程按钮，会删除当前日程，以及对应文档中的记录，**不可恢复**。
 
-## List on the marketplace
+## Todo
+- [ ] 界面语言、文档国际化
+- [ ] 日程的拖拽
+- [ ] 文档中日程记录显示样式优化
+- [ ] 任务看板界面
 
-* `pnpm run build` to generate package.zip
-* Create a new GitHub release using your new version number as the "Tag version". See here for an
-  example: https://github.com/siyuan-note/plugin-sample/releases
-* Upload the file package.zip as binary attachments
-* Publish the release
+## FAQ
 
-If it is the first release, please create a pull request to
-the [Community Bazaar](https://github.com/siyuan-note/bazaar) repository and modify the plugins.json file in it. This
-file is the index of all community plugin repositories, the format is:
+## 鸣谢
+感谢如下框架对本项目的支持（排名不分先后）
+- Vue3
+- Naive UI
 
-```json
-{
-  "repos": [
-    "username/reponame"
-  ]
-}
-```
+## 捐赠
+开发不易，如果你喜欢本插件，欢迎给作者发电。
 
-After the PR is merged, the bazaar will automatically update the index and deploy through GitHub Actions. When releasing
-a new version of the plugin in the future, you only need to follow the above steps to create a new release, and you
-don't need to PR the community bazaar repo.
+![](asset/code.png)
 
-Under normal circumstances, the community bazaar repo will automatically update the index and deploy every hour,
-and you can check the deployment status at https://github.com/siyuan-note/bazaar/actions.
+## 更新日志

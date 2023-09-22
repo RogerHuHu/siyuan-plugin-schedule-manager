@@ -5,14 +5,14 @@
 
 日历以标签页的方式显示，首次启动时，会自动在文档树中创建**日程管理笔记本**。
 
-![schedule_manager_notebook](./images/schedule_manager_notebook.png)
+![](https://gitee.com/rogerhuhu/siyuan-plugin-schedule-manager/blob/main/asset/schedule_manager_notebook.png)
 
  >- **介意的谨慎使用！！！**
  >- **请勿删除该笔记本，由于刚接触vue、typescript等，未做很多异常处理，删除可能会带来不必要的麻烦！！！**
 
 ## 功能
 ### 1. 添加日程分类
-![add_schedule_category](./images/add_schedule_category.png)
+![](https://gitee.com/rogerhuhu/siyuan-plugin-schedule-manager/blob/main/asset/add_schedule_category.png)
 
 点击添加日程分类按钮，会弹出日程分类信息编辑窗口，可以自定义日程分类名和对应颜色。
 
@@ -28,12 +28,12 @@
 
 添加日程时，会在相应名字的文档中创建一条记录，**不要编辑！！！**
 
-![add_schedule](./images/add_schedule.png)
+![](https://gitee.com/rogerhuhu/siyuan-plugin-schedule-manager/blob/main/asset/add_schedule.png)
 
 ### 4. 更新日程
 单机某个日程，会弹出更新日程的界面，可以修改日程的各种信息。同时修改对应文档中记录的信息。
 
-![update_schedule](./images/update_schedule.png)
+![](https://gitee.com/rogerhuhu/siyuan-plugin-schedule-manager/blob/main/asset/update_schedule.png)
 
 ### 5. 删除日程
 在上述日程更新界面，点击删除日程按钮，会删除当前日程，以及对应文档中的记录，**不可恢复**。
@@ -54,6 +54,6 @@
 ## 捐赠
 开发不易，如果你喜欢本插件，欢迎给作者发电。
 
-![code](./images/code.png)
+![](https://gitee.com/rogerhuhu/siyuan-plugin-schedule-manager/blob/main/asset/code.png)
 
 ## 更新日志
