@@ -84,6 +84,10 @@ export class ScheduleManager {
         EventAggregator.on('updateSchedule', (p) => {
             this.updateSchedule(p);
         });
+
+        EventAggregator.on('deleteSchedule', (p) => {
+            this.deleteSchedule(p);
+        });
     }
 
     createDocument(notebookId: string, docProp: any) : void {
@@ -165,6 +169,21 @@ export class ScheduleManager {
         }
     }
 
+    async deleteSchedule(schedule: any) {
+        let id;
+
+        // 先查询得到日程的 id
+        let query = "SELECT id FROM blocks WHERE content like \'%" + schedule.id + "%\' AND parent_id =\'" + this.getDocumentIdByName(schedule.extendedProps.category) + "\'";
+        await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
+            id = response.data[0].id;
+        })
+
+        await fetchSyncPost("/api/block/deleteBlock", {
+            "id": id
+        }).then(response => {
+        })
+    }
+
     async updateSchedule(schedule: any) {
         let id;
 
@@ -179,14 +198,12 @@ export class ScheduleManager {
         }).then(response => {
         })
 
-        console.log("update schedule1");
         await fetchSyncPost("/api/block/appendBlock", {
             "data": JSON.stringify(schedule.new).replace(/#/g,""),
             "dataType": "markdown",
             "parentID": this.getDocumentIdByName(schedule.new.extendedProps.category)
         }).then(response => {
-            console.log("update schedule2");
-            console.log(JSON.stringify(response));
+
         })
     }
 

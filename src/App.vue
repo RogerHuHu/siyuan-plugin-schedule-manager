@@ -81,6 +81,19 @@
                   </n-gi>
                 </n-grid>             
               </n-modal>
+
+              <n-modal
+                v-model:show="showDeleteScheduleConfirmModal"
+                preset="dialog"
+                type="warning"
+                title="确认"
+                content="日程删除后无法恢复，确定删除？"
+                style="width:600px"
+                :closable="modalClosable"
+                positive-text="确定"
+                negative-text="取消"
+                @positive-click="submitDeleteSchedule"
+              />
             </div>
           </div>
         </n-dialog-provider>
@@ -156,7 +169,7 @@ import listPlugin from '@fullcalendar/list';
 import { createElement } from '@fullcalendar/core/preact';
 
 import * as moment from "moment";
-import { useMessage, SelectOption } from 'naive-ui';
+import { SelectOption } from 'naive-ui';
 import EventAggregator from "./EventAggregator";
 import { format, parseISO, getTime } from 'date-fns';
 
@@ -199,8 +212,8 @@ export default defineComponent({
 
   data() {
     return {
-      //message: useMessage(),
       showModal: false,
+      showDeleteScheduleConfirmModal: false,
       calendarCategories: [],
 
       calendarOptions: {
@@ -329,6 +342,10 @@ export default defineComponent({
 
     handleDeleteClick() {
       this.showModal = false;
+      this.showDeleteScheduleConfirmModal = true;
+    },
+
+    submitDeleteSchedule() {
       this.selectedEvent.remove();
       EventAggregator.emit('deleteSchedule', this.selectedEvent);
     },
@@ -337,7 +354,7 @@ export default defineComponent({
       this.showModal = false;
 
       if(this.scheduleRange[0] == this.scheduleRange[1]) {
-        //this.message.error("开始时间和结束时间不能相同！");
+        EventAggregator.emit('showErrorMessage', "开始时间和结束时间不能相同！");
       } else {
         let oldCategory = this.selectedEvent.extendedProps.category;
         this.selectedEvent.setProp("title", this.scheduleName);
@@ -371,7 +388,7 @@ export default defineComponent({
     handleSubmitClick() {
       this.showModal = false;
       if(this.scheduleRange[0] == this.scheduleRange[1]) {
-        //this.message.error("开始时间和结束时间不能相同！");
+        EventAggregator.emit('showErrorMessage', "开始时间和结束时间不能相同！");
       } else {
         let newEvent = {
           id: new Date().getTime().toString(),
