@@ -158,12 +158,12 @@ export class ScheduleManager {
     }
 
     async getSchedules() {
-        console.log("**************getSchedules***************");
+        //console.log("**************getSchedules***************");
         for(let doc of this.documents) {
             let query = "SELECT content FROM blocks WHERE parent_id =\'" + doc.id + "\'";
-            console.log(query);
+            //console.log(query);
             await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
-                console.log(response);
+                //console.log(response);
                 doc.schedules = response.data;
             })
         }

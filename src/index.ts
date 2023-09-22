@@ -120,14 +120,14 @@ export default class PluginScheduleManager extends Plugin {
             type: TAB_TYPE,
             init() {
                 this.element.appendChild(scheduleManagerDiv);
-                console.log(this.element);
+                //console.log(this.element);
             },
 
             beforeDestroy() {
-                console.log("before destroy tab:", TAB_TYPE);
+                //console.log("before destroy tab:", TAB_TYPE);
             },
             destroy() {
-                console.log("destroy tab:", TAB_TYPE);
+                //console.log("destroy tab:", TAB_TYPE);
             }
         });
 
@@ -143,7 +143,7 @@ export default class PluginScheduleManager extends Plugin {
             },
         });
 
-        console.log(tab);
+        //console.log(tab);
 
         this.scheduleManager.mount(scheduleManagerDiv);
     }

@@ -2,7 +2,7 @@
   "name": "siyuan-plugin-schedule-manager",
   "author": "uniqueink",
   "url": "https://github.com/RogerHuHu/siyuan-plugin-schedule-manager.git",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "minAppVersion": "2.9.0",
   "backends": ["windows", "linux", "darwin"],
   "frontends": ["desktop"],
@@ -23,7 +23,6 @@
     "patreon": "",
     "github": "",
     "custom": [
-      "https://ld246.com/sponsor"
     ]
   }
 }

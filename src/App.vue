@@ -169,7 +169,6 @@ import listPlugin from '@fullcalendar/list';
 import { createElement } from '@fullcalendar/core/preact';
 
 import * as moment from "moment";
-import { SelectOption } from 'naive-ui';
 import EventAggregator from "./EventAggregator";
 import { format, parseISO, getTime } from 'date-fns';
 
@@ -274,7 +273,6 @@ export default defineComponent({
 
   mounted() {
     EventAggregator.on('initScheduleCategory', scheduleCategories => {
-      console.log(JSON.stringify(scheduleCategories));
       this.calendarCategories = [];
       for(let category of scheduleCategories) {
         let newValue = {

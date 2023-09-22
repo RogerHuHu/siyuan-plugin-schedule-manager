@@ -1,8 +1,8 @@
 <template>
-  <n-card title="日程">
+  <n-card title="日程分类">
     <n-grid :y-gap="3" :cols="1">
       <n-grid-item>
-        <n-button type="primary" @click="showModal = true">添加日程</n-button>
+        <n-button type="primary" @click="showModal = true">添加日程分类</n-button>
       </n-grid-item>
       <n-grid-item>
         <n-list hoverable clickable>
@@ -26,14 +26,14 @@
   <n-modal
     v-model:show="showModal"
     preset="dialog"
-    title="添加日程"
+    title="添加日程分类"
     positive-text="添加"
     negative-text="取消"
     @positive-click="submitCallback"
     @negative-click="cancelCallback"
   >
     <n-space vertical>
-      <n-input placeholder="请输入日程名" autosize style="min-width: 50%" @update:value="handleNameChange"/>
+      <n-input placeholder="请输入日程分类名" autosize style="min-width: 50%" @update:value="handleNameChange"/>
       <n-color-picker @update:value="handleColorUpdate" :modes="['hex']" :show-alpha="false"
         :swatches="[
           '#FFFFFF',
@@ -146,7 +146,7 @@ export default defineComponent({
       let category = this.schedules[index];
       this.dialog.warning({
         title: '警告',
-        content: '删除日程类别会导致对应日程丢失，确定删除日程类别' + '【' + category.name + '】？',
+        content: '删除日程分类会导致对应日程丢失，确定删除日程分类' + '【' + category.name + '】？',
         positiveText: '确定',
         negativeText: '取消',
         onPositiveClick: () => {
