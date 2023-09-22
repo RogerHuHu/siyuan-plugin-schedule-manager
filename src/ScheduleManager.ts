@@ -20,18 +20,7 @@ export class ScheduleManager {
 
     show(el: HTMLElement) : void {
         this.app = createApp(App);
-        this.app.use(naive).use(i18n);
-    }
-
-    showCatagory(el: HTMLElement) {
-        let categoryDiv = document.createElement('div');
-        categoryDiv.setAttribute('style', "width:20%;float:left;height:100%;");
-        el.appendChild(categoryDiv);
-
-        let button:HTMLButtonElement = document.createElement('button');
-        button.textContent = 'Catagory';
-        button.setAttribute('class', "btn btn-green");
-        categoryDiv.appendChild(button);
+        this.app.use(naive);
     }
 
     // 日期点击事件

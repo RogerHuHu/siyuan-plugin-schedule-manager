@@ -13,6 +13,12 @@ module.exports = (env, argv) => {
         new MiniCssExtractPlugin({
             filename: isPro ? "dist/index.css" : "index.css",
         }),
+
+        new webpack.DefinePlugin({
+            '__VUE_OPTIONS_API__': true,
+            '__VUE_PROD_DEVTOOLS__':false
+        }),
+
         new VueLoaderPlugin()
     ];
     let entry = {

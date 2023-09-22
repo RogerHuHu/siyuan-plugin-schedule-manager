@@ -5,10 +5,10 @@
         <n-dialog-provider>
           <div class="schedule-app-container">
             <div class="schedule-app-sidebar">
-              <demo ref="scheduleCategoryRef"/>      
+              <demo/>      
             </div>
             <div class="schedule-app-main">
-              <FullCalendar :options="calendarOptions" ref="FullCalendar"/>
+              <FullCalendar :options="calendarOptions" ref="fullCalendar"/>
               <n-modal
                 v-model:show="showModal"
                 preset="dialog"
@@ -223,7 +223,6 @@ export default defineComponent({
         eventColor: '#3BB2E3', // 全部日历日程背景色
         themeSystem: 'bootstrap4', // 主题
         initialDate: moment().format('YYYY-MM-DD'), // 自定义设置背景颜色时，一定要初始化日期时间
-        timeGridEventMinHeight: '20', // 设置事件的最小高度
         aspectRatio: 1.65, // 设置日历单元格宽度与高度的比例
         //eventLimit: true, // 设置月日程，与 all-day slot 的最大显示数量，超过的通过弹窗显示
         headerToolbar: { // 日历头部按钮的位置
@@ -255,7 +254,6 @@ export default defineComponent({
         // loading: this.loadingEvent, // 视图数据加载中、加载完成触发（用于配合显示/隐藏加载指示器。）
         // selectAllow: this.selectAllow, //编程控制用户可以选择的地方，返回true则表示可选择，false表示不可选择
         //eventMouseEnter: this.eventMouseEnter, // 鼠标滑过
-        allowContextMenu: false,
         editable: true, // 是否可以进行（拖动、缩放）修改
         eventStartEditable: false, // Event日程开始时间可以改变，默认true，如果是false其实就是指日程块不能随意拖动，只能上下拉伸改变他的endTime
         eventDurationEditable: false, // Event日程的开始结束时间距离是否可以改变，默认true，如果是false则表示开始结束时间范围不能拉伸，只能拖拽
@@ -265,7 +263,6 @@ export default defineComponent({
         dayMaxEvents: true,
         weekends: true,
         navLinks: true, // 天链接
-        selectHelper: false,
         slotEventOverlap: false // 相同时间段的多个日程视觉上是否允许重叠，默认true允许
       },
     }
@@ -273,6 +270,7 @@ export default defineComponent({
 
   mounted() {
     EventAggregator.on('initScheduleCategory', scheduleCategories => {
+      console.log('initScheduleCategory');
       this.calendarCategories = [];
       for(let category of scheduleCategories) {
         let newValue = {
@@ -302,7 +300,7 @@ export default defineComponent({
               status: content.extendedProps.status // 日程状态
             }
           };
-          this.$refs.FullCalendar.getApi().addEvent(newEvent);
+          this.$refs.fullCalendar.getApi().addEvent(newEvent);
         }
       }
     });
@@ -311,7 +309,7 @@ export default defineComponent({
       let newValue = {
           label: p.name,
           value: p.color
-        }
+      };
       this.calendarCategories.push(newValue);
     });
 
@@ -403,7 +401,7 @@ export default defineComponent({
             status: this.selectedScheduleStatus // 日程状态
           }
         };
-        this.$refs.FullCalendar.getApi().addEvent(newEvent);
+        this.$refs.fullCalendar.getApi().addEvent(newEvent);
         EventAggregator.emit('addSchedule', newEvent);
       }
     }, 
