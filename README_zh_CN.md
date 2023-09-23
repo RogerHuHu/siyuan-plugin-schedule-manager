@@ -53,3 +53,4 @@
 - FullCalendar
 
 ## 更新日志
+[CHANGELOG](https://github.com/RogerHuHu/siyuan-plugin-schedule-manager/blob/main/CHANGELOG.md)
