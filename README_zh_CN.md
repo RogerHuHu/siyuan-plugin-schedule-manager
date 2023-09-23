@@ -50,5 +50,6 @@
 感谢如下框架对本项目的支持（排名不分先后）
 - Vue3
 - Naive UI
+- FullCalendar
 
 ## 更新日志

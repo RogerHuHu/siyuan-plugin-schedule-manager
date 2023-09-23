@@ -6,7 +6,7 @@
           <div class="schedule-app-container">
             <div class="schedule-app-sidebar">
               <demo/>      
-            </div>
+            </div>     
             <div class="schedule-app-main">
               <FullCalendar :options="calendarOptions" ref="fullCalendar"/>
               <n-modal
@@ -221,10 +221,11 @@ export default defineComponent({
         firstDay: 1, // 设置一周中显示的第一天是哪天，周日是 0，周一是 1， 类推
         locale: 'zh-cn', // 切换语言，当前为中文
         eventColor: '#3BB2E3', // 全部日历日程背景色
-        themeSystem: 'bootstrap4', // 主题
+        //themeSystem: 'bootstrap4', // 主题
         initialDate: moment().format('YYYY-MM-DD'), // 自定义设置背景颜色时，一定要初始化日期时间
-        aspectRatio: 1.65, // 设置日历单元格宽度与高度的比例
+        //aspectRatio: 1.65, // 设置日历单元格宽度与高度的比例
         //eventLimit: true, // 设置月日程，与 all-day slot 的最大显示数量，超过的通过弹窗显示
+        
         headerToolbar: { // 日历头部按钮的位置
           left: 'prevYear,prev,next,nextYear today',
           center: 'title',
@@ -243,7 +244,6 @@ export default defineComponent({
           meridiem: false,
           hour12: false // 设置时间为24小时
         },
-
         // 事件
         select: this.handleDateSelect, // 选中日历格事件
         eventClick: this.handleEventClick, // 点击日历日程事件
