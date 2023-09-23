@@ -4,8 +4,8 @@
   "url": "https://github.com/RogerHuHu/siyuan-plugin-schedule-manager.git",
   "version": "1.0.0",
   "minAppVersion": "2.10.6",
-  "backends": ["windows", "linux", "darwin"],
-  "frontends": ["desktop"],
+  "backends": ["all"],
+  "frontends": ["all"],
   "displayName": {
     "default": "Schedule Manager",
     "zh_CN": "日程管理"

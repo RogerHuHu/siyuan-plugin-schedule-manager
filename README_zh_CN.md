@@ -51,9 +51,4 @@
 - Vue3
 - Naive UI
 
-## 捐赠
-开发不易，如果你喜欢本插件，欢迎给作者发电。
-
-[![pPogfij.png](https://z1.ax1x.com/2023/09/22/pPogfij.png)](https://imgse.com/i/pPogfij)
-
 ## 更新日志
