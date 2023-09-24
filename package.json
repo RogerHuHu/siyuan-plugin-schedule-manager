@@ -1,6 +1,6 @@
 {
   "name": "siyuan-plugin-schedule-manager",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "This is a schedule manager plugin for Siyuan",
   "main": ".src/index.js",
   "scripts": {

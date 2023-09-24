@@ -3,11 +3,11 @@
     <n-message-provider>
       <n-notification-provider>
         <n-dialog-provider>
-          <div class="schedule-app-container">
-            <div class="schedule-app-sidebar">
-              <demo/>      
-            </div>     
-            <div class="schedule-app-main">
+          <n-grid x-gap="5" :cols="4">
+            <n-gi>
+              <demo/>
+            </n-gi>
+            <n-gi span="3">
               <FullCalendar :options="calendarOptions" ref="fullCalendar"/>
               <n-modal
                 v-model:show="showModal"
@@ -94,8 +94,8 @@
                 negative-text="取消"
                 @positive-click="submitDeleteSchedule"
               />
-            </div>
-          </div>
+            </n-gi>
+          </n-grid>
         </n-dialog-provider>
       </n-notification-provider>
     </n-message-provider>
@@ -141,7 +141,7 @@ b { /* used for event dates/times */
 }
 
 .schedule-app-main {
-  flex: 3;
+  flex: 2;
   padding: 1em;
 }
 
@@ -244,6 +244,7 @@ export default defineComponent({
           meridiem: false,
           hour12: false // 设置时间为24小时
         },
+        
         // 事件
         select: this.handleDateSelect, // 选中日历格事件
         eventClick: this.handleEventClick, // 点击日历日程事件

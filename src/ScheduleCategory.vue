@@ -8,7 +8,7 @@
         <n-list hoverable clickable>
           <n-list-item v-for="(schedule,index) in schedules" :key="index" style="padding:0px; margin:0px;">
             <n-space align="center">
-              <n-checkbox v-model:checked="schedule.checked" style="width:150px">
+              <n-checkbox v-model:checked="schedule.checked" style="width:100px">
                 {{schedule.name}}
               </n-checkbox>
               <div :style="{backgroundColor:schedule.color, width:'15px', height:'15px'}"/>

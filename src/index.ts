@@ -1,7 +1,5 @@
 import { Plugin, getFrontend, IModel, openTab, fetchPost } from "siyuan";
 import { setI18n, setPlugin } from "./utils";
-//import { showCalendar } from "./showcalendarview";
-//import { ScheduleManager } from "./schedule-manager";
 import { ScheduleManager } from "./ScheduleManager";
 
 import "./index.scss";
@@ -15,7 +13,6 @@ export default class PluginScheduleManager extends Plugin {
     private scheduleNotebookId: string = "";
     private scheduleDocId: string = "";
     private customTab: () => IModel;
-    //private scheduleManager = new ScheduleManager(this.app, this.i18n);
     private scheduleManager = new ScheduleManager();
 
     public isMobile: boolean;
