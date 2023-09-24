@@ -357,7 +357,8 @@ export default defineComponent({
         this.selectedEvent.setProp("title", this.scheduleName);
         this.selectedEvent.setProp("backgroundColor", this.selectedCategoryColor);
         this.selectedEvent.setProp("borderColor", this.selectedCategoryColor);
-        this.selectedEvent.setExtendedProp("category", this.selectedCategory.label);
+        let tmp = this.calendarCategories.find(u => u.value === this.selectedCategoryColor);
+        this.selectedEvent.setExtendedProp("category", tmp.label);
         this.selectedEvent.setExtendedProp("content", this.scheduleContent);
         this.selectedEvent.setExtendedProp("status", this.selectedScheduleStatus);
         this.selectedEvent.setDates(new Date(this.scheduleRange[0]), new Date(this.scheduleRange[1]));
@@ -372,7 +373,7 @@ export default defineComponent({
           // 修改边框颜色
           borderColor:this.selectedCategoryColor,
           extendedProps: {
-            category: this.selectedCategory.label,
+            category: tmp.label,
             content: this.scheduleContent,
             status: this.selectedScheduleStatus // 日程状态
           }

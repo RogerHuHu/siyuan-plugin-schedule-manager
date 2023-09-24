@@ -2,7 +2,7 @@
   "name": "siyuan-plugin-schedule-manager",
   "author": "uniqueink",
   "url": "https://github.com/RogerHuHu/siyuan-plugin-schedule-manager.git",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "minAppVersion": "2.10.6",
   "backends": ["all"],
   "frontends": ["all"],
