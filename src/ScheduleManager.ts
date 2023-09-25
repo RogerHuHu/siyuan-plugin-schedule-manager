@@ -23,12 +23,6 @@ export class ScheduleManager {
         this.app.use(naive);
     }
 
-    // 日期点击事件
-    handleDateClick(selectInfo) {
-        if(confirm('您是否要在【' + selectInfo.dateStr + '】添加一个新的事件？')) {
-        }
-    }
-
     mount(el: HTMLElement) : void {
         this.app.mount(el);
         this.readScheduleCategory();

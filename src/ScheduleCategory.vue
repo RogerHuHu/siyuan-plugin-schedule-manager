@@ -34,9 +34,9 @@
   >
     <n-space vertical>
       <n-input placeholder="请输入日程分类名" autosize style="min-width: 50%" @update:value="handleNameChange"/>
-      <n-color-picker @update:value="handleColorUpdate" :modes="['hex']" :show-alpha="false"
+      <n-color-picker v-model:value="scheduleColor" :modes="['hex']" :show-alpha="false"
         :swatches="[
-          '#FFFFFF',
+          '#00C9A7',
           '#18A058',
           '#2080F0',
           '#F0A020'
@@ -57,6 +57,7 @@ import { defineComponent, ref } from 'vue'
 import { useMessage, useDialog } from 'naive-ui'
 import { DeleteOutlined } from '@vicons/antd'
 import EventAggregator from "./EventAggregator";
+import { showMessage } from "siyuan";
 
 export default defineComponent({
   components: {
@@ -64,19 +65,12 @@ export default defineComponent({
   },
 
   setup () {
-    //const message = useMessage()
-    //const scheduleName = ref('')
-    //const scheduleColor = ref('#FFFFFF')
-
     return {
       DeleteOutlined,
+      scheduleColor: ref("#00C9A7"),
       showModal: ref(false),
       cancelCallback () {
         //message.success('Cancel')
-      },  
-
-      handleTest() {
-        //message.info('Test')
       }
     }
   },
@@ -85,7 +79,6 @@ export default defineComponent({
     return {
       schedules: [],
       scheduleName: '',
-      scheduleColor: '#FFFFFF',
       message: useMessage(),
       dialog: useDialog()
     };
@@ -108,8 +101,9 @@ export default defineComponent({
     submitCallback () {
       let scheduleExists = false;
       for(let sdl of this.schedules) {
-        if(sdl.name === this.scheduleName) {
+        if(sdl.name === this.scheduleName || sdl.color === this.scheduleColor) {
           scheduleExists = true;
+          showMessage("日程分类颜色不能重复", 6000, "error");
           break;
         }
       }
@@ -133,12 +127,6 @@ export default defineComponent({
     handleNameChange(value) {
       this.scheduleName = value
       //this.message.success(this.scheduleName)
-    },
-
-    // 颜色变更
-    handleColorUpdate(value) {
-      this.scheduleColor = value
-      //this.message.success(this.scheduleColor)
     },
 
     // 删除日程分类
