@@ -271,7 +271,6 @@ export default defineComponent({
 
   mounted() {
     EventAggregator.on('initScheduleCategory', scheduleCategories => {
-      console.log('initScheduleCategory');
       this.calendarCategories = [];
       for(let category of scheduleCategories) {
         let newValue = {
@@ -335,6 +334,7 @@ export default defineComponent({
 
     handleCancelClick() {
       this.showModal = false;
+      this.clearEventInfo();
     },
 
     handleDeleteClick() {
@@ -345,6 +345,7 @@ export default defineComponent({
     submitDeleteSchedule() {
       this.selectedEvent.remove();
       EventAggregator.emit('deleteSchedule', this.selectedEvent);
+      this.clearEventInfo();
     },
 
     handleUpdateClick() {
@@ -380,6 +381,7 @@ export default defineComponent({
         };
 
         EventAggregator.emit('updateSchedule', { old: oldCategory, new: tempEvent });
+        this.clearEventInfo();
       }
     },
 
@@ -388,6 +390,10 @@ export default defineComponent({
       if(this.scheduleRange[0] == this.scheduleRange[1]) {
         EventAggregator.emit('showErrorMessage', "开始时间和结束时间不能相同！");
       } else {
+        if(this.selectedCategory == null) {
+          this.selectedCategory = this.calendarCategories.find(u => u.value === this.selectedCategoryColor);
+        }
+
         let newEvent = {
           id: new Date().getTime().toString(),
           title: this.scheduleName,
@@ -405,6 +411,7 @@ export default defineComponent({
         };
         this.$refs.fullCalendar.getApi().addEvent(newEvent);
         EventAggregator.emit('addSchedule', newEvent);
+        this.clearEventInfo();
       }
     }, 
 
@@ -443,6 +450,14 @@ export default defineComponent({
 
     handleEvents(events) {
       this.currentEvents = events
+    },
+
+    clearEventInfo() {
+      this.selectedCategoryColor = "";
+      this.scheduleRange = null;
+      this.scheduleName = null;
+      this.scheduleContent = null;
+      this.selectedScheduleStatus = null;
     }
   }
 });
