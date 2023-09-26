@@ -103,25 +103,6 @@
 </template>
 
 <style lang='scss'>
-h2 {
-  margin: 0;
-  font-size: 16px;
-}
-
-ul {
-  margin: 0;
-  padding: 0 0 0 1.5em;
-}
-
-li {
-  margin: 1.5em 0;
-  padding: 0;
-}
-
-b { /* used for event dates/times */
-  margin-right: 3px;
-}
-
 .schedule-app {
   min-height: 100%;
 }
@@ -148,11 +129,6 @@ b { /* used for event dates/times */
 .schedule-app-modal {
   flex: 1;
 }
-
-.fc { /* the calendar root */
-  max-width: 1100px;
-  margin: 0 auto;
-}
 </style>
 
 <script>
@@ -166,7 +142,6 @@ import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import { createElement } from '@fullcalendar/core/preact';
 
 import * as moment from "moment";
 import EventAggregator from "./EventAggregator";
