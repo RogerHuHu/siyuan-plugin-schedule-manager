@@ -1,6 +1,6 @@
 {
   "name": "siyuan-plugin-schedule-manager",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "This is a schedule manager plugin for Siyuan",
   "main": ".src/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "build": "webpack --mode production"
   },
   "keywords": [],
-  "author": "uniqueink",
+  "author": "RogerHuHu",
   "license": "MIT",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "5.29.0",
