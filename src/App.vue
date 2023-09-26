@@ -146,6 +146,7 @@ import listPlugin from '@fullcalendar/list';
 import * as moment from "moment";
 import EventAggregator from "./EventAggregator";
 import { format, parseISO, getTime } from 'date-fns';
+import { showMessage } from "siyuan";
 
 export default defineComponent({
   components: {
@@ -327,7 +328,7 @@ export default defineComponent({
       this.showModal = false;
 
       if(this.scheduleRange[0] == this.scheduleRange[1]) {
-        EventAggregator.emit('showErrorMessage', "开始时间和结束时间不能相同！");
+        showMessage("开始时间和结束时间不能相同！", 6000, "error");
       } else {
         let oldCategory = this.selectedEvent.extendedProps.category;
         this.selectedEvent.setProp("title", this.scheduleName);
@@ -363,7 +364,7 @@ export default defineComponent({
     handleSubmitClick() {
       this.showModal = false;
       if(this.scheduleRange[0] == this.scheduleRange[1]) {
-        EventAggregator.emit('showErrorMessage', "开始时间和结束时间不能相同！");
+        showMessage("开始时间和结束时间不能相同！", 6000, "error");
       } else {
         if(this.selectedCategory == null) {
           this.selectedCategory = this.calendarCategories.find(u => u.value === this.selectedCategoryColor);

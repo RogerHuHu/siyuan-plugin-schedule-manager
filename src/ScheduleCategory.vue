@@ -91,10 +91,6 @@ export default defineComponent({
         this.schedules.push(category);
       }
     });
-
-    EventAggregator.on('showErrorMessage', message => {
-      this.message.error(message);
-    });
   },
 
   methods: {
