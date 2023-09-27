@@ -1,26 +1,31 @@
 <template>
-  <n-card title="日程分类">
+  <n-card>
     <n-grid :y-gap="3" :cols="1">
-      <n-grid-item>
-        <n-button type="primary" @click="showModal = true">添加日程分类</n-button>
-      </n-grid-item>
-      <n-grid-item>
+      <n-gi>
+        <n-space align="center" justify="space-between">
+          <div class="sm-title">日程分类</div>
+          <n-button strong secondary type="primary" @click="showModal = true">添加日程分类</n-button>
+        </n-space>
+      </n-gi>
+      <n-gi>
         <n-list hoverable clickable>
           <n-list-item v-for="(schedule,index) in schedules" :key="index" style="padding:0px; margin:0px;">
-            <n-space align="center">
+            <n-space align="center" justify="space-between">
               <n-checkbox v-model:checked="schedule.checked" style="width:100px">
                 {{schedule.name}}
               </n-checkbox>
-              <div :style="{backgroundColor:schedule.color, width:'15px', height:'15px'}"/>
-              <n-button quaternary circle style="padding:0px;" @click="handleDeleteScheduleCategory(index)">
-                 <template #icon>
-                   <n-icon :component="DeleteOutlined" color="#0e7a0d"/>
-                 </template>
-               </n-button>
+              <n-space align="center" justify="end">
+                <div class="sm-circle" :style="{backgroundColor:schedule.color, width:'15px', height:'15px'}"/>
+                <n-button quaternary circle style="padding:0px;" @click="handleDeleteScheduleCategory(index)">
+                  <template #icon>
+                    <n-icon :component="DeleteOutlined" color="#D60D0D"/>
+                  </template>
+                </n-button>
+              </n-space>
             </n-space>
           </n-list-item>
         </n-list>
-      </n-grid-item>
+      </n-gi>
     </n-grid>
   </n-card>
   <n-modal
@@ -32,9 +37,12 @@
     @positive-click="submitCallback"
     @negative-click="cancelCallback"
   >
-    <n-space vertical>
-      <n-input placeholder="请输入日程分类名" autosize style="min-width: 50%" @update:value="handleNameChange"/>
-      <n-color-picker v-model:value="scheduleColor" :modes="['hex']" :show-alpha="false"
+    <n-grid :y-gap="3" :cols="1">
+      <n-gi>
+        <n-input placeholder="请输入日程分类名" autosize style="min-width: 50%" @update:value="handleNameChange"/>
+      </n-gi>
+      <n-gi>
+        <n-color-picker v-model:value="scheduleColor" :modes="['hex']" :show-alpha="false"
         :swatches="[
           '#00C9A7',
           '#18A058',
@@ -42,14 +50,30 @@
           '#F0A020'
         ]"
       />
-    </n-space>
+      </n-gi>
+    </n-grid>
   </n-modal>
 </template>
 
-<style lang='scss'>
+<style scoped lang="scss">
 .n-card {
-  margin:1.5em 0;
+  margin:0.5em;
+  border-radius: 10px;
 }
+
+.n-button {
+  border-radius: 5px;
+}
+
+.sm-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.sm-circle {
+  border-radius: 50%;
+}
+
 </style>
 
 <script>

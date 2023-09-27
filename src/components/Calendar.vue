@@ -1,5 +1,7 @@
 <template>
-  <FullCalendar :options="calendarOptions" ref="fullCalendar"/>
+  <n-card>
+    <FullCalendar :options="calendarOptions" ref="fullCalendar"/>
+  </n-card>
 
   <n-modal
     v-model:show="showModal"
@@ -88,6 +90,13 @@
   />
 </template>
 
+<style scoped lang="scss">
+.n-card {
+  margin:0.5em;
+  border-radius: 10px;
+}
+</style>
+
 <script>
   import { i18n } from "../utils/utils";
   import { defineComponent, ref } from 'vue';
@@ -151,7 +160,6 @@
           firstDay: 1, // 设置一周中显示的第一天是哪天，周日是 0，周一是 1， 类推
           locale: 'zh-cn', // 切换语言，当前为中文
           eventColor: '#3BB2E3', // 全部日历日程背景色
-          //themeSystem: 'bootstrap4', // 主题
           initialDate: moment().format('YYYY-MM-DD'), // 自定义设置背景颜色时，一定要初始化日期时间
           //aspectRatio: 1.65, // 设置日历单元格宽度与高度的比例
           //eventLimit: true, // 设置月日程，与 all-day slot 的最大显示数量，超过的通过弹窗显示

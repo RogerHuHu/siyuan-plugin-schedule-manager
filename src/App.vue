@@ -3,11 +3,11 @@
     <n-message-provider>
       <n-notification-provider>
         <n-dialog-provider>
-          <n-grid x-gap="5" :cols="4">
+          <n-grid x-gap="5" :cols="6">
             <n-gi>
               <scheduleCategory/>
             </n-gi>
-            <n-gi span="3">
+            <n-gi span="5">
               <calendar/>
             </n-gi>
           </n-grid>
