@@ -75,8 +75,8 @@ export default class PluginScheduleManager extends Plugin {
         // 获取笔记本列表
         fetchPost("/api/notebook/lsNotebooks", {}, (response) => {
             // 若笔记本不存在，则新建
-            if(this.isNotebookExists(response.data.notebooks, "日程管理笔记本") == false) {
-                this.createNotebook("日程管理笔记本");
+            if(this.isNotebookExists(response.data.notebooks, this.i18n.scheduleManagerNotebook) == false) {
+                this.createNotebook(this.i18n.scheduleManagerNotebook);
             }
             this.scheduleManager.updateNotebookId(this.scheduleNotebookId);
         });
@@ -112,11 +112,11 @@ export default class PluginScheduleManager extends Plugin {
             },
 
             beforeDestroy() {
-                console.log("before destroy tab:", TAB_TYPE);
+                //console.log("before destroy tab:", TAB_TYPE);
             },
 
             destroy() {
-                console.log("destroy tab:", TAB_TYPE);
+                //console.log("destroy tab:", TAB_TYPE);
                 setScheduleManagerLoaded(false);
             }
         });

@@ -1,6 +1,29 @@
 {
   "openCalendar": "Open the calendar plugin",
   "scheduleManager": "Schedule manager",
+  "addScheduleCategory":"Add Schedule Category",
+  "scheduleCategory": "Schedule Category",
+  "add": "Add",
+  "inputScheduleCategoryName": "Schedule Category Name",
+  "scheduleCategoryColorError": "The schedule category color cannot be duplicated",
+  "warning": "Warning",
+  "confirmRemoveScheduleCategory": "Removing a schedule category will remove the corresponding schedules. Are you sure to remove",
+  "confirm": "Confirm",
+  "addSchedule": "Add Schedule",
+  "selectScheduleCategory": "Select Schedule Category",
+  "selectScheduleRange": "Select Schedule Range",
+  "scheduleName": "Schedule Name",
+  "inputScheduleName": "Input Schedule Name",
+  "scheduleContent": "Schedule Content",
+  "status": "Status",
+  "removeSchedule": "Remove Schedule",
+  "update": "Update",
+  "confirmRemoveSchedule": "The removal of a schedule cannot be recovered. Are you sure?",
+  "todo": "To Do",
+  "doing": "Doing",
+  "done": "Done",
+  "scheduleRangeError": "Start time and end time should be different!",
+  "scheduleManagerNotebook": "Schedule Manager Notebook",
   "today": "Today",
   "month": "Month",
   "week": "Week",
@@ -14,6 +37,6 @@
   "showDialog": "Show dialog",
   "removedData": "Data deleted",
   "confirmRemove": "Confirm to delete the data in ${name}?",
-  "insertEmoji": "Insert Emoji",
-  "addCategory":"addCategory"
+  "insertEmoji": "Insert Emoji"
 }
+The schedule cannot be restored after deletion. Are you sure to delete it?

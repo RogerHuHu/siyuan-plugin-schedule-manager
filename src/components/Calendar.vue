@@ -6,35 +6,35 @@
   <n-modal
     v-model:show="showModal"
     preset="dialog"
-    title="新建日程"
+    v-model:title="addScheduleText"
     style="width:600px"
     :closable="modalClosable"
     :showIcon="modalShowIcon"
   >
     <n-grid :cols="4" y-gap="5">
       <n-gi>
-        <div>选择日程分类</div>
+        <div>{{ selectScheduleCategoryText }}</div>
       </n-gi>
       <n-gi :span="3">
         <n-select v-model:value="selectedCategoryColor" :options="calendarCategories" @update:value="handleUpdateSelectedCategory" />
       </n-gi>
 
       <n-gi>
-        <div>选择日程时间</div>
+        <div>{{ selectScheduleRangeText }}</div>
       </n-gi>
       <n-gi :span="3">
         <n-date-picker v-model:value="scheduleRange" type="datetimerange" clearable />
       </n-gi>
 
       <n-gi>
-        <div>日程名</div>
+        <div>{{ scheduleNameText }}</div>
       </n-gi>
       <n-gi :span="3">
-        <n-input v-model:value="scheduleName" type="text" placeholder="请输入日程名" />
+        <n-input v-model:value="scheduleName" type="text" v-model:placeholder="inputScheduleNameText" />
       </n-gi>
 
       <n-gi>
-        <div>日程内容</div>
+        <div>{{ scheduleContentText }}</div>
       </n-gi>
       <n-gi :span="3">
         <n-input
@@ -45,7 +45,7 @@
       </n-gi>
 
       <n-gi>
-        <div>状态</div>
+        <div>{{ statusText }}</div>
       </n-gi>
       <n-gi :span="3">
         <n-radio-group v-model:value="selectedScheduleStatus" name="radiogroup">
@@ -60,16 +60,16 @@
       <n-gi :span="4">
         <n-space justify="end">
           <n-button type="info" @click="handleCancelClick">
-            取消
+            {{ cancelText }}
           </n-button>
           <n-button type="error" v-if="isUpdateButtonVisible" @click="handleDeleteClick">
-            删除日程
+            {{ removeScheduleText }}
           </n-button>
           <n-button type="success" v-if="isUpdateButtonVisible" @click="handleUpdateClick">
-            更新
+            {{ updateText }}
           </n-button>
           <n-button type="success" v-if="isSubmitButtonVisible" @click="handleSubmitClick">
-            确定
+            {{ confirmText }}
           </n-button>
         </n-space>
       </n-gi>
@@ -80,12 +80,12 @@
     v-model:show="showDeleteScheduleConfirmModal"
     preset="dialog"
     type="warning"
-    title="确认"
-    content="日程删除后无法恢复，确定删除？"
+    v-model:title="confirmText"
+    v-model:content="confirmRemoveScheduleText"
     style="width:600px"
     :closable="modalClosable"
-    positive-text="确定"
-    negative-text="取消"
+    positive-text="confirmText"
+    negative-text="cancelText"
     @positive-click="submitDeleteSchedule"
   />
 </template>
@@ -119,6 +119,18 @@
 
     setup() {
       return {
+        addScheduleText: i18n.addSchedule,
+        selectScheduleCategoryText: i18n.selectScheduleCategory,
+        selectScheduleRangeText: i18n.selectScheduleRange,
+        scheduleNameText: i18n.scheduleName,
+        inputScheduleNameText: i18n.inputScheduleName,
+        scheduleContentText: i18n.scheduleContent,
+        statusText: i18n.status,
+        cancelText: i18n.cancel,
+        removeScheduleText: i18n.removeSchedule,
+        updateText: i18n.update,
+        confirmText: i18n.confirm,
+        confirmRemoveScheduleText: i18n.confirmRemoveSchedule,
         selectedDate: "",
         modalClosable: false,
         modalShowIcon: false,
@@ -133,15 +145,15 @@
         scheduleStatusList: [
           {
             value: 1,
-            label: "未开始"
+            label: i18n.todo
           },
           {
             value: 2,
-            label: '进行中'
+            label: i18n.doing
           },
           {
             value: 3,
-            label: '已完成'
+            label: i18n.done
           }
         ],
         selectedEvent: null,
@@ -277,7 +289,7 @@
       handleSubmitClick() {
         this.showModal = false;
         if(this.scheduleRange[0] == this.scheduleRange[1]) {
-          showMessage("开始时间和结束时间不能相同！", 6000, "error");
+          showMessage(i18n.scheduleRangeError, 6000, "error");
         } else {
           if(this.selectedCategory == null) {
             this.selectedCategory = this.findSelectedCategoryByColor(this.calendarCategories, this.selectedCategoryColor);
@@ -297,7 +309,7 @@
         this.showModal = false;
 
         if(this.scheduleRange[0] == this.scheduleRange[1]) {
-          showMessage("开始时间和结束时间不能相同！", 6000, "error");
+          showMessage(i18n.scheduleRangeError, 6000, "error");
         } else {
           let oldCategory = this.selectedEvent.extendedProps.category;
           this.selectedEvent.setProp("title", this.scheduleName);

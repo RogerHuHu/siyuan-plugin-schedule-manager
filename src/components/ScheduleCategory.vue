@@ -3,8 +3,8 @@
     <n-grid :y-gap="3" :cols="1">
       <n-gi>
         <n-space align="center" justify="space-between">
-          <div class="sm-title">日程分类</div>
-          <n-button strong secondary type="primary" @click="showModal = true">添加日程分类</n-button>
+          <div class="sm-title">{{ scheduleCategoryText }}</div>
+          <n-button strong secondary type="primary" @click="showModal = true">{{ addScheduleCategoryText }}</n-button>
         </n-space>
       </n-gi>
       <n-gi>
@@ -31,15 +31,15 @@
   <n-modal
     v-model:show="showModal"
     preset="dialog"
-    title="添加日程分类"
-    positive-text="添加"
-    negative-text="取消"
+    v-model:title="addScheduleCategoryText"
+    v-model:positive-text="addText"
+    v-model:negative-text="cancelText"
     @positive-click="submitCallback"
     @negative-click="cancelCallback"
   >
     <n-grid :y-gap="3" :cols="1">
       <n-gi>
-        <n-input placeholder="请输入日程分类名" autosize style="min-width: 50%" @update:value="handleNameChange"/>
+        <n-input v-model:placeholder="inputScheduleCategoryNameText" autosize style="min-width: 50%" @update:value="handleNameChange"/>
       </n-gi>
       <n-gi>
         <n-color-picker v-model:value="scheduleColor" :modes="['hex']" :show-alpha="false"
@@ -77,6 +77,7 @@
 </style>
 
 <script>
+import { i18n } from "../utils/utils";
 import { defineComponent, ref } from 'vue'
 import { useMessage, useDialog } from 'naive-ui'
 import { DeleteOutlined } from '@vicons/antd'
@@ -91,6 +92,11 @@ export default defineComponent({
   setup () {
     return {
       DeleteOutlined,
+      scheduleCategoryText: i18n.scheduleCategory,
+      addScheduleCategoryText: i18n.addScheduleCategory,
+      addText: i18n.add,
+      cancelText: i18n.cancel,
+      inputScheduleCategoryNameText: i18n.inputScheduleCategoryName,
       scheduleColor: ref("#00C9A7"),
       showModal: ref(false),
       cancelCallback () {
@@ -123,7 +129,7 @@ export default defineComponent({
       for(let sdl of this.schedules) {
         if(sdl.name === this.scheduleName || sdl.color === this.scheduleColor) {
           scheduleExists = true;
-          showMessage("日程分类颜色不能重复", 6000, "error");
+          showMessage(i18n.scheduleCategoryColorError, 6000, "error");
           break;
         }
       }
@@ -153,10 +159,10 @@ export default defineComponent({
     handleDeleteScheduleCategory(index) {
       let category = this.schedules[index];
       this.dialog.warning({
-        title: '警告',
-        content: '删除日程分类会导致对应日程丢失，确定删除日程分类' + '【' + category.name + '】？',
-        positiveText: '确定',
-        negativeText: '取消',
+        title: i18n.warning,
+        content: i18n.confirmRemoveScheduleCategory + '【' + category.name + '】？',
+        positiveText: i18n.confirm,
+        negativeText: i18n.cancel,
         onPositiveClick: () => {
           this.schedules.splice(index, 1);
           this.$forceUpdate();
