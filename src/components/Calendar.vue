@@ -89,7 +89,7 @@
 </template>
 
 <script>
-  import { i18n } from "./utils";
+  import { i18n } from "../utils/utils";
   import { defineComponent, ref } from 'vue';
   import { CalendarOptions, EventApi, DateSelectArg, EventClickArg } from '@fullcalendar/core';
   import FullCalendar from "@fullcalendar/vue3";
@@ -99,7 +99,7 @@
   import listPlugin from '@fullcalendar/list';
 
   import * as moment from "moment";
-  import EventAggregator from "./EventAggregator";
+  import EventAggregator from "../utils/EventAggregator";
   import { format, parseISO, getTime } from 'date-fns';
   import { showMessage } from "siyuan";
 

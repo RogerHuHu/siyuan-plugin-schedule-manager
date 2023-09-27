@@ -56,7 +56,7 @@
 import { defineComponent, ref } from 'vue'
 import { useMessage, useDialog } from 'naive-ui'
 import { DeleteOutlined } from '@vicons/antd'
-import EventAggregator from "./EventAggregator";
+import EventAggregator from "../utils/EventAggregator";
 import { showMessage } from "siyuan";
 
 export default defineComponent({

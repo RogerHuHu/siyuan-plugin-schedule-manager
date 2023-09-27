@@ -1,11 +1,11 @@
-import { i18n } from "./utils";
+import { i18n } from "./utils/utils";
 
 import { createApp } from "vue";
 import naive from "naive-ui";
 import App from "./App.vue";
 
 import { fetchPost, fetchSyncPost } from "siyuan";
-import EventAggregator from "./EventAggregator";
+import EventAggregator from "./utils/EventAggregator";
 
 export class ScheduleManager {
     app : any;

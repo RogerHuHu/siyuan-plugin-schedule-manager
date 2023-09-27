@@ -1,5 +1,5 @@
 import { Plugin, getFrontend, IModel, openTab, fetchPost } from "siyuan";
-import { setI18n, setPlugin } from "./utils";
+import { setI18n, setPlugin, getScheduleManagerLoaded, setScheduleManagerLoaded } from "./utils/utils";
 import { ScheduleManager } from "./ScheduleManager";
 
 import "./index.scss";
@@ -9,7 +9,7 @@ const TAB_TYPE = "custom_tab";
 const DOCK_TYPE = "dock_tab";
 
 export default class PluginScheduleManager extends Plugin {
-    private foundNotebook: boolean = false;
+    private isLoaded: boolean = false;
     private scheduleNotebookId: string = "";
     private scheduleDocId: string = "";
     private customTab: () => IModel;
@@ -32,18 +32,22 @@ export default class PluginScheduleManager extends Plugin {
             title: this.i18n.openCalendar,
             position: "right",
             callback: () => {
-                if (this.isMobile) {
-                    this.showCalendar();
-                } else {
-                    let rect = topBarElement.getBoundingClientRect();
-                    // 如果被隐藏，则使用更多按钮
-                    if (rect.width === 0) {
-                        rect = document.querySelector("#barMore").getBoundingClientRect();
+                // Avoiding duplicate loading of schedules
+                if(getScheduleManagerLoaded() == false) {
+                    setScheduleManagerLoaded(true);
+                    if (this.isMobile) {
+                        this.showCalendar();
+                    } else {
+                        let rect = topBarElement.getBoundingClientRect();
+                        // 如果被隐藏，则使用更多按钮
+                        if (rect.width === 0) {
+                            rect = document.querySelector("#barMore").getBoundingClientRect();
+                        }
+                        if (rect.width === 0) {
+                            rect = document.querySelector("#barPlugins").getBoundingClientRect();
+                        }
+                        this.showCalendar();
                     }
-                    if (rect.width === 0) {
-                        rect = document.querySelector("#barPlugins").getBoundingClientRect();
-                    }
-                    this.showCalendar();
                 }
             }
         });
@@ -68,7 +72,6 @@ export default class PluginScheduleManager extends Plugin {
     }
 
     scheduleNotebookInit() {
-        this.foundNotebook = false;
         // 获取笔记本列表
         fetchPost("/api/notebook/lsNotebooks", {}, (response) => {
             // 若笔记本不存在，则新建
@@ -76,7 +79,6 @@ export default class PluginScheduleManager extends Plugin {
                 this.createNotebook("日程管理笔记本");
             }
             this.scheduleManager.updateNotebookId(this.scheduleNotebookId);
-            //this.createDocument(this.scheduleNotebookId, "/日程管理文档");  
         });
     }
 
@@ -97,17 +99,6 @@ export default class PluginScheduleManager extends Plugin {
         });
     }
 
-    createDocument(notebookId: string, path: string) {
-        fetchPost("/api/filetree/createDocWithMd", {
-            "notebook": notebookId,
-            "path": path,
-            "markdown": ""
-        }, (response) => {
-            this.scheduleDocId = response.data;
-            this.scheduleManager.updateDocId(this.scheduleDocId);
-        });
-    }
-
     showCalendar() {
         let scheduleManagerDiv = document.createElement('div');
         scheduleManagerDiv.setAttribute("class", "schedule-app");
@@ -121,10 +112,12 @@ export default class PluginScheduleManager extends Plugin {
             },
 
             beforeDestroy() {
-                //console.log("before destroy tab:", TAB_TYPE);
+                console.log("before destroy tab:", TAB_TYPE);
             },
+
             destroy() {
-                //console.log("destroy tab:", TAB_TYPE);
+                console.log("destroy tab:", TAB_TYPE);
+                setScheduleManagerLoaded(false);
             }
         });
 
@@ -139,8 +132,6 @@ export default class PluginScheduleManager extends Plugin {
                 id: this.name + TAB_TYPE
             },
         });
-
-        //console.log(tab);
 
         this.scheduleManager.mount(scheduleManagerDiv);
     }

@@ -19,12 +19,8 @@
 
 <script>
   import { defineComponent, ref } from "vue";
-  import ScheduleCategory from "./ScheduleCategory.vue";
-  import Calendar from "./Calendar.vue";
-
-  import EventAggregator from "./EventAggregator";
-  import { format, parseISO, getTime } from 'date-fns';
-  import { showMessage } from "siyuan";
+  import ScheduleCategory from "./components/ScheduleCategory.vue";
+  import Calendar from "./components/Calendar.vue";
 
   export default defineComponent({
     components: {
