@@ -84,8 +84,8 @@
     v-model:content="confirmRemoveScheduleText"
     style="width:600px"
     :closable="modalClosable"
-    positive-text="confirmText"
-    negative-text="cancelText"
+    v-model:positive-text="confirmText"
+    v-model:negative-text="cancelText"
     @positive-click="submitDeleteSchedule"
   />
 </template>
