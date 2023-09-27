@@ -1,3 +1,5 @@
+[English](https://github.com/RogerHuHu/siyuan-plugin-schedule-manager/blob/main/README.md)
+
 # 日程管理
 
 ## 简介
@@ -31,7 +33,7 @@
 [![pPogRoQ.png](https://z1.ax1x.com/2023/09/22/pPogRoQ.png)](https://imgse.com/i/pPogRoQ)
 
 ### 4. 更新日程
-单机某个日程，会弹出更新日程的界面，可以修改日程的各种信息。同时修改对应文档中记录的信息。
+单击某个日程，会弹出更新日程的界面，可以修改日程的各种信息。同时修改对应文档中记录的信息。
 
 [![pPog2dg.png](https://z1.ax1x.com/2023/09/22/pPog2dg.png)](https://imgse.com/i/pPog2dg)
 
@@ -43,10 +45,12 @@
 2. 点击空白处，界面会消失，会保留上次填写的信息（防止误操作）。
 
 ## Todo
-- [ ] 界面语言、文档国际化
+- [x] 界面语言、文档国际化
 - [ ] 日程的拖拽
 - [ ] 文档中日程记录显示样式优化
 - [ ] 任务看板界面
+- [ ] 适配移动端
+- [ ] 根据日程分类筛选加载的日程
 
 ## FAQ
 

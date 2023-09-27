@@ -1,65 +1,66 @@
-# 日程管理
+[中文](https://github.com/RogerHuHu/siyuan-plugin-schedule-manager/blob/main/README_zh_CN.md)
 
-## 简介
-日程管理插件通过日历的形式管理待办事项，目前支持月、周、日、列表多种视图。
+# Schedule Manager
 
-日历以标签页的方式显示，首次启动时，会自动在文档树中创建**日程管理笔记本**。
+## Introduction
+The schedule management plugin manages to-do items in the form of a calendar, and currently supports multiple views such as month, week, day, and list.
 
-![](asset/schedule_manager_notebook.png)
+The calendar is displayed as a tab and automatically creates a **Schedule Manager Notebook** in the document tree when first launched.
 
- >- **介意的谨慎使用！！！**
- >- **请勿删除该笔记本，由于刚接触vue、typescript等，未做很多异常处理，删除可能会带来不必要的麻烦！！！**
+[![pPog6L8.png](https://z1.ax1x.com/2023/09/22/pPog6L8.png)](https://imgse.com/i/pPog6L8)
 
-## 功能
-### 1. 添加日程分类
-![](asset/add_schedule_category.png)
+ >- **Mind using with caution!!!**
+ >- **Please do not remove the notebook. I'm new to Vue, Typescript, etc., and have not added enough exception handling, removing the notebook may cause unnecessary trouble !!!**
 
-点击添加日程分类按钮，会弹出日程分类信息编辑窗口，可以自定义日程分类名和对应颜色。
+## Function
+### 1. Add Schedule Category
+[![pPoggeS.png](https://z1.ax1x.com/2023/09/22/pPoggeS.png)](https://imgse.com/i/pPoggeS)
 
-添加日程分类时，会在**日程管理笔记本**下创建对应名字的文档。
+Clicking the add schedule category button to open the schedule category information editing window, where you can customize the schedule category name and corresponding color.
 
-### 2. 删除日程分类
-点击日程分类最后的删除按钮，可以删除对应日程分类，以及**日程管理笔记本**下的对应文档。
+When you add a schedule category, a document with the corresponding name will be created under **Schedule Manager Notebook**.
 
->- **操作需谨慎**，删除日程分类会删除对应的所有日程，且不可恢复
+### 2. Remove Schedule Category
+Through clicking the remove button at the end of a schedule category, you can remove the corresponding schedule category, as well as the corresponding document under the **Schedule Manager Notebook**.
 
-### 3. 添加日程
-双击某个日历格，会弹出日程添加界面，可以自定义日程分类、日程起止时间、日程名、日程内容和日程的状态。
+>- **Need to be careful**, removing a schedule category removes all the corresponding schedules and cannot be recovered.
 
-添加日程时，会在相应名字的文档中创建一条记录，**不要编辑！！！**
+### 3. Add Schedule
+Double-click a calendar grid to open a schedule adding window, where you can customize the category, time range, name, content and status of a schedule.
 
-![](asset/add_schedule.png)
+When adding a schedule, a record will be created in the corresponding document, **do not edit it!!!**.
 
-### 4. 更新日程
-单机某个日程，会弹出更新日程的界面，可以修改日程的各种信息。同时修改对应文档中记录的信息。
+[![pPogRoQ.png](https://z1.ax1x.com/2023/09/22/pPogRoQ.png)](https://imgse.com/i/pPogRoQ)
 
-![](asset/update_schedule.png)
+### 4. Update Schedule
+Clicking on a certain schedule will open an update window, where you can modify the information of the schedule. Simultaneously, the information recoreded in the corresponding document will be modified.
+[![pPog2dg.png](https://z1.ax1x.com/2023/09/22/pPog2dg.png)](https://imgse.com/i/pPog2dg)
 
-### 5. 删除日程
-在上述日程更新界面，点击删除日程按钮，会删除当前日程，以及对应文档中的记录，**不可恢复**。
+### 5. Remove Schedule
+Clicking the remove schedule button on the above-mentioned window will remove the current schedule, as well as the recored in the corresponding document, **it is non-recoverable**.
 
-### 6. 日程信息编辑界面
-1. 点击确定、更新、删除日程或取消按钮时，界面会消失，并且会清空上次填写的信息。
-2. 点击空白处，界面会消失，会保留上次填写的信息（防止误操作）。
+### 6. Schedule information Edit Window
+1. When you click the OK, Update, Remove, or Cancel buttons, the window disappears and the last filled information will be cleared.
+2. When you click on a blank space, the window disappear and will retain the last filled information (to prevent misuse).
 
 ## Todo
-- [ ] 界面语言、文档国际化
-- [ ] 日程的拖拽
-- [ ] 文档中日程记录显示样式优化
-- [ ] 任务看板界面
+- [x] The internationalization of the interface language and the document
+- [ ] Schedule drag & drop
+- [ ] Optimization of the display style of schedule records in documents
+- [ ] Task kanban view
+- [ ] Adaptation for mobile
+- [ ] Filter loaded schedules according to schedule categories
 
 ## FAQ
 
-## 鸣谢
-感谢如下框架对本项目的支持（排名不分先后）
+## Thanks
+Thank you for the support of the following framework for this project (in no particular order)
 - Vue3
 - Naive UI
 - FullCalendar
 
-## 捐赠
-开发不易，如果你喜欢本插件，欢迎给作者发电。
+## By me a cup of coffee
+![](https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/code.png)
 
-![](asset/code.png)
-
-## 更新日志
+## Changelog
 [CHANGELOG](https://github.com/RogerHuHu/siyuan-plugin-schedule-manager/blob/main/CHANGELOG.md)
