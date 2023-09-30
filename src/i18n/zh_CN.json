@@ -1,5 +1,7 @@
 {
   "openCalendar": "打开日历",
+  "calendar": "日历",
+  "kanban": "看板",
   "scheduleManager": "日程管理",
   "addScheduleCategory":"添加日程分类",
   "scheduleCategory": "日程分类",
@@ -22,6 +24,7 @@
   "todo": "未开始",
   "doing": "进行中",
   "done": "已完成",
+  "archive": "归档",
   "scheduleRangeError": "开始时间和结束时间不能相同！",
   "scheduleManagerNotebook": "日程管理笔记本",
   "today": "今天",

@@ -1,5 +1,7 @@
 {
   "openCalendar": "Open the calendar plugin",
+  "calendar": "Calendar",
+  "kanban": "Kanban",
   "scheduleManager": "Schedule manager",
   "addScheduleCategory":"Add Schedule Category",
   "scheduleCategory": "Schedule Category",
@@ -22,6 +24,7 @@
   "todo": "To Do",
   "doing": "Doing",
   "done": "Done",
+  "archive": "Archive",
   "scheduleRangeError": "Start time and end time should be different!",
   "scheduleManagerNotebook": "Schedule Manager Notebook",
   "today": "Today",

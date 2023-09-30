@@ -91,10 +91,9 @@
 </template>
 
 <style scoped lang="scss">
-.n-card {
-  margin:0.5em;
-  border-radius: 10px;
-}
+  .n-card {
+    border-radius: 10px;
+  }
 </style>
 
 <script>

@@ -56,24 +56,22 @@
 </template>
 
 <style scoped lang="scss">
-.n-card {
-  margin:0.5em;
-  border-radius: 10px;
-}
+  .n-card {
+    border-radius: 10px;
+  }
 
-.n-button {
-  border-radius: 5px;
-}
+  .n-button {
+    border-radius: 5px;
+  }
 
-.sm-title {
-  font-size: 16px;
-  font-weight: bold;
-}
+  .sm-title {
+    font-size: 16px;
+    font-weight: bold;
+  }
 
-.sm-circle {
-  border-radius: 50%;
-}
-
+  .sm-circle {
+    border-radius: 50%;
+  }
 </style>
 
 <script>
