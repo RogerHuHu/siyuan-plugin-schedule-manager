@@ -4,13 +4,25 @@
       <n-card content-style="padding: 10px;">
         <n-space vertical>
           <div class="sm-title1">{{ todoText }}</div>
-          <n-list hoverable clickable>
-            <n-list-item v-for="(schedule,index) in schedules" :key="index" style="padding:0px; margin:0px;">
-              <n-card>
-
+          <n-grid y-gap="5" :cols="1" v-for="(category,cindex) in globalData.schedules.categories" :key="cindex" style="padding:0px; margin:0px;">
+            <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex" style="padding:0px; margin:0px;">
+              <n-card v-if="schedule.status == 1" size="small">
+                <n-space vertical>
+                  <n-space justify="space-between">
+                    <n-tag :bordered="false" :color="{color: schedule.backgroundColor}">{{ schedule.title }}</n-tag>
+                    <n-button text style="font-size: 20px">
+                      <n-icon>
+                        <setting-outlined />
+                      </n-icon>
+                    </n-button>
+                  </n-space>
+                  <n-ellipsis style="max-width: 100px">
+                    {{ schedule.content }}
+                  </n-ellipsis>
+                </n-space>
               </n-card>
-            </n-list-item>
-        </n-list>
+            </n-gi>
+          </n-grid>
         </n-space>
       </n-card>
     </n-gi>
@@ -18,6 +30,25 @@
       <n-card content-style="padding: 10px;">
         <n-space vertical>
           <div class="sm-title2">{{ doingText }}</div>
+          <n-grid y-gap="5" :cols="1" v-for="(category,cindex) in globalData.schedules.categories" :key="cindex" style="padding:0px; margin:0px;">
+            <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex" style="padding:0px; margin:0px;">
+              <n-card v-if="schedule.status == 2" size="small">
+                <n-space vertical>
+                  <n-space justify="space-between">
+                    <n-tag :bordered="false" :color="{color: schedule.backgroundColor}">{{ schedule.title }}</n-tag>
+                    <n-button text style="font-size: 20px">
+                      <n-icon>
+                        <setting-outlined />
+                      </n-icon>
+                    </n-button>
+                  </n-space>
+                  <n-ellipsis style="max-width: 100px">
+                    {{ schedule.content }}
+                  </n-ellipsis>
+                </n-space>
+              </n-card>
+            </n-gi>
+          </n-grid>
         </n-space>
       </n-card>
     </n-gi>
@@ -25,6 +56,25 @@
       <n-card content-style="padding: 10px;">
         <n-space vertical>
           <div class="sm-title3">{{ doneText }}</div>
+          <n-grid :cols="1" v-for="(category,cindex) in globalData.schedules.categories" :key="cindex" style="padding:0px; margin:0px;">
+            <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex" style="padding:0px; margin:0px;">
+              <n-card v-if="schedule.status == 3" size="small">
+                <n-space vertical>
+                  <n-space justify="space-between">
+                    <n-tag :bordered="false" :color="{color: schedule.backgroundColor}">{{ schedule.title }}</n-tag>
+                    <n-button text style="font-size: 20px">
+                      <n-icon>
+                        <setting-outlined />
+                      </n-icon>
+                    </n-button>
+                  </n-space>
+                  <n-ellipsis style="max-width: 100px">
+                    {{ schedule.content }}
+                  </n-ellipsis>
+                </n-space>
+              </n-card>
+            </n-gi>
+          </n-grid>
         </n-space>
       </n-card>
     </n-gi>
@@ -32,6 +82,25 @@
       <n-card content-style="padding: 10px;">
         <n-space vertical>
           <div class="sm-title4">{{ archiveText }}</div>
+          <n-grid :cols="1" v-for="(category,cindex) in globalData.schedules.categories" :key="cindex" style="padding:0px; margin:0px;">
+            <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex" style="padding:0px; margin:0px;">
+              <n-card v-if="schedule.status == 4" size="small">
+                <n-space vertical>
+                  <n-space justify="space-between">
+                    <n-tag :bordered="false" :color="{color: schedule.backgroundColor}">{{ schedule.title }}</n-tag>
+                    <n-button text style="font-size: 20px">
+                      <n-icon>
+                        <setting-outlined />
+                      </n-icon>
+                    </n-button>
+                  </n-space>
+                  <n-ellipsis style="max-width: 100px">
+                    {{ schedule.content }}
+                  </n-ellipsis>
+                </n-space>
+              </n-card>
+            </n-gi>
+          </n-grid>
         </n-space>
       </n-card>
     </n-gi>
@@ -68,21 +137,20 @@
 </style>
 
 <script>
-import { i18n } from "../utils/utils";
+import { i18n, globalData } from "../utils/utils";
 import { defineComponent, ref } from 'vue'
 import { useMessage, useDialog } from 'naive-ui'
-import { DeleteOutlined } from '@vicons/antd'
 import EventAggregator from "../utils/EventAggregator";
 import { showMessage } from "siyuan";
+import { SettingOutlined, } from '@vicons/antd'
 
 export default defineComponent({
   components: {
-    DeleteOutlined
+    SettingOutlined
   },
 
   setup () {
     return {
-      DeleteOutlined,
       todoText: i18n.todo,
       doingText: i18n.doing,
       doneText: i18n.done,
@@ -92,6 +160,7 @@ export default defineComponent({
 
   data() {
     return {
+      globalData,
       calendarCategories: [],
       schedules: [],
       scheduleName: '',
@@ -101,28 +170,6 @@ export default defineComponent({
   },
 
   mounted() {
-    EventAggregator.on('initScheduleCategory', scheduleCategories => {
-      this.calendarCategories = [];
-      for(let category of scheduleCategories) {
-        let newValue = {
-          label: category.name,
-          value: category.color
-        }
-        this.calendarCategories.push(newValue);
-
-        for(let schedule of category.schedules) {
-          if(schedule.content === "") {
-            continue;
-          }
-
-          let content = JSON.parse(schedule.content);
-          let newEvent = this.createEventStartEnd(
-            content.id, content.title, content.start, content.end,
-            '#' + content.backgroundColor, content.extendedProps.category,
-            content.extendedProps.content, content.extendedProps.status);
-          }
-        }
-    });
   },
 
   methods: {

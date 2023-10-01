@@ -9,13 +9,13 @@
       </n-gi>
       <n-gi>
         <n-list hoverable clickable>
-          <n-list-item v-for="(schedule,index) in schedules" :key="index" style="padding:0px; margin:0px;">
+          <n-list-item v-for="(category,index) in globalData.schedules.categories" :key="index" style="padding:0px; margin:0px;">
             <n-space align="center" justify="space-between">
-              <n-checkbox v-model:checked="schedule.checked" style="width:100px">
-                {{schedule.name}}
+              <n-checkbox v-model:checked="category.checked" style="width:100px">
+                {{category.name}}
               </n-checkbox>
               <n-space align="center" justify="end">
-                <div class="sm-circle" :style="{backgroundColor:schedule.color, width:'15px', height:'15px'}"/>
+                <div class="sm-circle" :style="{backgroundColor:category.color, width:'15px', height:'15px'}"/>
                 <n-button quaternary circle style="padding:0px;" @click="handleDeleteScheduleCategory(index)">
                   <template #icon>
                     <n-icon :component="DeleteOutlined" color="#D60D0D"/>
@@ -75,12 +75,13 @@
 </style>
 
 <script>
-import { i18n } from "../utils/utils";
+import { i18n, globalData } from "../utils/utils";
 import { defineComponent, ref } from 'vue'
 import { useMessage, useDialog } from 'naive-ui'
 import { DeleteOutlined } from '@vicons/antd'
 import EventAggregator from "../utils/EventAggregator";
 import { showMessage } from "siyuan";
+import { Category } from "../Category";
 
 export default defineComponent({
   components: {
@@ -105,7 +106,7 @@ export default defineComponent({
 
   data() {
     return {
-      schedules: [],
+      globalData,
       scheduleName: '',
       message: useMessage(),
       dialog: useDialog()
@@ -113,19 +114,13 @@ export default defineComponent({
   },
 
   mounted() {
-    EventAggregator.on('initScheduleCategory', scheduleCategories => {
-      this.schedules = [];
-      for(let category of scheduleCategories) {
-        this.schedules.push(category);
-      }
-    });
   },
 
   methods: {
-    submitCallback () {
+    submitCallback() {
       let scheduleExists = false;
-      for(let sdl of this.schedules) {
-        if(sdl.name === this.scheduleName || sdl.color === this.scheduleColor) {
+      for(let ctg of this.globalData.schedules.categories) {
+        if(ctg.name === this.scheduleName || ctg.color === this.scheduleColor) {
           scheduleExists = true;
           showMessage(i18n.scheduleCategoryColorError, 6000, "error");
           break;
@@ -133,12 +128,8 @@ export default defineComponent({
       }
 
       if(scheduleExists == false) {
-        let newCategory = {
-          checked: true,
-          color: this.scheduleColor,
-          name: this.scheduleName
-        };
-        this.schedules.push(newCategory);
+        let newCategory = new Category(this.scheduleName, this.scheduleColor);
+        this.globalData.schedules.categories.push(newCategory);
         EventAggregator.emit('addCategorty', {
           "checked": newCategory.checked,
           "color": this.scheduleColor,
@@ -155,15 +146,14 @@ export default defineComponent({
 
     // 删除日程分类
     handleDeleteScheduleCategory(index) {
-      let category = this.schedules[index];
+      let category = this.globalData.schedules.categories[index];
       this.dialog.warning({
         title: i18n.warning,
         content: i18n.confirmRemoveScheduleCategory + '【' + category.name + '】？',
         positiveText: i18n.confirm,
         negativeText: i18n.cancel,
         onPositiveClick: () => {
-          this.schedules.splice(index, 1);
-          this.$forceUpdate();
+          this.globalData.schedules.categories.splice(index, 1);
           EventAggregator.emit('deleteCategorty', category);
         }
       });

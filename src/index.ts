@@ -79,6 +79,7 @@ export default class PluginScheduleManager extends Plugin {
                 this.createNotebook(this.i18n.scheduleManagerNotebook);
             }
             this.scheduleManager.updateNotebookId(this.scheduleNotebookId);
+            this.scheduleManager.init();
         });
     }
 

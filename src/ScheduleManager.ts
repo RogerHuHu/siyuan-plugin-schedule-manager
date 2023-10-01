@@ -1,9 +1,11 @@
-import { createApp } from "vue";
+import { createApp, initCustomFormatter } from "vue";
 import naive from "naive-ui";
 import App from "./App.vue";
 
 import { fetchPost, fetchSyncPost } from "siyuan";
 import EventAggregator from "./utils/EventAggregator";
+import { Schedules } from "./Schedules";
+import { globalData } from "./utils/utils";
 
 export class ScheduleManager {
     app : any;
@@ -14,6 +16,11 @@ export class ScheduleManager {
     // 构造函数
     constructor() {
         this.listenEvents();
+        globalData.schedules = new Schedules();
+    }
+
+    init(): void {
+        this.readScheduleCategory();
     }
 
     show(el: HTMLElement) : void {
@@ -23,7 +30,6 @@ export class ScheduleManager {
 
     mount(el: HTMLElement) : void {
         this.app.mount(el);
-        this.readScheduleCategory();
     }
 
     updateNotebookId(id: string) : void {
@@ -40,7 +46,8 @@ export class ScheduleManager {
         await this.getDocumentsName();
         await this.getSchedules();
        
-        EventAggregator.emit('initScheduleCategory', this.documents);
+        globalData.schedules.init(this.documents);
+        EventAggregator.emit('initScheduleCategory');
     }
 
     listenEvents() : void {

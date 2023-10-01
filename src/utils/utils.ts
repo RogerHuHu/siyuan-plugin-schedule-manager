@@ -1,4 +1,6 @@
-import PluginScheduleManager from "."
+import PluginScheduleManager from ".";
+import { Schedules } from "../Schedules";
+import { reactive } from "vue"
 
 // i18n 全局实例
 export let i18n: any;
@@ -19,3 +21,7 @@ export function getScheduleManagerLoaded(): boolean {
 export function setScheduleManagerLoaded(isLoaded: boolean) {
     isScheduleManagerLoaded = isLoaded;
 }
+
+export const globalData = reactive({
+    schedules: Schedules
+})
