@@ -100,10 +100,10 @@ export default class PluginScheduleManager extends Plugin {
         });
     }
 
-    showCalendar() {
+    async showCalendar() {
         let scheduleManagerDiv = document.createElement('div');
         scheduleManagerDiv.setAttribute("class", "schedule-app");
-        this.scheduleManager.show(scheduleManagerDiv);
+        await this.scheduleManager.show();
 
         this.customTab = this.addTab({
             type: TAB_TYPE,

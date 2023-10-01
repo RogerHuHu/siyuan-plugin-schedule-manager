@@ -21,15 +21,14 @@ export class Schedules {
 
                 let content = JSON.parse(elementS.content);
                 let schedule = new Schedule(content.id, content.title, content.start, content.end, "#" + content.backgroundColor,
-                                            "#" + content.borderColor, content.extendedProps.category, content.extendedProps.content,
-                                            content.extendedProps.status);
+                                            "#" + content.borderColor, content.category, content.content,
+                                            content.status);
                 category.schedules.push(schedule);
             }
         }
     }
 
     addSchedule(schedule: Schedule) : void {
-        console.log("addSchedule", JSON.stringify(schedule));
         let categoty = this.categories.find(c => c.name === schedule.category);
         if(categoty !== null) {
             categoty.schedules.push(schedule);

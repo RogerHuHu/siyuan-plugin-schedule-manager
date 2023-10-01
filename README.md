@@ -43,11 +43,16 @@ Clicking the remove schedule button on the above-mentioned window will remove th
 1. When you click the OK, Update, Remove, or Cancel buttons, the window disappears and the last filled information will be cleared.
 2. When you click on a blank space, the window disappear and will retain the last filled information (to prevent misuse).
 
+### 7. Task kanban view
+1. Implemented a relatively rudimentary task kanban.
+2. Adding or dragging a schedule is not supported.
+3. Support for editing schedule information.
+
 ## Todo
 - [x] The internationalization of the interface language and the document
 - [ ] Schedule drag & drop
 - [ ] Optimization of the display style of schedule records in documents
-- [ ] Task kanban view
+- [x] Task kanban view
 - [ ] Adaptation for mobile
 - [ ] Filter loaded schedules according to schedule categories
 

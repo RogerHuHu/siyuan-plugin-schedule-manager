@@ -5,6 +5,7 @@ import App from "./App.vue";
 import { fetchPost, fetchSyncPost } from "siyuan";
 import EventAggregator from "./utils/EventAggregator";
 import { Schedules } from "./Schedules";
+import { Schedule } from "./Schedule";
 import { globalData } from "./utils/utils";
 
 export class ScheduleManager {
@@ -20,10 +21,12 @@ export class ScheduleManager {
     }
 
     init(): void {
-        this.readScheduleCategory();
+        //this.readScheduleCategory();
+        this.updateDocumentVersion();
     }
 
-    show(el: HTMLElement) : void {
+    async show() {
+        await this.readScheduleCategory();
         this.app = createApp(App);
         this.app.use(naive);
     }
@@ -63,7 +66,7 @@ export class ScheduleManager {
             fetchPost("/api/block/appendBlock", {
                 "data": JSON.stringify(p).replace(/#/g,""),
                 "dataType": "markdown",
-                "parentID": this.getDocumentIdByName(p.extendedProps.category)
+                "parentID": this.getDocumentIdByName(p.category)
             }, (response) => {
 
             });
@@ -112,7 +115,7 @@ export class ScheduleManager {
             "attrs": {
                 "custom-checked": checked ? "true" : "false",
                 "custom-color": color,
-                "custom-version": "1.0.0"
+                "custom-version": "1.1.0"
             }
         }, (response) => {
             
@@ -161,7 +164,7 @@ export class ScheduleManager {
         let id;
 
         // 先查询得到日程的 id
-        let query = "SELECT id FROM blocks WHERE content like \'%" + schedule.id + "%\' AND parent_id =\'" + this.getDocumentIdByName(schedule.extendedProps.category) + "\'";
+        let query = "SELECT id FROM blocks WHERE content like \'%" + schedule.id + "%\' AND parent_id =\'" + this.getDocumentIdByName(schedule.category) + "\'";
         await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
             id = response.data[0].id;
         })
@@ -189,7 +192,7 @@ export class ScheduleManager {
         await fetchSyncPost("/api/block/appendBlock", {
             "data": JSON.stringify(schedule.new).replace(/#/g,""),
             "dataType": "markdown",
-            "parentID": this.getDocumentIdByName(schedule.new.extendedProps.category)
+            "parentID": this.getDocumentIdByName(schedule.new.category)
         }).then(response => {
 
         })
@@ -197,6 +200,113 @@ export class ScheduleManager {
 
     getDocumentIdByName(name: string) : string {
         for(let doc of this.documents) {
+            if(doc.name === name) {
+                return doc.id;
+            }
+        }
+    }
+
+    async updateDocumentVersion() {
+        let documents = await this.getDocuments1();
+
+        for(let doc of documents) {
+            await fetchSyncPost("/api/attr/getBlockAttrs", {"id":doc.id}).then(response => {
+                doc.name = response.data.title;
+                doc.checked = response.data["custom-checked"] === "true" ? true : false;
+                doc.color = response.data["custom-color"];
+                doc.version = response.data["custom-version"];
+            })
+        }
+
+        for(let doc of documents) {
+            //console.log(doc);
+            if(doc.version === "1.0.0") {
+                //console.log("version 1.0.0");
+                await this.updateSchedules1(doc.id, documents);
+                this.setDocumentProperty1(doc.id, doc.checked, doc.color);
+            }
+        }
+    }
+
+    async getDocuments1(): Promise<any[]> {
+        let documents = [];
+        let query = "SELECT id FROM blocks WHERE type = \'d\' AND box =\'" + this.noteBookId + "\'";
+        await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
+            for(let id of response.data) {
+                let document = {
+                    id: id.id,
+                    name: "",
+                    checked: "",
+                    color: "",
+                    version: ""
+                }
+                documents.push(document);
+            }
+        });
+
+        return documents;
+    }
+
+    setDocumentProperty1(docId: string, checked: boolean, color: string) : void {
+        fetchPost("/api/attr/setBlockAttrs", {
+            "id": docId,
+            "attrs": {
+                "custom-checked": checked ? "true" : "false",
+                "custom-color": color,
+                "custom-version": "1.1.0"
+            }
+        }, (response) => {
+            
+        });
+    }
+
+    async updateSchedules1(docId: string, documents: any[]) {
+        let query = "SELECT content FROM blocks WHERE parent_id =\'" + docId + "\'";
+        let schedules = [];
+        await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
+            schedules = response.data;
+        });
+
+        //console.log(schedules);
+        for(let schedule of schedules) {
+            await this.updateSchedule1(schedule, documents);
+        }
+        //console.log("update schedules successfully");
+    }
+
+    async updateSchedule1(schedule: any, documents: any[]) {
+        let id;
+
+        if(schedule.content !== "") {
+            let content = JSON.parse(schedule.content);
+            // 先查询得到日程的 id
+            let query = "SELECT id FROM blocks WHERE content like \'%" + content.id + "%\' AND parent_id =\'" +
+                this.getDocumentIdByName1(content.extendedProps.category, documents) + "\'";
+            await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
+                id = response.data[0].id;
+            })
+
+            await fetchSyncPost("/api/block/deleteBlock", {
+                "id": id
+            }).then(response => {
+            })
+
+            let newSchedule = new Schedule(content.id, content.title, content.start, content.end, content.backgroundColor,
+                                           content.borderColor, content.extendedProps.category, content.extendedProps.content,
+                                           content.extendedProps.status);
+            //console.log(newSchedule);
+            await fetchSyncPost("/api/block/appendBlock", {
+                "data": JSON.stringify(newSchedule),
+                "dataType": "markdown",
+                "parentID": this.getDocumentIdByName1(newSchedule.category, documents)
+            }).then(response => {
+
+            })
+        }
+    }
+
+    getDocumentIdByName1(name: string, documents: any[]) : string {
+        for(let doc of documents) {
             if(doc.name === name) {
                 return doc.id;
             }

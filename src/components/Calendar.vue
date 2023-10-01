@@ -264,12 +264,12 @@
       submitDeleteSchedule() {
         let event = this.selectedEvent;
         this.selectedEvent.remove();
-        this.globalData.schedules.removeSchedule(
-                 new Schedule(event.id, event.title, event.start, event.end,
-                              event.backgroundColor, event.borderColor,
-                              event.extendedProps.category, event.extendedProps.content,
-                              event.extendedProps.status));
-        EventAggregator.emit('deleteSchedule', event);
+        let schedule = new Schedule(event.id, event.title, event.start, event.end,
+                                    event.backgroundColor, event.borderColor,
+                                    event.extendedProps.category, event.extendedProps.content,
+                                    event.extendedProps.status);
+        this.globalData.schedules.removeSchedule(schedule);
+        EventAggregator.emit('deleteSchedule', schedule);
         this.clearEventInfo();
       },
 
@@ -288,11 +288,12 @@
                                                this.selectedCategory.name, this.scheduleContent,
                                                this.selectedScheduleStatus);
           this.$refs.fullCalendar.getApi().addEvent(newEvent);
-          this.globalData.schedules.addSchedule(new Schedule(newEvent.id, newEvent.title, newEvent.start, newEvent.end,
-                                                             newEvent.backgroundColor, newEvent.borderColor,
-                                                             newEvent.extendedProps.category, newEvent.extendedProps.content,
-                                                             newEvent.extendedProps.status));
-          EventAggregator.emit('addSchedule', newEvent);
+          let schedule = new Schedule(newEvent.id, newEvent.title, newEvent.start, newEvent.end,
+                                      newEvent.backgroundColor, newEvent.borderColor,
+                                      newEvent.extendedProps.category, newEvent.extendedProps.content,
+                                      newEvent.extendedProps.status)
+          this.globalData.schedules.addSchedule(schedule);
+          EventAggregator.emit('addSchedule', schedule);
           this.clearEventInfo();
         }
       }, 
@@ -317,14 +318,15 @@
                                                this.scheduleRange, this.selectedCategoryColor,
                                                tmp.name, this.scheduleContent,
                                                this.selectedScheduleStatus);
-          this.globalData.schedules.updateSchedule(oldCategory,
-              new Schedule(newEvent.id, newEvent.title, newEvent.start, newEvent.end,
+          
+          let schedule = new Schedule(newEvent.id, newEvent.title, newEvent.start, newEvent.end,
                            newEvent.backgroundColor, newEvent.borderColor,
                            newEvent.extendedProps.category, newEvent.extendedProps.content,
-                           newEvent.extendedProps.status));
+                           newEvent.extendedProps.status);
+          this.globalData.schedules.updateSchedule(oldCategory, schedule);
           EventAggregator.emit('updateSchedule', {
             old: oldCategory,
-            new: newEvent });
+            new: schedule });
           this.clearEventInfo();
         }
       },
