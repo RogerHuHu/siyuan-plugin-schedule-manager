@@ -2,6 +2,8 @@
 
 # Schedule Manager
 
+**Note: Upgrading from version "1.0. x" to version "1.1. x" may require reopening the plugin to update the format of the schedule records**
+
 ## Introduction
 The schedule management plugin manages to-do items in the form of a calendar, and currently supports multiple views such as month, week, day, and list.
 

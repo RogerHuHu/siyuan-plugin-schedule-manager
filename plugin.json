@@ -2,7 +2,7 @@
   "name": "siyuan-plugin-schedule-manager",
   "author": "RogerHuHu",
   "url": "https://github.com/RogerHuHu/siyuan-plugin-schedule-manager",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "minAppVersion": "2.10.6",
   "backends": ["all"],
   "frontends": ["all"],
@@ -12,7 +12,7 @@
   },
   "description": {
     "default": "This is a schedule manager plugin",
-    "zh_CN": "这是一个插日程管理插件"
+    "zh_CN": "这是一个插日程管理插件，支持日历视图和看板视图"
   },
   "readme": {
     "default": "README.md",
