@@ -97,6 +97,47 @@
   }
 </style>
 
+<style lang="scss">
+  .fc .fc-toolbar.fc-header-toolbar {
+    //background-color: #D0FBE1;
+    margin-bottom: 0px;
+  }
+
+  .fc .fc-button-primary {
+      background-color: #75E6AA;
+      border: none;
+      color: #2a2a2a;
+  }
+
+  .fc .fc-button-group > .fc-button:hover {
+    background-color: #42C7AB;
+      border: none;
+      color: #2a2a2a;
+  }
+
+  .fc .fc-button-primary:disabled {
+      background-color: #75E6AA;
+      border: none;
+      color: #2a2a2a;
+  }
+
+  .fc .fc-button-primary:not(:disabled).fc-button-active {
+      background-color: #42C7AB;
+      border: none;
+      color: #2a2a2a;
+  }
+  
+  /*
+  .fc .fc-col-header {
+    background-color: #D9EDDF;
+  }
+
+  .fc .fc-view-harness-active > .fc-view {
+    color: #2a2a2a;
+  }
+  */
+</style>
+
 <script>
   import { i18n, globalData } from "../utils/utils";
   import { defineComponent, ref } from 'vue';
@@ -384,6 +425,7 @@
             end: eventEnd,
             backgroundColor: color,
             borderColor: color,
+            display: 'block',
             extendedProps: {
               category: eventCategory,
               content: eventContent,
