@@ -104,27 +104,27 @@
   }
 
   .fc .fc-button-primary {
-      background-color: #75E6AA;
-      border: none;
-      color: #2a2a2a;
+    background-color: #daf0e4;
+    border: none;
+    color: #2a2a2a;
   }
 
   .fc .fc-button-group > .fc-button:hover {
     background-color: #42C7AB;
-      border: none;
-      color: #2a2a2a;
+    border: none;
+    color: #2a2a2a;
   }
 
   .fc .fc-button-primary:disabled {
-      background-color: #75E6AA;
-      border: none;
-      color: #2a2a2a;
+    background-color: #daf0e4;
+    border: none;
+    color: #2a2a2a;
   }
 
   .fc .fc-button-primary:not(:disabled).fc-button-active {
-      background-color: #42C7AB;
-      border: none;
-      color: #2a2a2a;
+    background-color: #42C7AB;
+    border: none;
+    color: #2a2a2a;
   }
   
   /*
