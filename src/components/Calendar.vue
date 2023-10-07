@@ -187,19 +187,19 @@
         scheduleStatusList: [
           {
             value: 1,
-            label: i18n.todo
+            label: '☕ ' + i18n.todo
           },
           {
             value: 2,
-            label: i18n.doing
+            label: '🏃‍♂️ ' + i18n.doing
           },
           {
             value: 3,
-            label: i18n.done
+            label: '✅ ' + i18n.done
           },
           {
             value: 4,
-            label: i18n.archive
+            label: '📦 ' + i18n.archive
           }
         ],
         selectedEvent: null

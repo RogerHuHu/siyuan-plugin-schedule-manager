@@ -3,7 +3,7 @@
     <n-gi>
       <n-card content-style="padding: 10px;">
         <n-space vertical>
-          <div class="sm-title1">{{ todoText }}</div>
+          <div class="sm-title1">{{ ' ☕ ' + todoText }}</div>
           <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.schedules.categories" :key="cindex">
             <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
               <n-card v-if="schedule.status == 1" size="small">
@@ -29,7 +29,7 @@
     <n-gi>
       <n-card content-style="padding: 10px;">
         <n-space vertical>
-          <div class="sm-title2">{{ doingText }}</div>
+          <div class="sm-title2">{{ ' 🏃‍♂️ ' + doingText }}</div>
           <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.schedules.categories" :key="cindex">
             <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
               <n-card v-if="schedule.status == 2" size="small">
@@ -55,7 +55,7 @@
     <n-gi>
       <n-card content-style="padding: 10px;">
         <n-space vertical>
-          <div class="sm-title3">{{ doneText }}</div>
+          <div class="sm-title3">{{ ' ✅ ' + doneText }}</div>
           <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.schedules.categories" :key="cindex">
             <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
               <n-card v-if="schedule.status == 3" size="small">
@@ -81,7 +81,7 @@
     <n-gi>
       <n-card content-style="padding: 10px;">
         <n-space vertical>
-          <div class="sm-title4">{{ archiveText }}</div>
+          <div class="sm-title4">{{ ' 📦 ' + archiveText }}</div>
           <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.schedules.categories" :key="cindex">
             <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
               <n-card v-if="schedule.status == 4" size="small">
@@ -271,19 +271,19 @@ export default defineComponent({
       scheduleStatusList: [
         {
           value: 1,
-          label: i18n.todo
+          label: '☕ ' + i18n.todo
         },
         {
           value: 2,
-          label: i18n.doing
+          label: '🏃‍♂️ ' + i18n.doing
         },
         {
           value: 3,
-          label: i18n.done
+          label: '✅ ' + i18n.done
         },
         {
           value: 4,
-          label: i18n.archive
+          label: '📦 ' + i18n.archive
         }
       ],
       selectedSchedule: null,
