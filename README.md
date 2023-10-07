@@ -2,7 +2,7 @@
 
 # Schedule Manager
 
-**Note: Upgrading from version "1.0. x" to version "1.1. x" may require reopening the plugin to update the format of the schedule records**
+<b><font color="#dd0000">Note: Upgrading from version "1.0. x" to version "1.1. x" may require reopening the plugin to update the format of the schedule records</font></b>
 
 ## Introduction
 The schedule management plugin manages to-do items in the form of a calendar, and currently supports multiple views such as month, week, day, and list.
@@ -13,6 +13,8 @@ The calendar is displayed as a tab and automatically creates a **Schedule Manage
 
  >- **Mind using with caution!!!**
  >- **Please do not remove the notebook. I'm new to Vue, Typescript, etc., and have not added enough exception handling, removing the notebook may cause unnecessary trouble !!!**
+
+The icons of schedule statuses：☕ Todo, 🏃‍♂️ Doing, ✅ Done, 📦 Archive（**The archive function may be implemented in the next version.**）
 
 ## Function
 ### 1. Add Schedule Category
@@ -67,7 +69,7 @@ Thank you for the support of the following framework for this project (in no par
 - FullCalendar
 
 ## By me a cup of coffee
-![](https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/code.png)
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/code.png" alt="" width="653" height="360" align="left">
 
 ## Changelog
 [CHANGELOG](https://github.com/RogerHuHu/siyuan-plugin-schedule-manager/blob/main/CHANGELOG.md)

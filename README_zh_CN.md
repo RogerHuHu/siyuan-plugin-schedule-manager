@@ -2,7 +2,7 @@
 
 # 日程管理
 
-**注意：从 1.0.x 版本升级到 1.1.x 版本可能需要重新开关下插件，以更新日程记录的格式**
+<b><font color="#dd0000">注意：从 1.0.x 版本升级到 1.1.x 版本可能需要重新开关下插件，以更新日程记录的格式</font></b>
 
 ## 简介
 日程管理插件通过日历的形式管理待办事项，目前支持月、周、日、列表多种视图。
@@ -13,6 +13,8 @@
 
  >- **介意的谨慎使用！！！**
  >- **请勿删除该笔记本，由于刚接触vue、typescript等，未做很多异常处理，删除可能会带来不必要的麻烦！！！**
+
+日程状态图标：☕ 待完成、🏃‍♂️ 进行中、✅ 已完成、📦 归档（**暂未实现实际功能，考虑在下个版本实现**）
 
 ## 功能
 ### 1. 添加日程分类
@@ -70,7 +72,7 @@
 ## 捐赠
 开发不易，如果你喜欢本插件，欢迎给作者发电。
 
-![](https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/code.png)
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/code.png" alt="" width="653" height="360" align="left">
 
 ## 更新日志
 [CHANGELOG](https://github.com/RogerHuHu/siyuan-plugin-schedule-manager/blob/main/CHANGELOG.md)
