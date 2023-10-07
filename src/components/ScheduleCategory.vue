@@ -4,14 +4,23 @@
       <n-gi>
         <n-space align="center" justify="space-between">
           <div class="sm-title">{{ scheduleCategoryText }}</div>
-          <n-button strong secondary type="primary" @click="showModal = true">{{ addScheduleCategoryText }}</n-button>
+          <n-tooltip>
+            <template #trigger>
+              <n-button strong secondary circle type="primary" @click="showModal = true">
+                <template #icon>
+                  <n-icon :component="PlusOutlined" color="#18a058"/>
+                </template>
+              </n-button>
+            </template>
+            {{ addScheduleCategoryText }}
+          </n-tooltip>
         </n-space>
       </n-gi>
       <n-gi>
         <n-list hoverable clickable>
           <n-list-item v-for="(category,index) in globalData.schedules.categories" :key="index" style="padding:0px; margin:0px;">
             <n-space align="center" justify="space-between">
-              <n-checkbox v-model:checked="category.checked" style="width:100px">
+              <n-checkbox v-model:checked="category.checked" style="min-width:70px">
                 {{category.name}}
               </n-checkbox>
               <n-space align="center" justify="end">
@@ -60,9 +69,11 @@
     border-radius: 10px;
   }
 
+  /*
   .n-button {
     border-radius: 5px;
   }
+  */
 
   .sm-title {
     font-size: 16px;
@@ -78,7 +89,7 @@
 import { i18n, globalData } from "../utils/utils";
 import { defineComponent, ref } from 'vue'
 import { useMessage, useDialog } from 'naive-ui'
-import { DeleteOutlined } from '@vicons/antd'
+import { DeleteOutlined, PlusOutlined } from '@vicons/antd'
 import EventAggregator from "../utils/EventAggregator";
 import { showMessage } from "siyuan";
 import { Category } from "../Category";
@@ -91,6 +102,7 @@ export default defineComponent({
   setup () {
     return {
       DeleteOutlined,
+      PlusOutlined,
       scheduleCategoryText: i18n.scheduleCategory,
       addScheduleCategoryText: i18n.addScheduleCategory,
       addText: i18n.add,
