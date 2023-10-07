@@ -25,3 +25,10 @@ export function setScheduleManagerLoaded(isLoaded: boolean) {
 export const globalData = reactive({
     schedules: Schedules
 })
+
+export enum smColor {
+    TODO_COLOR = "#61C1F4",
+    DOING_COLOR = "#F8E496",
+    DONE_COLOR = "#96F896",
+    ARCHIVE_COLOR = "#C1C4C1",
+}

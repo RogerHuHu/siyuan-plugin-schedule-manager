@@ -126,7 +126,7 @@
     border: none;
     color: #2a2a2a;
   }
-  
+
   /*
   .fc .fc-col-header {
     background-color: #D9EDDF;
@@ -139,7 +139,7 @@
 </style>
 
 <script>
-  import { i18n, globalData } from "../utils/utils";
+  import { i18n, globalData, smColor } from "../utils/utils";
   import { defineComponent, ref } from 'vue';
   import { CalendarOptions, EventApi, DateSelectArg, EventClickArg } from '@fullcalendar/core';
   import FullCalendar from "@fullcalendar/vue3";
@@ -196,9 +196,13 @@
           {
             value: 3,
             label: i18n.done
+          },
+          {
+            value: 4,
+            label: i18n.archive
           }
         ],
-        selectedEvent: null,
+        selectedEvent: null
       };
     },
 
@@ -391,7 +395,7 @@
         this.isUpdateButtonVisible = true;
         this.isSubmitButtonVisible = false;
         this.selectedCategoryColor = clickInfo.event.backgroundColor;
-        this.scheduleName = clickInfo.event.title;
+        this.scheduleName = clickInfo.event.title.substring(clickInfo.event.title.indexOf(' ') + 1);
         if(this.scheduleRange == null) {
           this.scheduleRange = [Date.now(), Date.now() + 1];
         }
@@ -420,7 +424,7 @@
       createEventStartEnd(eventId, name, eventStart, eventEnd, color, eventCategory, eventContent, eventStatus) {
         let newEvent = {
             id: eventId,
-            title: name,
+            title: this.getEventName(name, eventStatus),
             start: eventStart,
             end: eventEnd,
             backgroundColor: color,
@@ -445,6 +449,28 @@
 
       findSelectedCategoryByColor(categories, color) {
         return categories.find(u => u.color === color);
+      },
+
+      getEventName(name, status) {
+        let result = "";
+        switch(status) {
+          case 1:
+            result = '☕ ' + name;
+            break;
+          case 2:
+            result = '🏃‍♂️ ' + name;
+            break;
+          case 3:
+            result = '✅ ' + name;
+            break;
+          case 4:
+            result = '📦 ' + name;
+            break;
+          default:
+            result = name;
+            break;
+        }
+        return result;
       }
     }
   });

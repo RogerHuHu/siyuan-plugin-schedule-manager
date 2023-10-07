@@ -207,24 +207,24 @@
   }
 
   .sm-title1 {
-    background: #61C1F4;
+    background: todoColor;
   }
 
   .sm-title2 {
-    background: #F8E496;
+    background: doingColor;
   }
 
   .sm-title3 {
-    background: #96F896;
+    background: doneColor;
   }
 
   .sm-title4 {
-    background: #C1C4C1;
+    background: archivedColor;
   }
 </style>
 
 <script>
-import { i18n, globalData } from "../utils/utils";
+import { i18n, globalData, smColor } from "../utils/utils";
 import { defineComponent, ref } from 'vue'
 import { useMessage, useDialog } from 'naive-ui'
 import { format, parseISO, getTime } from 'date-fns';
@@ -280,12 +280,20 @@ export default defineComponent({
         {
           value: 3,
           label: i18n.done
+        },
+        {
+          value: 4,
+          label: i18n.archive
         }
       ],
       selectedSchedule: null,
       cindex: 0,
       sindex: 0,
-      scheduleGap: ref(3)
+      scheduleGap: ref(3),
+      todoColor: smColor.TODO_COLOR,
+      doingColor: smColor.DOING_COLOR,
+      doneColor: smColor.DONE_COLOR,
+      archiveColor: smColor.ARCHIVE_COLOR,
     }
   },
 
