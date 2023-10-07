@@ -69,7 +69,7 @@ Thank you for the support of the following framework for this project (in no par
 - FullCalendar
 
 ## By me a cup of coffee
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/code.png" alt="" width="653" height="360" align="left">
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/code.png" alt="" width="653" height="360" align="center">
 
 ## Changelog
 [CHANGELOG](https://github.com/RogerHuHu/siyuan-plugin-schedule-manager/blob/main/CHANGELOG.md)
