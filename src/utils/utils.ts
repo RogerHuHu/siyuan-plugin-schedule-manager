@@ -1,5 +1,5 @@
 import PluginScheduleManager from ".";
-import { Schedules } from "../Schedules";
+import { ScheduleCategories } from "../ScheduleCategories";
 import { reactive } from "vue"
 
 // i18n 全局实例
@@ -22,13 +22,18 @@ export function setScheduleManagerLoaded(isLoaded: boolean) {
     isScheduleManagerLoaded = isLoaded;
 }
 
-export const globalData = reactive({
-    schedules: Schedules
-})
+export const globalData = {
+    scheduleCategories: new ScheduleCategories()
+}
 
 export enum smColor {
     TODO_COLOR = "#61C1F4",
     DOING_COLOR = "#F8E496",
     DONE_COLOR = "#96F896",
     ARCHIVE_COLOR = "#C1C4C1",
+}
+
+export let fcApi: any;
+export function setFCApi(_fcApi: any) {
+    fcApi = _fcApi;
 }

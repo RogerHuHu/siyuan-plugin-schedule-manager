@@ -4,7 +4,7 @@ import App from "./App.vue";
 
 import { fetchPost, fetchSyncPost } from "siyuan";
 import EventAggregator from "./utils/EventAggregator";
-import { Schedules } from "./Schedules";
+import { ScheduleCategories } from "./ScheduleCategories";
 import { Schedule } from "./Schedule";
 import { globalData } from "./utils/utils";
 
@@ -17,7 +17,7 @@ export class ScheduleManager {
     // 构造函数
     constructor() {
         this.listenEvents();
-        globalData.schedules = new Schedules();
+        //globalData.scheduleCategories = new ScheduleCategories();
     }
 
     init(): void {
@@ -49,8 +49,7 @@ export class ScheduleManager {
         await this.getDocumentsName();
         await this.getSchedules();
        
-        globalData.schedules.init(this.documents);
-        EventAggregator.emit('initScheduleCategory');
+        globalData.scheduleCategories.init(this.documents);
     }
 
     listenEvents() : void {

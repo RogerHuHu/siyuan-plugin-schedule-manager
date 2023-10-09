@@ -18,7 +18,7 @@
       </n-gi>
       <n-gi>
         <n-list hoverable clickable>
-          <n-list-item v-for="(category,index) in globalData.schedules.categories" :key="index" style="padding:0px; margin:0px;">
+          <n-list-item v-for="(category,index) in globalData.scheduleCategories.categories" :key="index" style="padding:0px; margin:0px;">
             <n-space align="center" justify="space-between">
               <n-checkbox v-model:checked="category.checked" style="min-width:70px">
                 {{category.name}}
@@ -92,7 +92,7 @@ import { useMessage, useDialog } from 'naive-ui'
 import { DeleteOutlined, PlusOutlined } from '@vicons/antd'
 import EventAggregator from "../utils/EventAggregator";
 import { showMessage } from "siyuan";
-import { Category } from "../Category";
+import { ScheduleCategory } from "../ScheduleCategory";
 
 export default defineComponent({
   components: {
@@ -130,42 +130,33 @@ export default defineComponent({
 
   methods: {
     submitCallback() {
-      let scheduleExists = false;
-      for(let ctg of this.globalData.schedules.categories) {
-        if(ctg.name === this.scheduleName || ctg.color === this.scheduleColor) {
-          scheduleExists = true;
-          showMessage(i18n.scheduleCategoryColorError, 6000, "error");
-          break;
-        }
-      }
-
-      if(scheduleExists == false) {
-        let newCategory = new Category(this.scheduleName, this.scheduleColor);
-        this.globalData.schedules.categories.push(newCategory);
+      let newCategory = new ScheduleCategory(this.scheduleName, this.scheduleColor);
+      if(this.globalData.scheduleCategories.addCategory(newCategory) === true) {
         EventAggregator.emit('addCategorty', {
           "checked": newCategory.checked,
           "color": this.scheduleColor,
           "name": this.scheduleName
         });
+      } else {
+        showMessage(i18n.scheduleCategoryColorError, 6000, "error");
       }
     },
 
     // 日程名变更
     handleNameChange(value) {
       this.scheduleName = value
-      //this.message.success(this.scheduleName)
     },
 
     // 删除日程分类
     handleDeleteScheduleCategory(index) {
-      let category = this.globalData.schedules.categories[index];
+      let category = this.globalData.scheduleCategories.getCategory(index);
       this.dialog.warning({
         title: i18n.warning,
         content: i18n.confirmRemoveScheduleCategory + '【' + category.name + '】？',
         positiveText: i18n.confirm,
         negativeText: i18n.cancel,
         onPositiveClick: () => {
-          this.globalData.schedules.categories.splice(index, 1);
+          this.globalData.scheduleCategories.removeCategory(index);
           EventAggregator.emit('deleteCategorty', category);
         }
       });

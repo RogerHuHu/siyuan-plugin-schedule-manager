@@ -16,8 +16,8 @@
         <div>{{ selectScheduleCategoryText }}</div>
       </n-gi>
       <n-gi :span="3">
-        <n-select v-model:value="selectedCategoryColor" label-field="name" value-field="color"
-                  :options="globalData.schedules.categories" @update:value="handleUpdateSelectedCategory" />
+        <n-select v-model:value="selectedCategory" label-field="name" value-field="name"
+                  :options="globalData.scheduleCategories.categories" @update:value="handleUpdateSelectedCategory" />
       </n-gi>
 
       <n-gi>
@@ -126,20 +126,10 @@
     border: none;
     color: #2a2a2a;
   }
-
-  /*
-  .fc .fc-col-header {
-    background-color: #D9EDDF;
-  }
-
-  .fc .fc-view-harness-active > .fc-view {
-    color: #2a2a2a;
-  }
-  */
 </style>
 
 <script>
-  import { i18n, globalData, smColor } from "../utils/utils";
+  import { i18n, globalData, smColor, setFCApi } from "../utils/utils";
   import { defineComponent, ref } from 'vue';
   import { CalendarOptions, EventApi, DateSelectArg, EventClickArg } from '@fullcalendar/core';
   import FullCalendar from "@fullcalendar/vue3";
@@ -179,7 +169,7 @@
         isUpdateButtonVisible: false,
         isSubmitButtonVisible: true,
         selectedCategoryColor: ref(null),
-        selectedCategory: null,
+        selectedCategory: ref(null),
         scheduleRange: ref(null),
         scheduleName: ref(null),
         scheduleContent: ref(null),
@@ -202,7 +192,7 @@
             label: '📦 ' + i18n.archive
           }
         ],
-        selectedEvent: null
+        selectedEvent: null,
       };
     },
 
@@ -267,33 +257,24 @@
     },
 
     mounted() {
+      setFCApi(this.$refs.fullCalendar.getApi());
+      EventAggregator.emit('readCategories');
       /*
-      EventAggregator.on('initScheduleCategory', () => {
-        for(let category of this.globalData.schedules.categories) {
-          for(let schedule of category.schedules) {
-            let newEvent = this.createEventStartEnd(
-              schedule.id, schedule.title, schedule.start, schedule.end,
-              '#' + schedule.backgroundColor, schedule.category,
-              schedule.content, schedule.status);
-            this.$refs.fullCalendar.getApi().addEvent(newEvent);
-          }
-        }
-      });
-      */
       for(let category of this.globalData.schedules.categories) {
-          for(let schedule of category.schedules) {
-            let newEvent = this.createEventStartEnd(
-              schedule.id, schedule.title, schedule.start, schedule.end,
-              schedule.backgroundColor, schedule.category,
-              schedule.content, schedule.status);
+        for(let schedule of category.schedules) {
+          let newEvent = this.createEventStartEnd(
+            schedule.id, schedule.title, schedule.start, schedule.end,
+            schedule.backgroundColor, schedule.category,
+            schedule.content, schedule.status);
             this.$refs.fullCalendar.getApi().addEvent(newEvent);
-          }
         }
+      }
+      */
     },
 
     methods: {
       handleUpdateSelectedCategory(value, option) {
-        this.selectedCategory = option;
+        //this.selectedCategory = option;
       },
 
       handleCancelClick() {
@@ -310,10 +291,9 @@
         let event = this.selectedEvent;
         this.selectedEvent.remove();
         let schedule = new Schedule(event.id, event.title, event.start, event.end,
-                                    event.backgroundColor, event.borderColor,
                                     event.extendedProps.category, event.extendedProps.content,
                                     event.extendedProps.status);
-        this.globalData.schedules.removeSchedule(schedule);
+        this.globalData.scheduleCategories.removeSchedule(schedule);
         EventAggregator.emit('deleteSchedule', schedule);
         this.clearEventInfo();
       },
@@ -324,20 +304,31 @@
           showMessage(i18n.scheduleRangeError, 6000, "error");
         } else {
           if(this.selectedCategory == null) {
-            this.selectedCategory = this.findSelectedCategoryByColor(this.globalData.schedules.categories, 
-                                                                     this.selectedCategoryColor);
+            //this.selectedCategory = this.findSelectedCategoryByColor(this.globalData.schedules.categories, 
+            //                                                         this.selectedCategoryColor);
           }
 
+          /*
           let newEvent = this.createEventRange(new Date().getTime().toString(), this.scheduleName,
                                                this.scheduleRange, this.selectedCategoryColor,
                                                this.selectedCategory.name, this.scheduleContent,
                                                this.selectedScheduleStatus);
           this.$refs.fullCalendar.getApi().addEvent(newEvent);
+          
+
           let schedule = new Schedule(newEvent.id, newEvent.title, newEvent.start, newEvent.end,
                                       newEvent.backgroundColor, newEvent.borderColor,
                                       newEvent.extendedProps.category, newEvent.extendedProps.content,
                                       newEvent.extendedProps.status)
-          this.globalData.schedules.addSchedule(schedule);
+          */
+
+          let schedule = new Schedule(
+            new Date().getTime().toString(), this.scheduleName,
+            format(this.scheduleRange[0], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[0], 'HH:mm:ss'),
+            format(this.scheduleRange[1], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[1], 'HH:mm:ss'),
+            this.selectedCategory, this.scheduleContent, this.selectedScheduleStatus
+          );
+          this.globalData.scheduleCategories.addSchedule(schedule);
           EventAggregator.emit('addSchedule', schedule);
           this.clearEventInfo();
         }
@@ -350,15 +341,17 @@
           showMessage(i18n.scheduleRangeError, 6000, "error");
         } else {
           let oldCategory = this.selectedEvent.extendedProps.category;
+          this.selectedEvent.remove();
+          /*
           this.selectedEvent.setProp("title", this.scheduleName);
-          this.selectedEvent.setProp("backgroundColor", this.selectedCategoryColor);
-          this.selectedEvent.setProp("borderColor", this.selectedCategoryColor);
           let tmp = this.findSelectedCategoryByColor(this.globalData.schedules.categories, this.selectedCategoryColor);
           this.selectedEvent.setExtendedProp("category", tmp.name);
           this.selectedEvent.setExtendedProp("content", this.scheduleContent);
           this.selectedEvent.setExtendedProp("status", this.selectedScheduleStatus);
           this.selectedEvent.setDates(new Date(this.scheduleRange[0]), new Date(this.scheduleRange[1]));
+          */
 
+          /*
           let newEvent = this.createEventRange(this.selectedEvent.id, this.scheduleName,
                                                this.scheduleRange, this.selectedCategoryColor,
                                                tmp.name, this.scheduleContent,
@@ -368,7 +361,15 @@
                            newEvent.backgroundColor, newEvent.borderColor,
                            newEvent.extendedProps.category, newEvent.extendedProps.content,
                            newEvent.extendedProps.status);
-          this.globalData.schedules.updateSchedule(oldCategory, schedule);
+          */
+          let schedule = new Schedule(
+            this.selectedEvent.id, this.scheduleName,
+            format(this.scheduleRange[0], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[0], 'HH:mm:ss'),
+            format(this.scheduleRange[1], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[1], 'HH:mm:ss'),
+            this.selectedCategory, this.scheduleContent, this.selectedScheduleStatus
+          );
+
+          this.globalData.scheduleCategories.updateSchedule(oldCategory, schedule);
           EventAggregator.emit('updateSchedule', {
             old: oldCategory,
             new: schedule });
@@ -394,7 +395,8 @@
       handleEventClick(clickInfo) {
         this.isUpdateButtonVisible = true;
         this.isSubmitButtonVisible = false;
-        this.selectedCategoryColor = clickInfo.event.backgroundColor;
+        //this.selectedCategoryColor = clickInfo.event.backgroundColor;
+        this.selectedCategory = clickInfo.event.extendedProps.category;
         this.scheduleName = clickInfo.event.title.substring(clickInfo.event.title.indexOf(' ') + 1);
         if(this.scheduleRange == null) {
           this.scheduleRange = [Date.now(), Date.now() + 1];
