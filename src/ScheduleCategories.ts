@@ -85,9 +85,9 @@ export class ScheduleCategories {
             events: [],
             id: category.name,
             display: 'block',
-            color: category.color
+            color: category.color,
+            textColor: category.textColor
         };
-
         fcApi.addEventSource(eventSource);
     }
 

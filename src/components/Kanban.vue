@@ -9,7 +9,7 @@
               <n-card v-if="schedule.status == 1" size="small" style="box-shadow: 0px 0px 5px #959595;">
                 <n-space vertical>
                   <n-space justify="space-between">
-                    <n-tag :bordered="false" :color="{color: category.color}">{{ schedule.title }}</n-tag>
+                    <n-tag :bordered="false" :color="{color: category.color}" :style="{color: category.textColor}">{{ schedule.title }}</n-tag>
                     <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
                       <n-icon>
                         <setting-outlined />
@@ -35,7 +35,7 @@
               <n-card v-if="schedule.status == 2" size="small" style="box-shadow: 0px 0px 5px #959595;">
                 <n-space vertical>
                   <n-space justify="space-between">
-                    <n-tag :bordered="false" :color="{color: category.color}">{{ schedule.title }}</n-tag>
+                    <n-tag :bordered="false" :color="{color: category.color}" :style="{color: category.textColor}">{{ schedule.title }}</n-tag>
                     <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
                       <n-icon>
                         <setting-outlined />
@@ -61,7 +61,7 @@
               <n-card v-if="schedule.status == 3" size="small" style="box-shadow: 0px 0px 5px #959595;">
                 <n-space vertical>
                   <n-space justify="space-between">
-                    <n-tag :bordered="false" :color="{color: category.color}">{{ schedule.title }}</n-tag>
+                    <n-tag :bordered="false" :color="{color: category.color}" :style="{color: category.textColor}">{{ schedule.title }}</n-tag>
                     <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
                       <n-icon>
                         <setting-outlined />
@@ -89,7 +89,7 @@
                   <n-card v-if="schedule.status == 4" size="small" style="box-shadow: 0px 0px 5px #959595;">
                     <n-space vertical>
                       <n-space justify="space-between">
-                        <n-tag :bordered="false" :color="{color: category.color}">{{ schedule.title }}</n-tag>
+                        <n-tag :bordered="false" :color="{color: category.color}" :style="{color: category.textColor}">{{ schedule.title }}</n-tag>
                         <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
                           <n-icon>
                             <setting-outlined />
