@@ -35,10 +35,8 @@ export class ScheduleCategories {
         this.categories.splice(0, this.categories.length);
         this.clearEventSources();
         for(let elementC of this.documents) {
-            if(elementC.checked === false) continue;
-            let category = new ScheduleCategory(elementC.name, elementC.color);
+            let category = new ScheduleCategory(elementC.name, elementC.color, elementC.checked);
             this.addCategory(category);
-
             for(let elementS of elementC.schedules) {
                 if(elementS.content === "") {
                   continue;
@@ -68,7 +66,8 @@ export class ScheduleCategories {
         let find2 = this.categories.find(c => c.color === category.color);
         if(find1 !== undefined || find2 !== undefined) return false;
         this.categories.push(category);
-        this.addEventSource(category);
+        if(category.checked === true)
+            this.addEventSource(category);
         return true;
     }
 
@@ -107,6 +106,7 @@ export class ScheduleCategories {
         let category = this.categories.find(c => c.name === schedule.category);
         category?.addSchedule(schedule);
         
+        if(category.checked === false) return;
         let eventSource = fcApi.getEventSourceById(schedule.category);
         if(eventSource !== null) {
             fcApi.addEvent(this.createEvent(schedule), eventSource);
@@ -183,6 +183,11 @@ export class ScheduleCategories {
                 let eventSource = fcApi.getEventSourceById(category.name);
                 eventSource?.remove();
             }
+
+            EventAggregator.emit('updateCategortySelection', {
+                "name": category.name,
+                "checked": category.checked,
+            });
         }
     }
 }

@@ -6,10 +6,11 @@ export class ScheduleCategory {
     color: string;
     schedules: Schedule[];
 
-    constructor(name: string, color: string, schedules?: Schedule[]) {
+    constructor(name: string, color: string, checked: boolean, schedules?: Schedule[]) {
         this.checked = true;
         this.name = name;
         this.color = color;
+        this.checked = checked;
 
         if(schedules != null)
             this.schedules = schedules;

@@ -6,7 +6,7 @@
           <div class="sm-title1">{{ ' ☕ ' + todoText }}</div>
           <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
             <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
-              <n-card v-if="schedule.status == 1" size="small">
+              <n-card v-if="schedule.status == 1" size="small" style="box-shadow: 0px 0px 5px #959595;">
                 <n-space vertical>
                   <n-space justify="space-between">
                     <n-tag :bordered="false" :color="{color: category.color}">{{ schedule.title }}</n-tag>
@@ -32,7 +32,7 @@
           <div class="sm-title2">{{ ' 🏃‍♂️ ' + doingText }}</div>
           <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
             <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
-              <n-card v-if="schedule.status == 2" size="small">
+              <n-card v-if="schedule.status == 2" size="small" style="box-shadow: 0px 0px 5px #959595;">
                 <n-space vertical>
                   <n-space justify="space-between">
                     <n-tag :bordered="false" :color="{color: category.color}">{{ schedule.title }}</n-tag>
@@ -58,7 +58,7 @@
           <div class="sm-title3">{{ ' ✅ ' + doneText }}</div>
           <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
             <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
-              <n-card v-if="schedule.status == 3" size="small">
+              <n-card v-if="schedule.status == 3" size="small" style="box-shadow: 0px 0px 5px #959595;">
                 <n-space vertical>
                   <n-space justify="space-between">
                     <n-tag :bordered="false" :color="{color: category.color}">{{ schedule.title }}</n-tag>
@@ -82,25 +82,29 @@
       <n-card content-style="padding: 10px;">
         <n-space vertical>
           <div class="sm-title4">{{ ' 📦 ' + archiveText }}</div>
-          <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
-            <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
-              <n-card v-if="schedule.status == 4" size="small">
-                <n-space vertical>
-                  <n-space justify="space-between">
-                    <n-tag :bordered="false" :color="{color: category.color}">{{ schedule.title }}</n-tag>
-                    <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
-                      <n-icon>
-                        <setting-outlined />
-                      </n-icon>
-                    </n-button>
-                  </n-space>
-                  <n-ellipsis style="max-width: 100px">
-                    {{ schedule.content }}
-                  </n-ellipsis>
-                </n-space>
-              </n-card>
-            </n-gi>
-          </n-grid>
+          <n-collapse v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
+            <n-collapse-item :title="category.name">
+              <n-grid :y-gap="scheduleGap" :cols="1">
+                <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
+                  <n-card v-if="schedule.status == 4" size="small" style="box-shadow: 0px 0px 5px #959595;">
+                    <n-space vertical>
+                      <n-space justify="space-between">
+                        <n-tag :bordered="false" :color="{color: category.color}">{{ schedule.title }}</n-tag>
+                        <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
+                          <n-icon>
+                            <setting-outlined />
+                          </n-icon>
+                        </n-button>
+                      </n-space>
+                      <n-ellipsis style="max-width: 100px">
+                        {{ schedule.content }}
+                      </n-ellipsis>
+                    </n-space>
+                  </n-card>
+                </n-gi>
+              </n-grid>
+            </n-collapse-item>
+          </n-collapse>
         </n-space>
       </n-card>
     </n-gi>
@@ -226,7 +230,7 @@
 <script>
 import { i18n, globalData, smColor } from "../utils/utils";
 import { defineComponent, ref } from 'vue'
-import { useMessage, useDialog } from 'naive-ui'
+import { useMessage, useDialog, NCollapse } from 'naive-ui'
 import { format, parseISO, getTime } from 'date-fns';
 import EventAggregator from "../utils/EventAggregator";
 import { showMessage } from "siyuan";
@@ -235,8 +239,9 @@ import { Schedule } from '../Schedule'
 
 export default defineComponent({
   components: {
-    SettingOutlined
-  },
+    SettingOutlined,
+    NCollapse
+},
 
   setup () {
     return {

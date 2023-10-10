@@ -78,6 +78,10 @@ export class ScheduleManager {
         EventAggregator.on('deleteSchedule', (p) => {
             this.deleteSchedule(p);
         });
+
+        EventAggregator.on('updateCategortySelection', (p) => {
+            this.setDocumentCheckedProperty(p.name, p.checked);
+        });
     }
 
     createDocument(notebookId: string, docProp: any) : void {
@@ -115,6 +119,17 @@ export class ScheduleManager {
                 "custom-checked": checked ? "true" : "false",
                 "custom-color": color,
                 "custom-version": "1.1.0"
+            }
+        }, (response) => {
+            
+        });
+    }
+
+    setDocumentCheckedProperty(name: string, checked: boolean) : void {
+        fetchPost("/api/attr/setBlockAttrs", {
+            "id": this.getDocumentIdByName(name),
+            "attrs": {
+                "custom-checked": checked ? "true" : "false"
             }
         }, (response) => {
             
