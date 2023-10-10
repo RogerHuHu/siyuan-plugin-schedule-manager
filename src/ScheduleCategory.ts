@@ -24,9 +24,4 @@ export class ScheduleCategory {
     removeSchedule(schedule: Schedule) :void {
         this.schedules = this.schedules.filter(c => c.id !== schedule.id);
     }
-
-    updateSchedule(schedule: Schedule) :void {
-        this.schedules = this.schedules.filter(c => c.id !== schedule.id);
-        this.schedules.push(schedule);
-    }
 }

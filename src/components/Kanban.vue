@@ -9,7 +9,7 @@
               <n-card v-if="schedule.status == 1" size="small">
                 <n-space vertical>
                   <n-space justify="space-between">
-                    <n-tag :bordered="false" :color="{color: schedule.backgroundColor}">{{ schedule.title }}</n-tag>
+                    <n-tag :bordered="false" :color="{color: category.color}">{{ schedule.title }}</n-tag>
                     <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
                       <n-icon>
                         <setting-outlined />
@@ -35,7 +35,7 @@
               <n-card v-if="schedule.status == 2" size="small">
                 <n-space vertical>
                   <n-space justify="space-between">
-                    <n-tag :bordered="false" :color="{color: schedule.backgroundColor}">{{ schedule.title }}</n-tag>
+                    <n-tag :bordered="false" :color="{color: category.color}">{{ schedule.title }}</n-tag>
                     <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
                       <n-icon>
                         <setting-outlined />
@@ -61,7 +61,7 @@
               <n-card v-if="schedule.status == 3" size="small">
                 <n-space vertical>
                   <n-space justify="space-between">
-                    <n-tag :bordered="false" :color="{color: schedule.backgroundColor}">{{ schedule.title }}</n-tag>
+                    <n-tag :bordered="false" :color="{color: category.color}">{{ schedule.title }}</n-tag>
                     <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
                       <n-icon>
                         <setting-outlined />
@@ -87,7 +87,7 @@
               <n-card v-if="schedule.status == 4" size="small">
                 <n-space vertical>
                   <n-space justify="space-between">
-                    <n-tag :bordered="false" :color="{color: schedule.backgroundColor}">{{ schedule.title }}</n-tag>
+                    <n-tag :bordered="false" :color="{color: category.color}">{{ schedule.title }}</n-tag>
                     <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
                       <n-icon>
                         <setting-outlined />
@@ -119,8 +119,8 @@
         <div>{{ selectScheduleCategoryText }}</div>
       </n-gi>
       <n-gi :span="3">
-        <n-select v-model:value="selectedCategory" label-field="name" value-field="color"
-                  :options="globalData.scheduleCategories.categories" @update:value="handleUpdateSelectedCategory" />
+        <n-select v-model:value="selectedCategory" label-field="name" value-field="name"
+                  :options="globalData.scheduleCategories.categories" />
       </n-gi>
 
       <n-gi>
@@ -198,7 +198,7 @@
   .n-card {
     border-radius: 10px;
   }
-  
+
   .sm-title1, .sm-title2, .sm-title3, .sm-title4 {
     font-size: 16px;
     font-weight: bold;
@@ -311,25 +311,18 @@ export default defineComponent({
   },
 
   methods: {
-    handleUpdateSelectedCategory(value, option) {
-      //this.selectedCategory = option;
-    },
-
     handleSetSchedule(cindex, sindex) {
       this.cindex = cindex;
       this.sindex = sindex;
       let schedule = this.globalData.scheduleCategories.categories[cindex].schedules[sindex];
-      //this.selectedCategoryColor = schedule.backgroundColor;
       this.selectedCategory = schedule.category;
       this.scheduleName = schedule.title;
       if(this.scheduleRange == null) {
         this.scheduleRange = [Date.now(), Date.now() + 1];
       }
       let date = parseISO(schedule.start);
-      //let date = moment(schedule.start).toDate();
       this.scheduleRange[0] = getTime(date);
       date = parseISO(schedule.end);
-      //date = moment(schedule.end).toDate();
       this.scheduleRange[1] = getTime(date);
       this.scheduleContent = schedule.content;
       this.selectedScheduleStatus = schedule.status;
@@ -354,7 +347,6 @@ export default defineComponent({
         showMessage(i18n.scheduleRangeError, 6000, "error");
       } else {
         let oldCategory = this.selectedSchedule.category;
-        //let tmp = this.findSelectedCategoryByColor(this.globalData.schedules.categories, this.selectedCategoryColor);
         let start = format(this.scheduleRange[0], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[0], 'HH:mm:ss');
         let end = format(this.scheduleRange[1], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[1], 'HH:mm:ss');
         let newSchedule = new Schedule(this.selectedSchedule.id, this.scheduleName,
@@ -385,10 +377,6 @@ export default defineComponent({
       this.scheduleContent = null;
       this.selectedScheduleStatus = null;
     },
-
-    findSelectedCategoryByColor(categories, color) {
-        return categories.find(u => u.color === color);
-      }
   }
 })
 </script>

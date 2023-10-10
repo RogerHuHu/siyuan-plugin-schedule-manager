@@ -17,7 +17,7 @@
       </n-gi>
       <n-gi :span="3">
         <n-select v-model:value="selectedCategory" label-field="name" value-field="name"
-                  :options="globalData.scheduleCategories.categories" @update:value="handleUpdateSelectedCategory" />
+                  :options="globalData.scheduleCategories.categories" />
       </n-gi>
 
       <n-gi>
@@ -261,24 +261,9 @@
     mounted() {
       setFCApi(this.$refs.fullCalendar.getApi());
       EventAggregator.emit('readCategories');
-      /*
-      for(let category of this.globalData.schedules.categories) {
-        for(let schedule of category.schedules) {
-          let newEvent = this.createEventStartEnd(
-            schedule.id, schedule.title, schedule.start, schedule.end,
-            schedule.backgroundColor, schedule.category,
-            schedule.content, schedule.status);
-            this.$refs.fullCalendar.getApi().addEvent(newEvent);
-        }
-      }
-      */
     },
 
     methods: {
-      handleUpdateSelectedCategory(value, option) {
-        //this.selectedCategory = option;
-      },
-
       handleCancelClick() {
         this.showModal = false;
         this.clearEventInfo();
@@ -291,7 +276,6 @@
 
       submitDeleteSchedule() {
         let event = this.selectedEvent;
-        //this.selectedEvent.remove();
         let schedule = new Schedule(event.id, event.title, event.start, event.end,
                                     event.extendedProps.category, event.extendedProps.content,
                                     event.extendedProps.status);
@@ -305,25 +289,6 @@
         if(this.scheduleRange[0] == this.scheduleRange[1]) {
           showMessage(i18n.scheduleRangeError, 6000, "error");
         } else {
-          if(this.selectedCategory == null) {
-            //this.selectedCategory = this.findSelectedCategoryByColor(this.globalData.schedules.categories, 
-            //                                                         this.selectedCategoryColor);
-          }
-
-          /*
-          let newEvent = this.createEventRange(new Date().getTime().toString(), this.scheduleName,
-                                               this.scheduleRange, this.selectedCategoryColor,
-                                               this.selectedCategory.name, this.scheduleContent,
-                                               this.selectedScheduleStatus);
-          this.$refs.fullCalendar.getApi().addEvent(newEvent);
-          
-
-          let schedule = new Schedule(newEvent.id, newEvent.title, newEvent.start, newEvent.end,
-                                      newEvent.backgroundColor, newEvent.borderColor,
-                                      newEvent.extendedProps.category, newEvent.extendedProps.content,
-                                      newEvent.extendedProps.status)
-          */
-
           let schedule = new Schedule(
             new Date().getTime().toString(), this.scheduleName,
             format(this.scheduleRange[0], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[0], 'HH:mm:ss'),
@@ -343,27 +308,6 @@
           showMessage(i18n.scheduleRangeError, 6000, "error");
         } else {
           let oldCategory = this.selectedEvent.extendedProps.category;
-          //this.selectedEvent.remove();
-          /*
-          this.selectedEvent.setProp("title", this.scheduleName);
-          let tmp = this.findSelectedCategoryByColor(this.globalData.schedules.categories, this.selectedCategoryColor);
-          this.selectedEvent.setExtendedProp("category", tmp.name);
-          this.selectedEvent.setExtendedProp("content", this.scheduleContent);
-          this.selectedEvent.setExtendedProp("status", this.selectedScheduleStatus);
-          this.selectedEvent.setDates(new Date(this.scheduleRange[0]), new Date(this.scheduleRange[1]));
-          */
-
-          /*
-          let newEvent = this.createEventRange(this.selectedEvent.id, this.scheduleName,
-                                               this.scheduleRange, this.selectedCategoryColor,
-                                               tmp.name, this.scheduleContent,
-                                               this.selectedScheduleStatus);
-          
-          let schedule = new Schedule(newEvent.id, newEvent.title, newEvent.start, newEvent.end,
-                           newEvent.backgroundColor, newEvent.borderColor,
-                           newEvent.extendedProps.category, newEvent.extendedProps.content,
-                           newEvent.extendedProps.status);
-          */
           let schedule = new Schedule(
             this.selectedEvent.id, this.scheduleName,
             format(this.scheduleRange[0], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[0], 'HH:mm:ss'),
@@ -397,7 +341,6 @@
       handleEventClick(clickInfo) {
         this.isUpdateButtonVisible = true;
         this.isSubmitButtonVisible = false;
-        //this.selectedCategoryColor = clickInfo.event.backgroundColor;
         this.selectedCategory = clickInfo.event.extendedProps.category;
         this.scheduleName = clickInfo.event.title.substring(clickInfo.event.title.indexOf(' ') + 1);
         if(this.scheduleRange == null) {
@@ -450,10 +393,6 @@
         this.scheduleName = null;
         this.scheduleContent = null;
         this.selectedScheduleStatus = null;
-      },
-
-      findSelectedCategoryByColor(categories, color) {
-        return categories.find(u => u.color === color);
       },
 
       getEventName(name, status) {

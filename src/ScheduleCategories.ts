@@ -35,6 +35,7 @@ export class ScheduleCategories {
         this.categories.splice(0, this.categories.length);
         this.clearEventSources();
         for(let elementC of this.documents) {
+            if(elementC.checked === false) continue;
             let category = new ScheduleCategory(elementC.name, elementC.color);
             this.addCategory(category);
 
@@ -53,6 +54,7 @@ export class ScheduleCategories {
     refreshScheduleCategories() : void {
         this.clearEventSources();
         for(let category of this.categories) {
+            if(category.checked === false) continue;
             this.addEventSource(category);
             for(let schedule of category.schedules) {
                 fcApi.addEvent(this.createEvent(schedule), fcApi.getEventSourceById(schedule.category));
@@ -104,7 +106,11 @@ export class ScheduleCategories {
     addSchedule(schedule: Schedule) : void {
         let category = this.categories.find(c => c.name === schedule.category);
         category?.addSchedule(schedule);
-        fcApi.addEvent(this.createEvent(schedule), fcApi.getEventSourceById(schedule.category));
+        
+        let eventSource = fcApi.getEventSourceById(schedule.category);
+        if(eventSource !== null) {
+            fcApi.addEvent(this.createEvent(schedule), eventSource);
+        }
     }
 
     removeSchedule(schedule: Schedule) :void {
@@ -115,9 +121,15 @@ export class ScheduleCategories {
 
     updateSchedule(oldCategoryName: string, schedule: Schedule) :void {
         let category = this.categories.find(c => c.name === oldCategoryName);
-        category?.updateSchedule(schedule);
+        category?.removeSchedule(schedule);
+        category = this.categories.find(c => c.name === schedule.category);
+        category?.addSchedule(schedule);
         fcApi.getEventById(schedule.id).remove();
-        fcApi.addEvent(this.createEvent(schedule), fcApi.getEventSourceById(schedule.category));
+
+        let eventSource = fcApi.getEventSourceById(schedule.category);
+        if(eventSource !== null) {
+            fcApi.addEvent(this.createEvent(schedule), eventSource);
+        }   
     }
 
     createEvent(schedule: Schedule) {
@@ -155,5 +167,22 @@ export class ScheduleCategories {
             break;
         }
         return result;
-      }
+    }
+
+    updateSelection(): void {
+        for(let category of this.categories) {
+            if(category.checked) {
+                let eventSource = fcApi.getEventSourceById(category.name);
+                if(eventSource === null) {
+                    this.addEventSource(category);
+                    for(let schedule of category.schedules) {
+                        fcApi.addEvent(this.createEvent(schedule), fcApi.getEventSourceById(schedule.category));
+                    }
+                }
+            } else {
+                let eventSource = fcApi.getEventSourceById(category.name);
+                eventSource?.remove();
+            }
+        }
+    }
 }

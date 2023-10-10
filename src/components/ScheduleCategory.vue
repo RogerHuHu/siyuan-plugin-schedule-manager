@@ -20,7 +20,7 @@
         <n-list hoverable clickable>
           <n-list-item v-for="(category,index) in globalData.scheduleCategories.categories" :key="index" style="padding:0px; margin:0px;">
             <n-space align="center" justify="space-between">
-              <n-checkbox v-model:checked="category.checked" style="min-width:70px">
+              <n-checkbox v-model:checked="category.checked" style="min-width:70px" @update:checked="handleUpdateChecked">
                 {{category.name}}
               </n-checkbox>
               <n-space align="center" justify="end">
@@ -161,6 +161,10 @@ export default defineComponent({
           EventAggregator.emit('deleteCategorty', category);
         }
       });
+    },
+
+    handleUpdateChecked(value) {
+      this.globalData.scheduleCategories.updateSelection();
     }
   }
 })
