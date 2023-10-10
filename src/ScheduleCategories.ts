@@ -1,6 +1,6 @@
 import { ScheduleCategory } from "./ScheduleCategory";
 import { Schedule } from "./Schedule";
-import { tr } from "date-fns/locale";
+import { el, tr } from "date-fns/locale";
 import { fcApi } from "./utils/utils";
 import EventAggregator from "./utils/EventAggregator";
 import { reactive } from "vue"
@@ -8,6 +8,7 @@ import { reactive } from "vue"
 export class ScheduleCategories {
     categories: ScheduleCategory[];
     private documents: any[];
+    private isInit = false;
 
     constructor() {
         this.categories = reactive([]);
@@ -18,9 +19,19 @@ export class ScheduleCategories {
 
     init(documents: any[]): void {
         this.documents = documents;
+        this.isInit = true;
     }
 
     readScheduleCategories(): void {
+        if(this.isInit === true) {
+            this.readScheduleCategoriesFromDocuments();
+        } else {
+            this.refreshScheduleCategories();
+        }
+        this.isInit = false;
+    }
+
+    readScheduleCategoriesFromDocuments() : void {
         this.categories.splice(0, this.categories.length);
         this.clearEventSources();
         for(let elementC of this.documents) {
@@ -35,6 +46,16 @@ export class ScheduleCategories {
                 let schedule = new Schedule(content.id, content.title, content.start, content.end,
                                             content.category, content.content, content.status);
                 this.addSchedule(schedule);
+            }
+        }
+    }
+
+    refreshScheduleCategories() : void {
+        this.clearEventSources();
+        for(let category of this.categories) {
+            this.addEventSource(category);
+            for(let schedule of category.schedules) {
+                fcApi.addEvent(this.createEvent(schedule), fcApi.getEventSourceById(schedule.category));
             }
         }
     }
@@ -87,6 +108,7 @@ export class ScheduleCategories {
     }
 
     removeSchedule(schedule: Schedule) :void {
+        fcApi.getEventById(schedule.id).remove();
         let category = this.categories.find(c => c.name === schedule.category);
         category?.removeSchedule(schedule);
     }
@@ -94,6 +116,7 @@ export class ScheduleCategories {
     updateSchedule(oldCategoryName: string, schedule: Schedule) :void {
         let category = this.categories.find(c => c.name === oldCategoryName);
         category?.updateSchedule(schedule);
+        fcApi.getEventById(schedule.id).remove();
         fcApi.addEvent(this.createEvent(schedule), fcApi.getEventSourceById(schedule.category));
     }
 

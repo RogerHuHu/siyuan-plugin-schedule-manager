@@ -1,6 +1,5 @@
 import PluginScheduleManager from ".";
 import { ScheduleCategories } from "../ScheduleCategories";
-import { reactive } from "vue"
 
 // i18n 全局实例
 export let i18n: any;

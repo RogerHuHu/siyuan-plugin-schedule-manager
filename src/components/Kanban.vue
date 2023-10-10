@@ -4,7 +4,7 @@
       <n-card content-style="padding: 10px;">
         <n-space vertical>
           <div class="sm-title1">{{ ' ☕ ' + todoText }}</div>
-          <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.schedules.categories" :key="cindex">
+          <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
             <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
               <n-card v-if="schedule.status == 1" size="small">
                 <n-space vertical>
@@ -30,7 +30,7 @@
       <n-card content-style="padding: 10px;">
         <n-space vertical>
           <div class="sm-title2">{{ ' 🏃‍♂️ ' + doingText }}</div>
-          <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.schedules.categories" :key="cindex">
+          <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
             <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
               <n-card v-if="schedule.status == 2" size="small">
                 <n-space vertical>
@@ -56,7 +56,7 @@
       <n-card content-style="padding: 10px;">
         <n-space vertical>
           <div class="sm-title3">{{ ' ✅ ' + doneText }}</div>
-          <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.schedules.categories" :key="cindex">
+          <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
             <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
               <n-card v-if="schedule.status == 3" size="small">
                 <n-space vertical>
@@ -82,7 +82,7 @@
       <n-card content-style="padding: 10px;">
         <n-space vertical>
           <div class="sm-title4">{{ ' 📦 ' + archiveText }}</div>
-          <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.schedules.categories" :key="cindex">
+          <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
             <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
               <n-card v-if="schedule.status == 4" size="small">
                 <n-space vertical>
@@ -119,8 +119,8 @@
         <div>{{ selectScheduleCategoryText }}</div>
       </n-gi>
       <n-gi :span="3">
-        <n-select v-model:value="selectedCategoryColor" label-field="name" value-field="color"
-                  :options="globalData.schedules.categories" @update:value="handleUpdateSelectedCategory" />
+        <n-select v-model:value="selectedCategory" label-field="name" value-field="color"
+                  :options="globalData.scheduleCategories.categories" @update:value="handleUpdateSelectedCategory" />
       </n-gi>
 
       <n-gi>
@@ -194,7 +194,7 @@
   />
 </template>
 
-<style scoped lang="scss">
+<style scoped lang="scss"> 
   .n-card {
     border-radius: 10px;
   }
@@ -312,14 +312,15 @@ export default defineComponent({
 
   methods: {
     handleUpdateSelectedCategory(value, option) {
-      this.selectedCategory = option;
+      //this.selectedCategory = option;
     },
 
     handleSetSchedule(cindex, sindex) {
       this.cindex = cindex;
       this.sindex = sindex;
-      let schedule = this.globalData.schedules.categories[cindex].schedules[sindex];
-      this.selectedCategoryColor = schedule.backgroundColor;
+      let schedule = this.globalData.scheduleCategories.categories[cindex].schedules[sindex];
+      //this.selectedCategoryColor = schedule.backgroundColor;
+      this.selectedCategory = schedule.category;
       this.scheduleName = schedule.title;
       if(this.scheduleRange == null) {
         this.scheduleRange = [Date.now(), Date.now() + 1];
@@ -353,15 +354,14 @@ export default defineComponent({
         showMessage(i18n.scheduleRangeError, 6000, "error");
       } else {
         let oldCategory = this.selectedSchedule.category;
-        let tmp = this.findSelectedCategoryByColor(this.globalData.schedules.categories, this.selectedCategoryColor);
+        //let tmp = this.findSelectedCategoryByColor(this.globalData.schedules.categories, this.selectedCategoryColor);
         let start = format(this.scheduleRange[0], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[0], 'HH:mm:ss');
         let end = format(this.scheduleRange[1], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[1], 'HH:mm:ss');
         let newSchedule = new Schedule(this.selectedSchedule.id, this.scheduleName,
-                                       start, end, this.selectedCategoryColor, this.selectedCategoryColor,
-                                       tmp.name, this.scheduleContent,
+                                       start, end, this.selectedCategory, this.scheduleContent,
                                        this.selectedScheduleStatus);
 
-        this.globalData.schedules.updateSchedule(oldCategory, newSchedule);
+        this.globalData.scheduleCategories.updateSchedule(oldCategory, newSchedule);
         EventAggregator.emit('updateSchedule', {
           old: oldCategory,
           new: newSchedule
@@ -372,14 +372,14 @@ export default defineComponent({
 
     submitDeleteSchedule() {
       let schedule = this.selectedSchedule;
-      this.selectedEvent.remove();
-      this.globalData.schedules.removeSchedule(schedule);
+      this.globalData.scheduleCategories.removeSchedule(schedule);
       EventAggregator.emit('deleteSchedule', schedule);
       this.clearEventInfo();
     },
 
     clearEventInfo() {
       this.selectedCategoryColor = "";
+      this.selectedCategory = "";
       this.scheduleRange = null;
       this.scheduleName = null;
       this.scheduleContent = null;

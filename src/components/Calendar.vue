@@ -1,5 +1,5 @@
 <template>
-  <n-card>
+  <n-card style="border-radius: 10px;" size="small">
     <FullCalendar :options="calendarOptions" ref="fullCalendar"/>
   </n-card>
 
@@ -92,9 +92,11 @@
 </template>
 
 <style scoped lang="scss">
+/*
   .n-card {
     border-radius: 10px;
   }
+  */
 </style>
 
 <style lang="scss">
@@ -289,7 +291,7 @@
 
       submitDeleteSchedule() {
         let event = this.selectedEvent;
-        this.selectedEvent.remove();
+        //this.selectedEvent.remove();
         let schedule = new Schedule(event.id, event.title, event.start, event.end,
                                     event.extendedProps.category, event.extendedProps.content,
                                     event.extendedProps.status);
@@ -341,7 +343,7 @@
           showMessage(i18n.scheduleRangeError, 6000, "error");
         } else {
           let oldCategory = this.selectedEvent.extendedProps.category;
-          this.selectedEvent.remove();
+          //this.selectedEvent.remove();
           /*
           this.selectedEvent.setProp("title", this.scheduleName);
           let tmp = this.findSelectedCategoryByColor(this.globalData.schedules.categories, this.selectedCategoryColor);
@@ -443,6 +445,7 @@
 
       clearEventInfo() {
         this.selectedCategoryColor = "";
+        this.selectedCategory = "";
         this.scheduleRange = null;
         this.scheduleName = null;
         this.scheduleContent = null;

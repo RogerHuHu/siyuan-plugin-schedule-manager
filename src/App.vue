@@ -3,7 +3,7 @@
     <n-message-provider>
       <n-notification-provider>
         <n-dialog-provider>
-          <n-tabs type="line" animated justify-content="space-evenly">
+          <n-tabs type="segment" animated style="margin-left:5px; margin-right:5px;">
             <n-tab-pane name="calendar" v-model:tab="calendarText">
               <n-grid x-gap="5" :cols="6">
                 <n-gi>
@@ -24,9 +24,20 @@
   </n-loading-bar-provider>
 </template>
 
-<style scoped lang="scss">
-  .n-tabs {
-    margin: 0px;
+<style lang="scss">
+  .n-tabs .n-tabs-rail {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+  }
+
+  .n-tabs .n-tabs-rail .n-tabs-tab-wrapper .n-tabs-tab {
+    background-color: #ffffff;
+  }
+
+  .n-tabs .n-tabs-rail .n-tabs-tab-wrapper .n-tabs-tab.n-tabs-tab--active {
+    background-color: #42C7AB;
   }
 </style>
 

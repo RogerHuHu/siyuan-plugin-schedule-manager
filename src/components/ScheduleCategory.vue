@@ -1,5 +1,5 @@
 <template>
-  <n-card>
+  <n-card style="border-radius: 10px;" size="small">
     <n-grid :y-gap="3" :cols="1">
       <n-gi>
         <n-space align="center" justify="space-between">
@@ -65,11 +65,12 @@
 </template>
 
 <style scoped lang="scss">
+/*
   .n-card {
     border-radius: 10px;
   }
 
-  /*
+  
   .n-button {
     border-radius: 5px;
   }
