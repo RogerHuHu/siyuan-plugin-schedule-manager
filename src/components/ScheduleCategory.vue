@@ -131,7 +131,7 @@ export default defineComponent({
 
   methods: {
     submitCallback() {
-      let newCategory = new ScheduleCategory(this.scheduleName, this.scheduleColor);
+      let newCategory = new ScheduleCategory(this.scheduleName, this.scheduleColor, true);
       if(this.globalData.scheduleCategories.addCategory(newCategory) === true) {
         EventAggregator.emit('addCategorty', {
           "checked": newCategory.checked,

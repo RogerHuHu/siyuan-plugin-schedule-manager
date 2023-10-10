@@ -29,6 +29,9 @@ Through clicking the remove button at the end of a schedule category, you can re
 
 >- **Need to be careful**, removing a schedule category removes all the corresponding schedules and cannot be recovered.
 
+### 3. Selection of Schedule Category
+Click the checkbox in front of the schedule category name to choose whether to display all schedules under the current category. The check status will be saved in the document.
+
 ### 3. Add Schedule
 Double-click a calendar grid to open a schedule adding window, where you can customize the category, time range, name, content and status of a schedule.
 
@@ -58,7 +61,7 @@ Clicking the remove schedule button on the above-mentioned window will remove th
 - [ ] Optimization of the display style of schedule records in documents
 - [x] Task kanban view
 - [ ] Adaptation for mobile
-- [ ] Filter loaded schedules according to schedule categories
+- [x] Filter loaded schedules according to schedule categories
 
 ## FAQ
 
