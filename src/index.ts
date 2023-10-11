@@ -1,5 +1,5 @@
 import { Plugin, getFrontend, IModel, openTab, fetchPost } from "siyuan";
-import { setI18n, setPlugin, getScheduleManagerLoaded, setScheduleManagerLoaded } from "./utils/utils";
+import { setI18n, setPlugin, getScheduleManagerLoaded, setScheduleManagerLoaded, mountScheduleManager } from "./utils/utils";
 import { ScheduleManager } from "./ScheduleManager";
 
 import "./index.scss";
@@ -103,13 +103,13 @@ export default class PluginScheduleManager extends Plugin {
     async showCalendar() {
         let scheduleManagerDiv = document.createElement('div');
         scheduleManagerDiv.setAttribute("class", "schedule-app");
+        let sm = this.scheduleManager;
         await this.scheduleManager.show();
-
         this.customTab = this.addTab({
             type: TAB_TYPE,
             init() {
                 this.element.appendChild(scheduleManagerDiv);
-                //console.log(this.element);
+                mountScheduleManager(sm, scheduleManagerDiv);
             },
 
             beforeDestroy() {
@@ -121,6 +121,7 @@ export default class PluginScheduleManager extends Plugin {
                 setScheduleManagerLoaded(false);
             }
         });
+        console.log("showCalendar2");
 
         const tab = openTab({
             app: this.app,
@@ -134,6 +135,6 @@ export default class PluginScheduleManager extends Plugin {
             },
         });
 
-        this.scheduleManager.mount(scheduleManagerDiv);
+        //this.scheduleManager.mount(scheduleManagerDiv);
     }
 }

@@ -1,5 +1,6 @@
 import PluginScheduleManager from ".";
 import { ScheduleCategories } from "../ScheduleCategories";
+import { ScheduleManager } from "../ScheduleManager";
 
 // i18n 全局实例
 export let i18n: any;
@@ -19,6 +20,10 @@ export function getScheduleManagerLoaded(): boolean {
 
 export function setScheduleManagerLoaded(isLoaded: boolean) {
     isScheduleManagerLoaded = isLoaded;
+}
+
+export async function mountScheduleManager(sm: ScheduleManager, el: HTMLElement) {
+    sm.mount(el);
 }
 
 export const globalData = {

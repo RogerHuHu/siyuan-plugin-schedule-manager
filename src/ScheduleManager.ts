@@ -7,6 +7,7 @@ import EventAggregator from "./utils/EventAggregator";
 import { ScheduleCategories } from "./ScheduleCategories";
 import { Schedule } from "./Schedule";
 import { globalData } from "./utils/utils";
+import { call } from "naive-ui/es/_utils";
 
 export class ScheduleManager {
     app : any;
