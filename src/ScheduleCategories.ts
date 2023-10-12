@@ -1,7 +1,7 @@
 import { ScheduleCategory } from "./ScheduleCategory";
 import { Schedule } from "./Schedule";
 import { el, tr } from "date-fns/locale";
-import { fcApi } from "./utils/utils";
+import { fcApi, globalData } from "./utils/utils";
 import EventAggregator from "./utils/EventAggregator";
 import { reactive } from "vue"
 
@@ -73,6 +73,10 @@ export class ScheduleCategories {
 
     getCategory(index: number): ScheduleCategory {
         return this.categories[index];
+    }
+
+    getCategoryByName(name: string): ScheduleCategory {
+        return this.categories.find(c => c.name === name);
     }
 
     removeCategory(index: number): void {
@@ -148,25 +152,7 @@ export class ScheduleCategories {
     }
 
     getEventName(name: string, status: number): string {
-        let result = "";
-        switch(status) {
-          case 1:
-            result = '☕ ' + name;
-            break;
-          case 2:
-            result = '🏃‍♂️ ' + name;
-            break;
-          case 3:
-            result = '✅ ' + name;
-            break;
-          case 4:
-            result = '📦 ' + name;
-            break;
-          default:
-            result = name;
-            break;
-        }
-        return result;
+        return globalData.scheduleStatusLogo[status - 1] + ' ' + name;
     }
 
     updateSelection(): void {

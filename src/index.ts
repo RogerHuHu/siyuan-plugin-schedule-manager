@@ -121,7 +121,6 @@ export default class PluginScheduleManager extends Plugin {
                 setScheduleManagerLoaded(false);
             }
         });
-        console.log("showCalendar2");
 
         const tab = openTab({
             app: this.app,

@@ -27,7 +27,8 @@ export async function mountScheduleManager(sm: ScheduleManager, el: HTMLElement)
 }
 
 export const globalData = {
-    scheduleCategories: new ScheduleCategories()
+    scheduleCategories: new ScheduleCategories(),
+    scheduleStatusLogo: ['☕', '🏃‍♂️', '✅', '📦']
 }
 
 export enum smColor {

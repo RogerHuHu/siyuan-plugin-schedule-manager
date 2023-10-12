@@ -4,6 +4,74 @@
   </n-card>
 
   <n-modal
+    v-model:show="showScheduleInfoModal"
+  >
+    <n-card
+      style="width: 300px; border-radius: 10px"
+      :bordered="false"
+      size="small"
+      aria-modal="true"
+    >
+      <n-grid :cols="4" y-gap="5">
+        <n-gi>
+          <div style="font-size: 14px; font-weight: bold;">{{ scheduleCategoryText }}</div>
+        </n-gi>
+        <n-gi :span="2">
+          <n-tag round size="small" :bordered="false" :color="{color: category.color, textColor: category.textColor}">{{ selectedCategory }}</n-tag>
+        </n-gi>
+        <n-gi>
+          <n-grid :cols="2">
+            <n-gi>
+              <n-button quaternary circle size="small" @click="handleEditSchedule()">
+                <template #icon>
+                  <n-icon :component="EditOutlined" color="#18a058"/>
+                </template>
+              </n-button>
+            </n-gi>
+            <n-gi>
+              <n-button quaternary circle size="small" @click="handleDeleteSchedule()">
+                <template #icon>
+                  <n-icon :component="DeleteOutlined" color="#D60D0D"/>
+                </template>
+              </n-button>
+            </n-gi>
+          </n-grid>
+        </n-gi>
+        <n-gi>
+          <div style="font-size: 14px; font-weight: bold;">{{ startTimeText }}</div>
+        </n-gi>
+        <n-gi :span="3">
+          <div style="font-size: 14px;">{{ scheduleStartTime }}</div>
+        </n-gi>
+        <n-gi>
+          <div style="font-size: 14px; font-weight: bold;">{{ endTimeText }}</div>
+        </n-gi>
+        <n-gi :span="3">
+          <div style="font-size: 14px;">{{ scheduleEndTime }}</div>
+        </n-gi>
+        <n-gi>
+          <div style="font-size: 14px; font-weight: bold;">{{ scheduleNameText }}</div>
+        </n-gi>
+        <n-gi :span="3">
+          <div style="font-size: 14px;">{{ scheduleName }}</div>
+        </n-gi>
+        <n-gi>
+          <div style="font-size: 14px; font-weight: bold;">{{ scheduleContentText }}</div>
+        </n-gi>
+        <n-gi :span="3">
+          <div style="font-size: 14px; max-height: 200px; overflow: auto;">{{ scheduleContent }}</div>
+        </n-gi>
+        <n-gi>
+          <div style="font-size: 14px; font-weight: bold;">{{ statusText }}</div>
+        </n-gi>
+        <n-gi :span="3">
+          <div style="font-size: 14px;">{{ scheduleStatus }}</div>
+        </n-gi>
+      </n-grid>
+    </n-card>
+  </n-modal>
+
+  <!--n-modal
     v-model:show="showModal"
     preset="dialog"
     v-model:title="addScheduleText"
@@ -75,7 +143,7 @@
         </n-space>
       </n-gi>
     </n-grid>             
-  </n-modal>
+  </n-modal-->
 
   <n-modal
     v-model:show="showDeleteScheduleConfirmModal"
@@ -133,6 +201,7 @@
 <script>
   import { i18n, globalData, smColor, setFCApi } from "../utils/utils";
   import { defineComponent, ref } from 'vue';
+  import { DeleteOutlined, EditOutlined } from '@vicons/antd'
   import { CalendarOptions, EventApi, DateSelectArg, EventClickArg } from '@fullcalendar/core';
   import FullCalendar from "@fullcalendar/vue3";
   import interactionPlugin from '@fullcalendar/interaction';
@@ -153,7 +222,10 @@
 
     setup() {
       return {
+        DeleteOutlined,
+        EditOutlined,
         addScheduleText: i18n.addSchedule,
+        scheduleCategoryText: i18n.scheduleCategory,
         selectScheduleCategoryText: i18n.selectScheduleCategory,
         selectScheduleRangeText: i18n.selectScheduleRange,
         scheduleNameText: i18n.scheduleName,
@@ -165,17 +237,22 @@
         updateText: i18n.update,
         confirmText: i18n.confirm,
         confirmRemoveScheduleText: i18n.confirmRemoveSchedule,
+        startTimeText: i18n.startTime,
+        endTimeText: i18n.endTime,
         selectedDate: "",
         modalClosable: false,
         modalShowIcon: false,
         isUpdateButtonVisible: false,
         isSubmitButtonVisible: true,
-        selectedCategoryColor: ref(null),
+        category: ref(null),
         selectedCategory: ref(null),
         scheduleRange: ref(null),
+        scheduleStartTime: ref(null),
+        scheduleEndTime: ref(null),
         scheduleName: ref(null),
         scheduleContent: ref(null),
         selectedScheduleStatus: ref(null),
+        scheduleStatus: ref(null),
         scheduleStatusList: [
           {
             value: 1,
@@ -201,7 +278,7 @@
     data() {
       return {
         globalData,
-        showModal: false,
+        showScheduleInfoModal: false,
         showDeleteScheduleConfirmModal: false,
         calendarCategories: [],
 
@@ -265,12 +342,12 @@
 
     methods: {
       handleCancelClick() {
-        this.showModal = false;
+        this.showScheduleInfoModal = false;
         this.clearEventInfo();
       },
 
       handleDeleteClick() {
-        this.showModal = false;
+        this.showScheduleInfoModal = false;
         this.showDeleteScheduleConfirmModal = true;
       },
 
@@ -285,7 +362,7 @@
       },
 
       handleSubmitClick() {
-        this.showModal = false;
+        this.showScheduleInfoModal = false;
         if(this.scheduleRange[0] == this.scheduleRange[1]) {
           showMessage(i18n.scheduleRangeError, 6000, "error");
         } else {
@@ -302,7 +379,7 @@
       }, 
 
       handleUpdateClick() {
-        this.showModal = false;
+        this.showScheduleInfoModal = false;
 
         if(this.scheduleRange[0] == this.scheduleRange[1]) {
           showMessage(i18n.scheduleRangeError, 6000, "error");
@@ -332,7 +409,7 @@
           this.selectedDate = "";
           this.isUpdateButtonVisible = false;
           this.isSubmitButtonVisible = true;
-          this.showModal = true;
+          this.showScheduleInfoModal = true;
         } else {
           this.selectedDate = selectInfo.startStr;
         }
@@ -353,69 +430,25 @@
         this.scheduleContent = clickInfo.event.extendedProps.content;
         this.selectedScheduleStatus = clickInfo.event.extendedProps.status;
         this.selectedEvent = clickInfo.event;
-        this.showModal = true;
+
+        this.category = this.globalData.scheduleCategories.getCategoryByName(this.selectedCategory);
+        this.scheduleStartTime = format(this.scheduleRange[0], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[0], 'HH:mm:ss');
+        this.scheduleEndTime = format(this.scheduleRange[1], 'yyyy-MM-dd') + ' ' + format(this.scheduleRange[1], 'HH:mm:ss'),
+        this.scheduleStatus = this.scheduleStatusList[this.selectedScheduleStatus - 1].label;
+        this.showScheduleInfoModal = true;
       },
 
       handleEvents(events) {
         this.currentEvents = events
       },
 
-      createEventRange(eventId, name, range, color, eventCategory, eventContent, eventStatus) {
-         let newEvent = this.createEventStartEnd(eventId, name,
-                                                 format(range[0], 'yyyy-MM-dd') + ' ' + format(range[0], 'HH:mm:ss'),
-                                                 format(range[1], 'yyyy-MM-dd') + ' ' + format(range[1], 'HH:mm:ss'),
-                                                 color, eventCategory, eventContent, eventStatus);
-          return newEvent;
-      },
-
-      createEventStartEnd(eventId, name, eventStart, eventEnd, color, eventCategory, eventContent, eventStatus) {
-        let newEvent = {
-            id: eventId,
-            title: this.getEventName(name, eventStatus),
-            start: eventStart,
-            end: eventEnd,
-            backgroundColor: color,
-            borderColor: color,
-            display: 'block',
-            extendedProps: {
-              category: eventCategory,
-              content: eventContent,
-              status: eventStatus // 日程状态
-            }
-          };
-          return newEvent;
-      },
-
       clearEventInfo() {
-        this.selectedCategoryColor = "";
         this.selectedCategory = "";
         this.scheduleRange = null;
         this.scheduleName = null;
         this.scheduleContent = null;
         this.selectedScheduleStatus = null;
       },
-
-      getEventName(name, status) {
-        let result = "";
-        switch(status) {
-          case 1:
-            result = '☕ ' + name;
-            break;
-          case 2:
-            result = '🏃‍♂️ ' + name;
-            break;
-          case 3:
-            result = '✅ ' + name;
-            break;
-          case 4:
-            result = '📦 ' + name;
-            break;
-          default:
-            result = name;
-            break;
-        }
-        return result;
-      }
     }
   });
 </script>
