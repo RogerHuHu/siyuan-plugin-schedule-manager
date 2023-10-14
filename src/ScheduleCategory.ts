@@ -1,4 +1,4 @@
-import { Schedule } from "Schedule";
+import { Schedule } from "./Schedule";
 
 export class ScheduleCategory {
     checked: boolean;

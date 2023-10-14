@@ -86,7 +86,7 @@ export class ScheduleCategories {
 
     addEventSource(category: ScheduleCategory):void {
         let eventSource = {
-            events: [],
+            events: [] as any[],
             id: category.name,
             display: 'block',
             color: category.color,

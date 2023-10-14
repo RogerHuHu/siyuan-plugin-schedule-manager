@@ -112,6 +112,14 @@ module.exports = (env, argv) => {
                 {
                     test: /\.vue$/,
                     loader: 'vue-loader'
+                },
+                {
+                    test: /\.tsx?$/,
+                    loader: 'ts-loader',
+                    exclude: /node_modules/,
+                    options: {
+                        appendTsSuffixTo: [/\.vue$/],
+                    }
                 }
             ],
         },

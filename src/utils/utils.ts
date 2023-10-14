@@ -1,4 +1,4 @@
-import PluginScheduleManager from ".";
+import PluginScheduleManager from "../index";
 import { ScheduleCategories } from "../ScheduleCategories";
 import { ScheduleManager } from "../ScheduleManager";
 

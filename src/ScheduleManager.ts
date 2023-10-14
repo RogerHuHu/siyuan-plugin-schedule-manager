@@ -58,11 +58,11 @@ export class ScheduleManager {
             this.createDocument(this.noteBookId, p);
         });
 
-        EventAggregator.on('deleteCategorty', (p) => {
+        EventAggregator.on('deleteCategorty', (p: any) => {
             this.deleteDocument(this.noteBookId, this.getDocumentIdByName(p.name));
         });
 
-        EventAggregator.on('addSchedule', (p) => {
+        EventAggregator.on('addSchedule', (p: any) => {
             fetchPost("/api/block/appendBlock", {
                 "data": JSON.stringify(p).replace(/#/g,""),
                 "dataType": "markdown",
@@ -80,7 +80,7 @@ export class ScheduleManager {
             this.deleteSchedule(p);
         });
 
-        EventAggregator.on('updateCategortySelection', (p) => {
+        EventAggregator.on('updateCategortySelection', (p: any) => {
             this.setDocumentCheckedProperty(p.name, p.checked);
         });
     }
@@ -99,7 +99,7 @@ export class ScheduleManager {
                 name: docProp.name,
                 checked: docProp.checked,
                 color: docProp.color,
-                schedules: []
+                schedules: [] as any[]
             };
             this.documents.push(document);
         });
@@ -146,7 +146,7 @@ export class ScheduleManager {
                     name: "",
                     checked: "",
                     color: "",
-                    schedules: []
+                    schedules: [] as any[]
                 }
                 this.documents.push(document);
             }
@@ -244,7 +244,7 @@ export class ScheduleManager {
     }
 
     async getDocuments1(): Promise<any[]> {
-        let documents = [];
+        let documents = [] as any;
         let query = "SELECT id FROM blocks WHERE type = \'d\' AND box =\'" + this.noteBookId + "\'";
         await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
             for(let id of response.data) {
@@ -277,7 +277,7 @@ export class ScheduleManager {
 
     async updateSchedules1(docId: string, documents: any[]) {
         let query = "SELECT content FROM blocks WHERE parent_id =\'" + docId + "\'";
-        let schedules = [];
+        let schedules = [] as any[];
         await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
             schedules = response.data;
         });
@@ -306,8 +306,7 @@ export class ScheduleManager {
             }).then(response => {
             })
 
-            let newSchedule = new Schedule(content.id, content.title, content.start, content.end, content.backgroundColor,
-                                           content.borderColor, content.extendedProps.category, content.extendedProps.content,
+            let newSchedule = new Schedule(content.id, content.title, content.start, content.end, content.extendedProps.category, content.extendedProps.content,
                                            content.extendedProps.status);
             //console.log(newSchedule);
             await fetchSyncPost("/api/block/appendBlock", {
