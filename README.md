@@ -14,7 +14,7 @@ The calendar is displayed as a tab and automatically creates a **Schedule Manage
  >- **Mind using with caution!!!**
  >- **Please do not remove the notebook. I'm new to Vue, Typescript, etc., and have not added enough exception handling, removing the notebook may cause unnecessary trouble !!!**
 
-The icons of schedule statuses：☕ Todo, 🏃‍♂️ Doing, ✅ Done, 📦 Archive（**The archive function may be implemented in the next version.**）
+The icons of schedule statuses：☕ Todo, 🏃‍♂️ Doing, ✅ Done, 📦 Archive
 
 ## Function
 ### 1. Add Schedule Category
