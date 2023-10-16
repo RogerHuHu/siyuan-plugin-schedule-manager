@@ -9,7 +9,7 @@ The schedule management plugin manages to-do items in the form of a calendar, an
 
 The calendar is displayed as a tab and automatically creates a **Schedule Manager Notebook** in the document tree when first launched.
 
-[![pPog6L8.png](https://z1.ax1x.com/2023/09/22/pPog6L8.png)](https://imgse.com/i/pPog6L8)
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/schedule_manager_notebook.png" alt="">
 
  >- **Mind using with caution!!!**
  >- **Please do not remove the notebook. I'm new to Vue, Typescript, etc., and have not added enough exception handling, removing the notebook may cause unnecessary trouble !!!**
@@ -18,7 +18,7 @@ The icons of schedule statuses：☕ Todo, 🏃‍♂️ Doing, ✅ Done, 📦 A
 
 ## Function
 ### 1. Add Schedule Category
-[![pPoggeS.png](https://z1.ax1x.com/2023/09/22/pPoggeS.png)](https://imgse.com/i/pPoggeS)
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/add_schedule_category.png" alt="">
 
 Clicking the add schedule category button to open the schedule category information editing window, where you can customize the schedule category name and corresponding color.
 
@@ -32,28 +32,37 @@ Through clicking the remove button at the end of a schedule category, you can re
 ### 3. Selection of Schedule Category
 Click the checkbox in front of the schedule category name to choose whether to display all schedules under the current category. The check status will be saved in the document.
 
-### 3. Add Schedule
+### 4. Add Schedule
 Double-click a calendar grid to open a schedule adding window, where you can customize the category, time range, name, content and status of a schedule.
 
 When adding a schedule, a record will be created in the corresponding document, **do not edit it!!!**.
 
-[![pPogRoQ.png](https://z1.ax1x.com/2023/09/22/pPogRoQ.png)](https://imgse.com/i/pPogRoQ)
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/add_schedule.png" alt="">
 
-### 4. Update Schedule
+### 5. Update Schedule
 Clicking on a certain schedule will open an update window, where you can modify the information of the schedule. Simultaneously, the information recoreded in the corresponding document will be modified.
-[![pPog2dg.png](https://z1.ax1x.com/2023/09/22/pPog2dg.png)](https://imgse.com/i/pPog2dg)
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/update_schedule.png" alt="">
 
-### 5. Remove Schedule
+### 6. Remove Schedule
 Clicking the remove schedule button on the above-mentioned window will remove the current schedule, as well as the recored in the corresponding document, **it is non-recoverable**.
 
-### 6. Schedule information Edit Window
+### 7. Recurring schedules
+In the schedule information editing interface, the repeating slider can be used to set whether the current schedule is a repeating schedule，it supports：
+- Recurring by day, automatically generates recurring schedules at set intervals (daily intervals) within the selected date range
+- Recurring by week, automatically generates a recurring schedule by selecting "Monday, Tuesday, ..., Sunday" within the selected date range
+- Recurring by month, automatically generates a recurring schedule at the set interval (monthly interval) within the selected date range, **generates a schedule every day of the month**
+- Recurring by year, automatically generates a recurring schedule at the set interval (yearly interval) within the selected date range, **generates a schedule every day of the year**
+
+### 8. Schedule information Edit Window
 1. When you click the OK, Update, Remove, or Cancel buttons, the window disappears and the last filled information will be cleared.
 2. When you click on a blank space, the window disappear and will retain the last filled information (to prevent misuse).
 
-### 7. Task kanban view
+### 9. Task kanban view
 1. Implemented a relatively rudimentary task kanban.
 2. Adding or dragging a schedule is not supported.
 3. Support for editing schedule information.
+
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/kanban.png" alt="">
 
 ## Todo
 - [x] The internationalization of the interface language and the document
