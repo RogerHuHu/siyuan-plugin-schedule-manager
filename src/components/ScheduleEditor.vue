@@ -1,51 +1,90 @@
 <template>
   <n-modal v-model:show="showEditModal">
     <n-card style="width: 280px; border-radius: 10px" :bordered="false" size="small" aria-modal="true">
-      <n-grid :cols="8" y-gap="2">
-        <n-gi :span="2" style="display: flex; justify-content:right;">
+      <n-grid :cols="4" y-gap="2">
+        <n-gi :span="1" style="display: flex; justify-content:right;">
           <div class="sm-schedule-item-header">{{ scheduleCategoryText }}</div>
         </n-gi>
-        <n-gi :span="6">
+        <n-gi :span="3">
           <n-select v-model:value="selectedCategory" size="tiny" label-field="name" value-field="name"
             :options="globalData.scheduleCategories.categories" />
         </n-gi>
   
-        <n-gi :span="2" style="display: flex; justify-content:right;">
+        <n-gi :span="1" style="display: flex; justify-content:right;">
           <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ scheduleNameText }}</div>
         </n-gi>
-        <n-gi :span="6">
+        <n-gi :span="3">
           <n-input v-model:value="scheduleName" size="small" type="text" v-model:placeholder="inputScheduleNameText" />
         </n-gi>
 
-        <n-gi :span="2" style="display: flex; justify-content:right;">
+        <n-gi :span="1" style="display: flex; justify-content:right;">
+          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ recurringText }}</div>
+        </n-gi>
+        <n-gi :span="3">
+          <n-switch v-model:value="isRecurringSchedule" size="small"/>
+        </n-gi>
+
+        <!--周期性日程参数-->
+        <n-gi :span="1" style="display: flex; justify-content:right;" v-if="isRecurringSchedule">
+          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ cycleText }}</div>
+        </n-gi>
+        <n-gi :span="3" v-if="isRecurringSchedule">
+          <n-select v-model:value="selectedFreq" size="tiny" :options="freqs" />
+        </n-gi>
+        <n-gi :span="4" v-if="isRecurringSchedule">
+          <n-select v-model:value="selectedWeekday" multiple :options="weekdays" size="tiny" :disabled="selectedFreq != 'weekly'"/>
+        </n-gi>
+
+        <n-gi :span="1" style="display: flex; justify-content:right;" v-if="isRecurringSchedule">
+          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ intervalText }}</div>
+        </n-gi>
+        <n-gi :span="3" v-if="isRecurringSchedule">
+          <n-input v-model:value="scheduleInterval" type="text" :allow-input="onlyAllowNumber" :placeholder="onlyAllowNumberText" size="small"/>
+        </n-gi>
+
+        <n-gi :span="1" style="display: flex; justify-content:right;" v-if="isRecurringSchedule">
           <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
         </n-gi>
-        <n-gi :span="6">
+        <n-gi :span="3" v-if="isRecurringSchedule">
           <n-date-picker v-model:value="startTime" size="small" type="datetime" format="yyy-MM-dd HH:mm" clearable />
         </n-gi>
 
-        <n-gi :span="2" style="display: flex; justify-content:right;">
+        <n-gi :span="1" style="display: flex; justify-content:right;" v-if="isRecurringSchedule">
           <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ endTimeText }}</div>
         </n-gi>
-        <n-gi :span="6">
+        <n-gi :span="3" v-if="isRecurringSchedule">
+          <n-date-picker v-model:value="endTime" size="small" type="datetime" format="yyy-MM-dd" clearable />
+        </n-gi>
+
+        <!--非周期性日程参数-->
+        <n-gi :span="1" style="display: flex; justify-content:right;" v-if="!isRecurringSchedule">
+          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
+        </n-gi>
+        <n-gi :span="3" v-if="!isRecurringSchedule">
+          <n-date-picker v-model:value="startTime" size="small" type="datetime" format="yyy-MM-dd HH:mm" clearable />
+        </n-gi>
+
+        <n-gi :span="1" style="display: flex; justify-content:right;" v-if="!isRecurringSchedule">
+          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ endTimeText }}</div>
+        </n-gi>
+        <n-gi :span="3" v-if="!isRecurringSchedule">
           <n-date-picker v-model:value="endTime" size="small" type="datetime" format="yyy-MM-dd HH:mm" clearable />
         </n-gi>
 
-        <n-gi :span="2" style="display: flex; justify-content:right;">
+        <n-gi :span="1" style="display: flex; justify-content:right;">
           <div class="sm-schedule-item-header" style="margin-top: 3.5px;">{{ scheduleContentText }}</div>
         </n-gi>
-        <n-gi :span="6">
+        <n-gi :span="3">
           <n-input v-model:value="scheduleContent" type="textarea" placeholder="" :autosize="{ maxRows: 7 }" size="small" />
         </n-gi>
 
-        <n-gi :span="2" style="display: flex; justify-content:right;">
+        <n-gi :span="1" style="display: flex; justify-content:right;">
           <div class="sm-schedule-item-header">{{ statusText }}</div>
         </n-gi>
-        <n-gi :span="6">
-          <!--div style="font-size: 14px; margin-left: 10px;">{{ scheduleStatus }}</div-->
+        <n-gi :span="3">
           <n-select v-model:value="selectedScheduleStatus" size="tiny" :options="scheduleStatusList" />
         </n-gi>
-        <n-gi :span="8">
+        <n-gi :span="4">
           <n-space justify="end" size="small">
             <n-button quaternary circle size="small" @click="handleSubmitSchedule()">
               <template #icon>
@@ -132,6 +171,10 @@ export default defineComponent({
       confirmRemoveScheduleText: i18n.confirmRemoveSchedule,
       startTimeText: i18n.startTime,
       endTimeText: i18n.endTime,
+      recurringText: i18n.recurring,
+      cycleText: i18n.cycle,
+      intervalText: i18n.interval,
+      onlyAllowNumberText: i18n.onlyAllowNumber,
       selectedDate: "",
       modalClosable: false,
       modalShowIcon: false,
@@ -144,6 +187,9 @@ export default defineComponent({
       scheduleName: ref(null),
       scheduleContent: ref(null),
       selectedScheduleStatus: ref(null),
+      isRecurringSchedule: ref(null),
+      scheduleInterval: ref(1),
+      selectedWeekday: ref(null),
       scheduleStatusList: [
         {
           value: 1,
@@ -162,6 +208,55 @@ export default defineComponent({
           label: '📦 ' + i18n.archive
         }
       ],
+      freqs: [
+        {
+          value: 'daily',
+          label: i18n.day
+        },
+        {
+          value: 'weekly',
+          label: i18n.week
+        },
+        {
+          value: 'monthly',
+          label: i18n.month
+        },
+        {
+          value: 'yearly',
+          label: i18n.year
+        }
+      ],
+      weekdays: [
+        {
+          value: 'monday',
+          label: i18n.monday
+        },
+        {
+          value: 'tuesday',
+          label: i18n.tuesday
+        },
+        {
+          value: 'wednesday',
+          label: i18n.wednesday
+        },
+        {
+          value: 'thursday',
+          label: i18n.thursday
+        },
+        {
+          value: 'friday',
+          label: i18n.friday
+        },
+        {
+          value: 'saturday',
+          label: i18n.saturday
+        },
+        {
+          value: 'sunday',
+          label: i18n.sunday
+        }
+      ],
+      selectedFreq: ref(null),
       selectedEvent: null,
     };
   },

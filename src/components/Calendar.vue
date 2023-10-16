@@ -46,6 +46,7 @@
   import dayGridPlugin from '@fullcalendar/daygrid';
   import timeGridPlugin from '@fullcalendar/timegrid';
   import listPlugin from '@fullcalendar/list';
+  import rrulePlugin from '@fullcalendar/rrule'
 
   import ScheduleEditor from "./ScheduleEditor.vue";
 
@@ -68,7 +69,7 @@
         globalData,
         
         calendarOptions: {
-          plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin],
+          plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin, rrulePlugin],
           initialView: 'dayGridMonth', // 默认为哪个视图（月： dayGridMonth，周：timeGridWeek，日：timeGridDay）
           firstDay: 1, // 设置一周中显示的第一天是哪天，周日是 0，周一是 1， 类推
           locale: 'zh-cn', // 切换语言，当前为中文
