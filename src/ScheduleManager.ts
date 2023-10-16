@@ -306,8 +306,10 @@ export class ScheduleManager {
             }).then(response => {
             })
 
-            let newSchedule = new Schedule(content.id, content.title, content.start, content.end, content.extendedProps.category, content.extendedProps.content,
-                                           content.extendedProps.status);
+            let newSchedule = new Schedule(content.id, content.title,
+                                           content.isRecurringSchedule, content.frequency, content.weekdays, content.interval,
+                                           content.start, content.end,
+                                           content.extendedProps.category, content.extendedProps.content, content.extendedProps.status);
             //console.log(newSchedule);
             await fetchSyncPost("/api/block/appendBlock", {
                 "data": JSON.stringify(newSchedule),

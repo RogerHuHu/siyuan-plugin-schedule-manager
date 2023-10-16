@@ -39,7 +39,7 @@
           <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ intervalText }}</div>
         </n-gi>
         <n-gi :span="3" v-if="isRecurringSchedule">
-          <n-input v-model:value="scheduleInterval" type="text" :allow-input="onlyAllowNumber" :placeholder="onlyAllowNumberText" size="small"/>
+          <n-input-number v-model:value="scheduleInterval" size="small"/>
         </n-gi>
 
         <n-gi :span="1" style="display: flex; justify-content:right;" v-if="isRecurringSchedule">
@@ -189,7 +189,7 @@ export default defineComponent({
       selectedScheduleStatus: ref(null),
       isRecurringSchedule: ref(null),
       scheduleInterval: ref(1),
-      selectedWeekday: ref(null),
+      selectedWeekday: ref([]),
       scheduleStatusList: [
         {
           value: 1,
@@ -228,31 +228,31 @@ export default defineComponent({
       ],
       weekdays: [
         {
-          value: 'monday',
+          value: 'mo',
           label: i18n.monday
         },
         {
-          value: 'tuesday',
+          value: 'tu',
           label: i18n.tuesday
         },
         {
-          value: 'wednesday',
+          value: 'we',
           label: i18n.wednesday
         },
         {
-          value: 'thursday',
+          value: 'th',
           label: i18n.thursday
         },
         {
-          value: 'friday',
+          value: 'fr',
           label: i18n.friday
         },
         {
-          value: 'saturday',
+          value: 'sa',
           label: i18n.saturday
         },
         {
-          value: 'sunday',
+          value: 'su',
           label: i18n.sunday
         }
       ],
@@ -283,20 +283,33 @@ export default defineComponent({
     },
 
     updateSchedule(param) {
-      this.updateScheduleInternal(param.id, param.extendedProps.category, param.title.substring(param.title.indexOf(' ') + 1),
-                                  param.startStr, param.endStr, param.extendedProps.content,
-                                  param.extendedProps.status);
+      if(param.extendedProps.rrule === undefined) {
+        this.updateScheduleInternal(param.id, param.extendedProps.category, param.title.substring(param.title.indexOf(' ') + 1),
+                                    false, '', [], 1,
+                                    param.startStr, param.endStr, param.extendedProps.content,
+                                    param.extendedProps.status);
+      } else {
+        this.updateScheduleInternal(param.id, param.extendedProps.category, param.title.substring(param.title.indexOf(' ') + 1),
+                                    true, param.extendedProps.rrule.freq, param.extendedProps.rrule.byweekday, param.extendedProps.rrule.interval,
+                                    param.extendedProps.rrule.dtstart, param.extendedProps.rrule.until, param.extendedProps.content,
+                                    param.extendedProps.status);
+      }
+      
     },
 
     updateScheduleKanban(cindex, sindex) {
       this.cindex = cindex;
       this.sindex = sindex;
       let schedule = this.globalData.scheduleCategories.categories[cindex].schedules[sindex];
-      this.updateScheduleInternal(schedule.id, schedule.category, schedule.title, schedule.start, schedule.end,
+      this.updateScheduleInternal(schedule.id, schedule.category, schedule.title,
+                                  schedule.isRecurringSchedule, schedule.frequency, schedule.weekdays, schedule.interval,
+                                  schedule.start, schedule.end,
                                   schedule.content, schedule.status);
     },
 
-    updateScheduleInternal(id, category, title, startTime, endTime, content, status) {
+    updateScheduleInternal(id, category, title,
+                           isRecurringSchedule, frequency, weekdays, interval,
+                           startTime, endTime, content, status) {
       this.isDeleteButtonVisible = true;
       this.selectedCategory = category;
       this.scheduleName = title;
@@ -305,7 +318,7 @@ export default defineComponent({
 
       if (this.endTime == null)
         this.endTime = this.startTime + 1;
-
+      
       let date = parseISO(startTime);
       this.startTime = getTime(date);
       date = parseISO(endTime);
@@ -314,11 +327,16 @@ export default defineComponent({
       this.selectedScheduleStatus = status;
 
       this.category = this.globalData.scheduleCategories.getCategoryByName(this.selectedCategory);
-      this.scheduleStartTime = format(this.startTime, 'yyyy-MM-dd HH:mm:ss');
-      this.scheduleEndTime = format(this.endTime, 'yyyy-MM-dd HH:mm:ss'),
+      //this.scheduleStartTime = format(this.startTime, 'yyyy-MM-dd HH:mm:ss');
+      //this.scheduleEndTime = format(this.endTime, 'yyyy-MM-dd HH:mm:ss'),
       this.scheduleStatus = this.scheduleStatusList[this.selectedScheduleStatus - 1].label;
+      
+      this.isRecurringSchedule = isRecurringSchedule;
+      this.selectedFreq = frequency;
+      this.selectedWeekday = weekdays;
+      this.scheduleInterval = interval;
 
-      this.selectedSchedule = new Schedule(id, title, startTime, endTime, category, content, status);
+      this.selectedSchedule = new Schedule(id, '', isRecurringSchedule, frequency, weekdays, interval, '', '', category, '', 1);
 
       this.showEditModal = true;
     },
@@ -329,23 +347,14 @@ export default defineComponent({
           showMessage(i18n.scheduleRangeError, 6000, "error");
         } else {
           if(this.isDeleteButtonVisible === false) {
-            let schedule = new Schedule(
-              new Date().getTime().toString(), this.scheduleName,
-              format(this.startTime, 'yyyy-MM-dd HH:mm:ss'),
-              format(this.endTime, 'yyyy-MM-dd HH:mm:ss'),
-              this.selectedCategory, this.scheduleContent, this.selectedScheduleStatus
-            );
+            // 提交新日程
+            let schedule = this.createNewSchedule();
             this.globalData.scheduleCategories.addSchedule(schedule);
             EventAggregator.emit('addSchedule', schedule);
           } else {
+            // 更新已有日程
             let oldCategory = this.selectedSchedule.category;
-            let schedule = new Schedule(
-              this.selectedSchedule.id, this.scheduleName,
-              format(this.startTime, 'yyyy-MM-dd HH:mm:ss'),
-              format(this.endTime, 'yyyy-MM-dd HH:mm:ss'),
-              this.selectedCategory, this.scheduleContent, this.selectedScheduleStatus
-            );
-
+            let schedule = this.createUpdateSchedule();
             this.globalData.scheduleCategories.updateSchedule(oldCategory, schedule);
             EventAggregator.emit('updateSchedule', {
               old: oldCategory,
@@ -369,6 +378,32 @@ export default defineComponent({
         this.globalData.scheduleCategories.removeSchedule(this.selectedSchedule);
         EventAggregator.emit('deleteSchedule', this.selectedSchedule);
         this.clearEventInfo();
+      },
+
+      createNewSchedule() {
+        return this.createSchedule(new Date().getTime().toString());
+      },
+
+      createUpdateSchedule() {
+        return this.createSchedule(this.selectedSchedule.id);
+      },
+
+      createSchedule(id) {
+        let start = "", end = "";
+        
+        if(this.isRecurringSchedule) {
+          start = format(this.startTime, "yyyy-MM-dd'T'HH:mm:ss");
+          end = format(this.endTime, 'yyyy-MM-dd');
+        } else {
+          start = format(this.startTime, 'yyyy-MM-dd HH:mm:ss');
+          end = format(this.endTime, 'yyyy-MM-dd HH:mm:ss');
+        }
+        
+        return new Schedule(id, this.scheduleName,
+                            this.isRecurringSchedule, this.selectedFreq, this.selectedWeekday, this.scheduleInterval,
+                            start, end,
+                            this.selectedCategory, this.scheduleContent, this.selectedScheduleStatus
+                           );
       },
 
       clearEventInfo() {

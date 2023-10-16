@@ -42,8 +42,20 @@ export class ScheduleCategories {
                   continue;
                 }
                 let content = JSON.parse(elementS.content);
-                let schedule = new Schedule(content.id, content.title, content.start, content.end,
+
+                let schedule = null;
+                if(content.isRecurringSchedule !== null && content.isRecurringSchedule === true) {
+                    schedule = new Schedule(content.id, content.title,
+                                            true, content.frequency, content.weekdays, content.interval,                   
+                                            content.start, content.end,
                                             content.category, content.content, content.status);
+                } else {
+                    schedule = new Schedule(content.id, content.title,
+                                            false, '', [], 1,                   
+                                            content.start, content.end,
+                                            content.category, content.content, content.status);
+                }
+                
                 this.addSchedule(schedule);
             }
         }
@@ -137,17 +149,46 @@ export class ScheduleCategories {
     }
 
     createEvent(schedule: Schedule) {
-        let newEvent = {
-            id: schedule.id,
-            title: this.getEventName(schedule.title, schedule.status),
-            start: schedule.start,
-            end: schedule.end,
-            extendedProps: {
-              category: schedule.category,
-              content: schedule.content,
-              status: schedule.status // 日程状态
-            }
-        };
+        let newEvent = null;
+
+        if(schedule.isRecurringSchedule) {
+            newEvent = {
+                id: schedule.id,
+                title: this.getEventName(schedule.title, schedule.status),
+                rrule: {
+                    freq: schedule.frequency,
+                    interval: schedule.interval,
+                    byweekday: schedule.weekdays,
+                    dtstart: schedule.start,
+                    until: schedule.end
+                },
+                extendedProps: {
+                    category: schedule.category,
+                    content: schedule.content,
+                    status: schedule.status, // 日程状态
+                    rrule: {
+                        freq: schedule.frequency,
+                        interval: schedule.interval,
+                        byweekday: schedule.weekdays,
+                        dtstart: schedule.start,
+                        until: schedule.end
+                    }
+                }
+            };
+        } else {
+            newEvent = {
+                id: schedule.id,
+                title: this.getEventName(schedule.title, schedule.status),
+                start: schedule.start,
+                end: schedule.end,
+                extendedProps: {
+                  category: schedule.category,
+                  content: schedule.content,
+                  status: schedule.status // 日程状态
+                }
+            };
+        }
+        
         return newEvent;
     }
 
