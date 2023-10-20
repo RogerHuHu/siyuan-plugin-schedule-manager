@@ -12,6 +12,7 @@ export class Schedule {
     refBlockId: string;
     content: string;
     status: number;
+    doneTime: number;
 
     constructor(id?: string, title?: string,
                 isRecurringSchedule?: boolean, frequency?: string, weekdays?: string[], interval?: number,
@@ -29,5 +30,10 @@ export class Schedule {
         this.refBlockId = refBlockId;
         this.content = content;
         this.status = status;
+        this.doneTime = 0;
+    }
+
+    setDoneTime(doneTime?: number) {
+        this.doneTime = doneTime === undefined ? 0 : doneTime;
     }
 }

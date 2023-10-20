@@ -4,6 +4,7 @@ import { el, tr } from "date-fns/locale";
 import { fcApi, globalData } from "./utils/utils";
 import EventAggregator from "./utils/EventAggregator";
 import { reactive } from "vue"
+import * as moment from "moment";
 
 export class ScheduleCategories {
     categories: ScheduleCategory[];
@@ -49,11 +50,13 @@ export class ScheduleCategories {
                                             true, content.frequency, content.weekdays, content.interval,                   
                                             content.start, content.end,
                                             content.category, content.refBlockId, content.content, content.status);
+                    schedule.setDoneTime(content.doneTime);
                 } else {
                     schedule = new Schedule(content.id, content.title,
                                             false, '', [], 1,                   
                                             content.start, content.end,
                                             content.category, content.refBlockId, content.content, content.status);
+                    schedule.setDoneTime(content.doneTime);
                 }
                 
                 this.addSchedule(schedule);
@@ -217,6 +220,20 @@ export class ScheduleCategories {
                 "name": category.name,
                 "checked": category.checked,
             });
+        }
+    }
+
+    archiveSchedules(archiveTime: number): void {
+        for(let category of this.categories) {
+            for(let schedule of category.schedules) {
+                if(schedule.status === 3 && moment().valueOf() >= (schedule.doneTime + archiveTime * 86400)) {
+                    schedule.status = 4;
+                    this.updateSchedule(schedule.category, schedule);
+                    EventAggregator.emit('updateSchedule', {
+                        old: schedule.category,
+                        new: schedule });
+                }
+            }
         }
     }
 }

@@ -7,7 +7,10 @@
             <n-tab-pane name="calendar" v-model:tab="calendarText">
               <n-grid x-gap="5" :cols="6">
                 <n-gi>
-                  <scheduleCategory/>
+                  <n-space vertical>
+                    <settings/>
+                    <scheduleCategory/>
+                  </n-space>
                 </n-gi>
                 <n-gi span="5">
                   <calendar/>
@@ -47,12 +50,14 @@ import { i18n } from "./utils/utils";
   import ScheduleCategory from "./components/ScheduleCategory.vue";
   import Calendar from "./components/Calendar.vue";
   import Kanban from "./components/Kanban.vue";
+  import Settings from "./components/Settings.vue";
 
   export default defineComponent({
     components: {
       ScheduleCategory,
       Calendar,
-      Kanban
+      Kanban,
+      Settings
     },
 
     setup() {

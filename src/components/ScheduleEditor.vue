@@ -409,11 +409,14 @@ export default defineComponent({
           end = format(this.endTime, 'yyyy-MM-dd HH:mm:ss');
         }
         
-        return new Schedule(id, this.scheduleName,
+        let newSchedule = new Schedule(id, this.scheduleName,
                             this.isRecurringSchedule, this.selectedFreq, this.selectedWeekday, this.scheduleInterval,
                             start, end,
                             this.selectedCategory, this.scheduleContentBlockId, this.scheduleContent, this.selectedScheduleStatus
                            );
+        if(this.selectedScheduleStatus == 3)
+          newSchedule.setDoneTime(moment().valueOf());
+        return newSchedule;
       },
 
       clearEventInfo() {
@@ -427,7 +430,6 @@ export default defineComponent({
 
       handleJumpToBlock() {
         if(this.scheduleContentBlockId !== null && this.scheduleContentBlockId !== undefined) {
-          //this.showEditModal = false;
           EventAggregator.emit('openBlockFloatLayer', this.scheduleContentBlockId);
         }
       }

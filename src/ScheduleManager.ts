@@ -4,10 +4,8 @@ import App from "./App.vue";
 
 import { fetchPost, fetchSyncPost } from "siyuan";
 import EventAggregator from "./utils/EventAggregator";
-import { ScheduleCategories } from "./ScheduleCategories";
 import { Schedule } from "./Schedule";
 import { globalData } from "./utils/utils";
-import { call } from "naive-ui/es/_utils";
 
 export class ScheduleManager {
     app : any;
@@ -83,6 +81,10 @@ export class ScheduleManager {
         EventAggregator.on('updateCategortySelection', (p: any) => {
             this.setDocumentCheckedProperty(p.name, p.checked);
         });
+
+        EventAggregator.on('updateArchiveTime', (p: any) => {
+            this.setDocumentArchiveTimeProperty(p);
+        });
     }
 
     createDocument(notebookId: string, docProp: any) : void {
@@ -92,7 +94,7 @@ export class ScheduleManager {
             "markdown": ""
         }, (response) => {
             let docId = response.data;
-            this.setDocumentProperty(docId, docProp.checked, docProp.color);
+            this.setDocumentProperty(docId, docProp.checked, docProp.color, 7);
 
             let document = {
                 id: docId,
@@ -113,13 +115,14 @@ export class ScheduleManager {
         });
     }
 
-    setDocumentProperty(docId: string, checked: boolean, color: string) : void {
+    setDocumentProperty(docId: string, checked: boolean, color: string, archiveTime: number) : void {
         fetchPost("/api/attr/setBlockAttrs", {
             "id": docId,
             "attrs": {
                 "custom-checked": checked ? "true" : "false",
                 "custom-color": color,
-                "custom-version": "1.1.0"
+                "custom-version": "1.1.0",
+                "custom-archiveTime": archiveTime
             }
         }, (response) => {
             
@@ -137,6 +140,17 @@ export class ScheduleManager {
         });
     }
 
+    async setDocumentArchiveTimeProperty(archiveTime: number) {
+        for(let document of this.documents) {
+            await fetchSyncPost("/api/attr/setBlockAttrs", {
+                "id": document.id,
+                "attrs": {
+                    "custom-archiveTime": archiveTime.toString()
+                }
+            });
+        }
+    }
+
     async getDocuments(notebookId: string) {
         let query = "SELECT id FROM blocks WHERE type = \'d\' AND box =\'" + notebookId + "\'";
         await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
@@ -146,6 +160,7 @@ export class ScheduleManager {
                     name: "",
                     checked: "",
                     color: "",
+                    archiveTime: "",
                     schedules: [] as any[]
                 }
                 this.documents.push(document);
@@ -159,6 +174,8 @@ export class ScheduleManager {
                 doc.name = response.data.title;
                 doc.checked = response.data["custom-checked"] === "true" ? true : false;
                 doc.color = response.data["custom-color"];
+                doc.archiveTime = response.data['custom-archiveTime'];
+                globalData.archiveTime = parseInt(doc.archiveTime, 10);
             })
         }
     }
@@ -268,7 +285,7 @@ export class ScheduleManager {
             "attrs": {
                 "custom-checked": checked ? "true" : "false",
                 "custom-color": color,
-                "custom-version": "1.1.0"
+                "custom-version": "1.1.0",
             }
         }, (response) => {
             
