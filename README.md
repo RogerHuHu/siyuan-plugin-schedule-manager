@@ -56,6 +56,9 @@ In the schedule information editing interface, the repeating slider can be used 
 ### 8. Schedule information Edit Window
 1. When you click the OK, Update, Remove, or Cancel buttons, the window disappears and the last filled information will be cleared.
 2. When you click on a blank space, the window disappear and will retain the last filled information (to prevent misuse).
+3. You can fill in the block ID in the red box (* * only the ID text of the block can be filled in * *). Clicking the arrow will open a window, displaying the content of the corresponding block.
+   
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/blockId.png" alt="">
 
 ### 9. Task kanban view
 1. Implemented a relatively rudimentary task kanban.
@@ -63,6 +66,13 @@ In the schedule information editing interface, the repeating slider can be used 
 3. Support for editing schedule information.
 
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/kanban.png" alt="">
+
+### 10. 一键归档
+After clicking the archive button，calculate from the time when the schedule is set to completed, and select a schedule that meets the requirements according to the time set on the interface for archiving
+> If the set time is 7 days, the completed schedule of 7 days or more will be archived
+> The schedule that was in a completed state before the update of this feature will be fully archived as there is no completed time
+
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/oneclick_archive.png" alt="">
 
 ## Todo
 - [x] The internationalization of the interface language and the document

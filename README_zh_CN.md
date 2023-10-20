@@ -57,6 +57,9 @@
 ### 8. 日程信息编辑界面
 1. 点击确定、更新、删除日程或取消按钮时，界面会消失，并且会清空上次填写的信息。
 2. 点击空白处，界面会消失，会保留上次填写的信息（防止误操作）。
+3. 红框处可以填写块ID（**只能填写块的ID文本**），点击箭头会打开窗口，显示对应块的内容。
+   
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/blockId.png" alt="">
 
 ### 9. 任务看板界面
 1. 实现了比较简陋的任务看板界面。
@@ -64,6 +67,13 @@
 3. 支持日程信息的更新。
    
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/kanban.png" alt="">
+
+### 10. 一键归档
+点击归档按钮后，从日程设置为已完成的时间计算，按界面上设置的时间选择符合要求的日程进行归档
+> 如设置的时间为7日，则将已完成7日及以上的日程归档
+> 在更新该功能前处于已完成状态的日程，由于无已完成的时间，会全部归档
+
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/oneclick_archive.png" alt="">
 
 ## Todo
 - [x] 界面语言、文档国际化
