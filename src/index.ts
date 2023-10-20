@@ -1,6 +1,7 @@
-import { Plugin, getFrontend, IModel, openTab, fetchPost } from "siyuan";
+import { Plugin, getFrontend, IModel, openTab, fetchPost, openWindow } from "siyuan";
 import { setI18n, setPlugin, getScheduleManagerLoaded, setScheduleManagerLoaded, mountScheduleManager } from "./utils/utils";
 import { ScheduleManager } from "./ScheduleManager";
+import EventAggregator from "./utils/EventAggregator";
 
 import "./index.scss";
 
@@ -61,6 +62,18 @@ export default class PluginScheduleManager extends Plugin {
 
         this.addStatusBar({
             element: statusIconTemp.content.firstElementChild as HTMLElement,
+        });
+
+        EventAggregator.on('openBlockFloatLayer', (p) => {
+            /*this.addFloatLayer({
+                ids: [p as string],
+                defIds: [],
+                x: window.innerWidth - 768 - 120,
+                y: 32
+            });*/
+            openWindow({
+                doc: {id: p as string}
+            });
         });
 
         //监听块菜单事件

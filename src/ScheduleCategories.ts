@@ -48,12 +48,12 @@ export class ScheduleCategories {
                     schedule = new Schedule(content.id, content.title,
                                             true, content.frequency, content.weekdays, content.interval,                   
                                             content.start, content.end,
-                                            content.category, content.content, content.status);
+                                            content.category, content.refBlockId, content.content, content.status);
                 } else {
                     schedule = new Schedule(content.id, content.title,
                                             false, '', [], 1,                   
                                             content.start, content.end,
-                                            content.category, content.content, content.status);
+                                            content.category, content.refBlockId, content.content, content.status);
                 }
                 
                 this.addSchedule(schedule);
@@ -164,6 +164,7 @@ export class ScheduleCategories {
                 },
                 extendedProps: {
                     category: schedule.category,
+                    refBlockId: schedule.refBlockId,
                     content: schedule.content,
                     status: schedule.status, // 日程状态
                     rrule: {
@@ -183,6 +184,7 @@ export class ScheduleCategories {
                 end: schedule.end,
                 extendedProps: {
                   category: schedule.category,
+                  refBlockId: schedule.refBlockId,
                   content: schedule.content,
                   status: schedule.status // 日程状态
                 }

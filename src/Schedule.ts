@@ -9,13 +9,14 @@ export class Schedule {
     start: string;
     end: string;
     category: string;
+    refBlockId: string;
     content: string;
     status: number;
 
     constructor(id?: string, title?: string,
                 isRecurringSchedule?: boolean, frequency?: string, weekdays?: string[], interval?: number,
                 start?: string, end?: string, 
-                category?: string, content?: string, status?: number) {
+                category?: string, refBlockId?:string, content?: string, status?: number) {
         this.id = id;
         this.title = title;
         this.isRecurringSchedule = isRecurringSchedule;
@@ -25,6 +26,7 @@ export class Schedule {
         this.start = start;
         this.end = end;
         this.category = category;
+        this.refBlockId = refBlockId;
         this.content = content;
         this.status = status;
     }

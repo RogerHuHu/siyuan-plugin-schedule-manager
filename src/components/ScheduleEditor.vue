@@ -74,7 +74,17 @@
         <n-gi :span="1" style="display: flex; justify-content:right;">
           <div class="sm-schedule-item-header" style="margin-top: 3.5px;">{{ scheduleContentText }}</div>
         </n-gi>
-        <n-gi :span="3">
+        <n-gi :span="2">
+          <n-input v-model:value="scheduleContentBlockId" type="text" placeholder="" size="small" />
+        </n-gi>
+        <n-gi>
+          <n-button quaternary circle size="small" @click="handleJumpToBlock()">
+              <template #icon>
+                <n-icon :component="ArrowRightOutlined" color="#18a058" />
+              </template>
+            </n-button>
+        </n-gi>
+        <n-gi :offset="1" :span="3">
           <n-input v-model:value="scheduleContent" type="textarea" placeholder="" :autosize="{ maxRows: 7 }" size="small" />
         </n-gi>
 
@@ -138,7 +148,7 @@
 <script>
   import { defineComponent, ref } from 'vue';
   import { i18n, globalData, smColor, setFCApi } from "../utils/utils";
-  import { DeleteOutlined, EditOutlined, CheckOutlined, ClearOutlined } from '@vicons/antd'
+  import { DeleteOutlined, EditOutlined, CheckOutlined, ClearOutlined, ArrowRightOutlined } from '@vicons/antd'
   import EventAggregator from "../utils/EventAggregator";
   import * as moment from "moment";
   import { format, parseISO, getTime } from 'date-fns';
@@ -147,10 +157,7 @@
 
 export default defineComponent({
   components: {
-    DeleteOutlined,
-    EditOutlined,
-    CheckOutlined,
-    ClearOutlined,
+    
   },
 
   setup() {
@@ -159,6 +166,7 @@ export default defineComponent({
       EditOutlined,
       CheckOutlined,
       ClearOutlined,
+      ArrowRightOutlined,
       scheduleCategoryText: i18n.scheduleCategory,
       selectScheduleCategoryText: i18n.selectScheduleCategory,
       selectScheduleRangeText: i18n.selectScheduleRange,
@@ -185,6 +193,7 @@ export default defineComponent({
       scheduleStartTime: ref(null),
       scheduleEndTime: ref(null),
       scheduleName: ref(null),
+      scheduleContentBlockId: ref(null),
       scheduleContent: ref(null),
       selectedScheduleStatus: ref(null),
       isRecurringSchedule: ref(null),
@@ -286,13 +295,13 @@ export default defineComponent({
       if(param.extendedProps.rrule === undefined) {
         this.updateScheduleInternal(param.id, param.extendedProps.category, param.title.substring(param.title.indexOf(' ') + 1),
                                     false, '', [], 1,
-                                    param.startStr, param.endStr, param.extendedProps.content,
+                                    param.startStr, param.endStr, param.extendedProps.refBlockId, param.extendedProps.content,
                                     param.extendedProps.status);
       } else {
         this.updateScheduleInternal(param.id, param.extendedProps.category, param.title.substring(param.title.indexOf(' ') + 1),
                                     true, param.extendedProps.rrule.freq, param.extendedProps.rrule.byweekday, param.extendedProps.rrule.interval,
-                                    param.extendedProps.rrule.dtstart, param.extendedProps.rrule.until, param.extendedProps.content,
-                                    param.extendedProps.status);
+                                    param.extendedProps.rrule.dtstart, param.extendedProps.rrule.until, param.extendedProps.refBlockId,
+                                    param.extendedProps.content, param.extendedProps.status);
       }
       
     },
@@ -304,12 +313,12 @@ export default defineComponent({
       this.updateScheduleInternal(schedule.id, schedule.category, schedule.title,
                                   schedule.isRecurringSchedule, schedule.frequency, schedule.weekdays, schedule.interval,
                                   schedule.start, schedule.end,
-                                  schedule.content, schedule.status);
+                                  schedule.refBlockId, schedule.content, schedule.status);
     },
 
     updateScheduleInternal(id, category, title,
                            isRecurringSchedule, frequency, weekdays, interval,
-                           startTime, endTime, content, status) {
+                           startTime, endTime, refBlockId, content, status) {
       this.isDeleteButtonVisible = true;
       this.selectedCategory = category;
       this.scheduleName = title;
@@ -323,6 +332,7 @@ export default defineComponent({
       this.startTime = getTime(date);
       date = parseISO(endTime);
       this.endTime = getTime(date);
+      this.scheduleContentBlockId = refBlockId;
       this.scheduleContent = content;
       this.selectedScheduleStatus = status;
 
@@ -336,7 +346,7 @@ export default defineComponent({
       this.selectedWeekday = weekdays;
       this.scheduleInterval = interval;
 
-      this.selectedSchedule = new Schedule(id, '', isRecurringSchedule, frequency, weekdays, interval, '', '', category, '', 1);
+      this.selectedSchedule = new Schedule(id, '', isRecurringSchedule, frequency, weekdays, interval, '', '', category, '', '', 1);
 
       this.showEditModal = true;
     },
@@ -402,7 +412,7 @@ export default defineComponent({
         return new Schedule(id, this.scheduleName,
                             this.isRecurringSchedule, this.selectedFreq, this.selectedWeekday, this.scheduleInterval,
                             start, end,
-                            this.selectedCategory, this.scheduleContent, this.selectedScheduleStatus
+                            this.selectedCategory, this.scheduleContentBlockId, this.scheduleContent, this.selectedScheduleStatus
                            );
       },
 
@@ -414,6 +424,13 @@ export default defineComponent({
         this.scheduleContent = null;
         this.selectedScheduleStatus = null;
       },
+
+      handleJumpToBlock() {
+        if(this.scheduleContentBlockId !== null && this.scheduleContentBlockId !== undefined) {
+          //this.showEditModal = false;
+          EventAggregator.emit('openBlockFloatLayer', this.scheduleContentBlockId);
+        }
+      }
   }
 })
 </script>
