@@ -175,7 +175,7 @@ export class ScheduleManager {
                 doc.checked = response.data["custom-checked"] === "true" ? true : false;
                 doc.color = response.data["custom-color"];
                 doc.archiveTime = response.data['custom-archiveTime'];
-                globalData.archiveTime = parseInt(doc.archiveTime, 10);
+                globalData.archiveTime = doc.archiveTime === undefined ? 7 : parseInt(doc.archiveTime, 10);
             })
         }
     }
