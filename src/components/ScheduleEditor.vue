@@ -429,6 +429,7 @@ export default defineComponent({
       },
 
       handleJumpToBlock() {
+        this.showEditModal = false;
         if(this.scheduleContentBlockId !== null && this.scheduleContentBlockId !== undefined) {
           EventAggregator.emit('openBlockFloatLayer', this.scheduleContentBlockId);
         }

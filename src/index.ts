@@ -65,14 +65,11 @@ export default class PluginScheduleManager extends Plugin {
         });
 
         EventAggregator.on('openBlockFloatLayer', (p) => {
-            /*this.addFloatLayer({
+            this.addFloatLayer({
                 ids: [p as string],
                 defIds: [],
                 x: window.innerWidth - 768 - 120,
                 y: 32
-            });*/
-            openWindow({
-                doc: {id: p as string}
             });
         });
 
