@@ -81,6 +81,7 @@ After clicking the archive button，calculate from the time when the schedule is
 - [x] Task kanban view
 - [ ] Adaptation for mobile
 - [x] Filter loaded schedules according to schedule categories
+- [ ] Connect third-party calendars through iCal, CalDav, Google Calendar, etc. to achieve cross platform schedule reminders
 
 ## FAQ
 
