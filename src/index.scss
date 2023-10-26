@@ -19,4 +19,44 @@
     border-radius: 4px;
     padding: 2px 8px;
   }
+
+  
+}
+
+:root {
+  // Neutral
+  --spsm-color-gray1: #ffffff;
+  --spsm-color-gray2: #fafafa;
+  --spsm-color-gray3: #f5f5f5;
+  --spsm-color-gray4: #f0f0f0;
+  --spsm-color-gray5: #e9e9e9;
+  --spsm-color-gray6: #d9d9d9;
+  --spsm-color-gray7: #bfbfbf;
+  --spsm-color-gray8: #8c8c8c;
+
+  // Daybreak Blue
+  --spsm-color-blue1: #e6f4ff;
+  --spsm-color-blue2: #bae0ff;
+  --spsm-color-blue3: #91caff;
+  --spsm-color-blue4: #69b1ff;
+  --spsm-color-blue5: #4096ff;
+
+  // Sunset Orange
+  --spsm-color-orange1: #fff7e6;
+  --spsm-color-orange2: #ffe7ba;
+  --spsm-color-orange3: #ffd591;
+  --spsm-color-orange4: #ffc069;
+  --spsm-color-orange5: #ffa940;
+
+  // Polar Green
+  --spsm-color-green1: #f6ffed;
+  --spsm-color-green2: #d9f7be;
+  --spsm-color-green3: #b7eb8f;
+  --spsm-color-green4: #95de64;
+  --spsm-color-green5: #73d13d;
+
+  // Shadow
+  --spsm-shadow-1-down: 0px 1px 2px -2px rgba(0,0,0,0.16), 0px 3px 6px px rgba(0,0,0,0.12), 0px 5px 12px 4px rgba(0,0,0,0.09);
+  --spsm-shadow-2-down: 0px 3px 6px -4px rgba(0,0,0,0.12), 0px 6px 16px 0px rgba(0,0,0,0.08), 0px 9px 28px 8px rgba(0,0,0,0.05);
+  --spsm-shadow-3-down: 0px 6px 16px -8px rgba(0,0,0,0.08), 0px 9px 28px 0px rgba(0,0,0,0.05), 0px 12px 48px 16px rgba(0,0,0,0.03);
 }

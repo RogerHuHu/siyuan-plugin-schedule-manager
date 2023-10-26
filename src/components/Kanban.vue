@@ -1,111 +1,225 @@
 <template>
   <n-grid x-gap="5" :cols="4">
     <n-gi>
-      <n-card content-style="padding: 10px;">
-        <n-space vertical>
-          <div class="sm-title1">{{ ' ☕ ' + todoText }}</div>
-          <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
-            <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
-              <n-card v-if="schedule.status == 1" size="small" style="box-shadow: 0px 0px 5px #959595;">
-                <n-space vertical>
-                  <n-space justify="space-between">
-                    <n-tag :bordered="false" :color="{color: category.color}" :style="{color: category.textColor}">{{ schedule.title }}</n-tag>
-                    <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
-                      <n-icon>
-                        <setting-outlined />
-                      </n-icon>
-                    </n-button>
-                  </n-space>
-                  <n-ellipsis style="max-width: 100px">
-                    {{ schedule.content }}
-                  </n-ellipsis>
-                </n-space>
-              </n-card>
-            </n-gi>
-          </n-grid>
-        </n-space>
+      <n-card content-style="padding: 10px;" style="background-color: var(--spsm-color-gray5)">
+        <n-grid :cols=1 y-gap="5">
+          <n-gi>
+            <div class="sm-title1">{{ ' ☕ ' + todoText }}</div>
+          </n-gi>
+          <n-gi>
+            <n-space vertical>
+              <template v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
+                <template v-for="(schedule,sindex) in category.schedules" :key="sindex">
+                  <n-card v-if="schedule.status == 1" size="small" hoverable>
+                    <n-grid :cols="3" y-gap="2">
+                      <n-gi :span="2">
+                        <n-ellipsis :style="{backgroundColor: category.color, color: category.textColor}" style="padding: 5px; border-radius: 5px;">
+                          {{ schedule.title }}
+                        </n-ellipsis>
+                      </n-gi>
+                      <n-gi align="right">
+                        <n-button text style="font-size: 20px;" @click="handleSetSchedule(cindex, sindex)">
+                          <n-icon>
+                            <setting-outlined />
+                          </n-icon>
+                        </n-button>
+                      </n-gi>
+                      <n-gi :span="3">
+                        <n-space>
+                          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
+                          <div style="margin-top: 3px;">{{ schedule.start }}</div>
+                        </n-space>
+                      </n-gi>
+                      <n-gi :span="3">
+                        <n-space>
+                          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
+                          <div style="margin-top: 3px;">{{ schedule.end }}</div>
+                        </n-space>
+                      </n-gi>
+                      <n-gi v-if="schedule.refBlockId != '' && schedule.refBlockId != undefined" :span="3">
+                        <a href="#" @click="handleJumpToBlock">
+                          {{ schedule.refBlockId }}
+                        </a>
+                      </n-gi>
+                      <n-gi :span="3">
+                        <n-ellipsis>
+                          {{ schedule.content }}
+                        </n-ellipsis>
+                      </n-gi>
+                    </n-grid>
+                  </n-card>
+                </template>
+              </template>
+            </n-space>
+          </n-gi>
+        </n-grid>
       </n-card>
     </n-gi>
     <n-gi>
-      <n-card content-style="padding: 10px;">
-        <n-space vertical>
-          <div class="sm-title2">{{ ' 🏃‍♂️ ' + doingText }}</div>
-          <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
-            <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
-              <n-card v-if="schedule.status == 2" size="small" style="box-shadow: 0px 0px 5px #959595;">
-                <n-space vertical>
-                  <n-space justify="space-between">
-                    <n-tag :bordered="false" :color="{color: category.color}" :style="{color: category.textColor}">{{ schedule.title }}</n-tag>
-                    <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
-                      <n-icon>
-                        <setting-outlined />
-                      </n-icon>
-                    </n-button>
-                  </n-space>
-                  <n-ellipsis style="max-width: 100px">
-                    {{ schedule.content }}
-                  </n-ellipsis>
-                </n-space>
-              </n-card>
-            </n-gi>
-          </n-grid>
-        </n-space>
-      </n-card>
-    </n-gi>
-    <n-gi>
-      <n-card content-style="padding: 10px;">
-        <n-space vertical>
-          <div class="sm-title3">{{ ' ✅ ' + doneText }}</div>
-          <n-grid :y-gap="scheduleGap" :cols="1" v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
-            <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
-              <n-card v-if="schedule.status == 3" size="small" style="box-shadow: 0px 0px 5px #959595;">
-                <n-space vertical>
-                  <n-space justify="space-between">
-                    <n-tag :bordered="false" :color="{color: category.color}" :style="{color: category.textColor}">{{ schedule.title }}</n-tag>
-                    <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
-                      <n-icon>
-                        <setting-outlined />
-                      </n-icon>
-                    </n-button>
-                  </n-space>
-                  <n-ellipsis style="max-width: 100px">
-                    {{ schedule.content }}
-                  </n-ellipsis>
-                </n-space>
-              </n-card>
-            </n-gi>
-          </n-grid>
-        </n-space>
-      </n-card>
-    </n-gi>
-    <n-gi>
-      <n-card content-style="padding: 10px;">
-        <n-space vertical>
-          <div class="sm-title4">{{ ' 📦 ' + archiveText }}</div>
-          <n-collapse v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
-            <n-collapse-item :title="category.name">
-              <n-grid :y-gap="scheduleGap" :cols="1">
-                <n-gi v-for="(schedule,sindex) in category.schedules" :key="sindex">
-                  <n-card v-if="schedule.status == 4" size="small" style="box-shadow: 0px 0px 5px #959595;">
-                    <n-space vertical>
-                      <n-space justify="space-between">
-                        <n-tag :bordered="false" :color="{color: category.color}" :style="{color: category.textColor}">{{ schedule.title }}</n-tag>
+      <n-card content-style="padding: 10px;" style="background-color: var(--spsm-color-gray5)">
+        <n-grid :cols=1 y-gap="5">
+          <n-gi>
+            <div class="sm-title2">{{ ' 🏃‍♂️ ' + doingText }}</div>
+          </n-gi>
+          <n-gi>
+            <n-space vertical>
+              <template v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
+                <template v-for="(schedule,sindex) in category.schedules" :key="sindex">
+                  <n-card v-if="schedule.status == 2" size="small" hoverable>
+                    <n-grid :cols="3" y-gap="2">
+                      <n-gi :span="2">
+                        <n-ellipsis :style="{backgroundColor: category.color, color: category.textColor}" style="padding: 5px; border-radius: 5px;">
+                          {{ schedule.title }}
+                        </n-ellipsis>
+                      </n-gi>
+                      <n-gi align="right">
                         <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
                           <n-icon>
                             <setting-outlined />
                           </n-icon>
                         </n-button>
-                      </n-space>
-                      <n-ellipsis style="max-width: 100px">
-                        {{ schedule.content }}
-                      </n-ellipsis>
-                    </n-space>
+                      </n-gi>
+                      <n-gi :span="3">
+                        <n-space>
+                          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
+                          <div style="margin-top: 3px;">{{ schedule.start }}</div>
+                        </n-space>
+                      </n-gi>
+                      <n-gi :span="3">
+                        <n-space>
+                          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
+                          <div style="margin-top: 3px;">{{ schedule.end }}</div>
+                        </n-space>
+                      </n-gi>
+                      <n-gi v-if="schedule.refBlockId != '' && schedule.refBlockId != undefined" :span="3">
+                        <a href="#" @click="handleJumpToBlock">
+                          {{ schedule.refBlockId }}
+                        </a>
+                      </n-gi>
+                      <n-gi :span="3">
+                        <n-ellipsis>
+                          {{ schedule.content }}
+                        </n-ellipsis>
+                      </n-gi>
+                    </n-grid>
                   </n-card>
-                </n-gi>
-              </n-grid>
-            </n-collapse-item>
-          </n-collapse>
-        </n-space>
+                </template>
+              </template>
+            </n-space>
+          </n-gi>
+        </n-grid>
+      </n-card>
+    </n-gi>
+    <n-gi>
+      <n-card content-style="padding: 10px;" style="background-color: var(--spsm-color-gray5)">
+        <n-grid :cols=1 y-gap="5">
+          <n-gi>
+            <div class="sm-title3">{{ ' ✅ ' + doneText }}</div>
+          </n-gi>
+          <n-gi>
+            <n-space vertical>
+              <template v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
+                <template v-for="(schedule,sindex) in category.schedules">
+                    <n-card v-if="schedule.status == 3" :key="sindex" size="small" hoverable>
+                      <n-grid :cols="3" y-gap="2">
+                        <n-gi :span="2">
+                          <n-ellipsis :style="{backgroundColor: category.color, color: category.textColor}" style="padding: 5px; border-radius: 5px;">
+                            {{ schedule.title }}
+                          </n-ellipsis>
+                        </n-gi>
+                        <n-gi align="right">
+                          <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
+                            <n-icon>
+                              <setting-outlined />
+                            </n-icon>
+                          </n-button>
+                        </n-gi>
+                        <n-gi :span="3">
+                          <n-space>
+                            <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
+                            <div style="margin-top: 3px;">{{ schedule.start }}</div>
+                          </n-space>
+                        </n-gi>
+                        <n-gi :span="3">
+                          <n-space>
+                            <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
+                            <div style="margin-top: 3px;">{{ schedule.end }}</div>
+                          </n-space>
+                        </n-gi>
+                        <n-gi v-if="schedule.refBlockId != '' && schedule.refBlockId != undefined" :span="3">
+                          <a href="#" @click="handleJumpToBlock">
+                            {{ schedule.refBlockId }}
+                          </a>
+                        </n-gi>
+                        <n-gi :span="3">
+                          <n-ellipsis style="max-width: 100px">
+                            {{ schedule.content }}
+                          </n-ellipsis>
+                        </n-gi>
+                      </n-grid>
+                    </n-card>
+                </template>
+              </template>  
+            </n-space>
+          </n-gi>
+        </n-grid>
+      </n-card>
+    </n-gi>
+    <n-gi>
+      <n-card content-style="padding: 10px;" style="background-color: var(--spsm-color-gray5)">
+        <n-grid :cols=1 y-gap="5">
+          <n-gi>
+            <div class="sm-title4">{{ ' 📦 ' + archiveText }}</div>
+          </n-gi>
+          <n-gi>
+            <n-collapse v-for="(category,cindex) in globalData.scheduleCategories.categories" :key="cindex">
+              <n-collapse-item :title="category.name">
+                <n-space vertical>
+                  <template v-for="(schedule,sindex) in category.schedules" :key="sindex">
+                    <n-card v-if="schedule.status == 4" size="small" hoverable>
+                      <n-grid :cols="3" y-gap="2">
+                        <n-gi :span="2">
+                          <n-ellipsis :style="{backgroundColor: category.color, color: category.textColor}" style="padding: 5px; border-radius: 5px;">
+                            {{ schedule.title }}
+                          </n-ellipsis>
+                        </n-gi>
+                        <n-gi align="right">
+                          <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
+                            <n-icon>
+                              <setting-outlined />
+                            </n-icon>
+                          </n-button>
+                        </n-gi>
+                        <n-gi :span="3">
+                          <n-space>
+                            <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
+                            <div style="margin-top: 3px;">{{ schedule.start }}</div>
+                          </n-space>
+                        </n-gi>
+                        <n-gi :span="3">
+                          <n-space>
+                            <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
+                            <div style="margin-top: 3px;">{{ schedule.end }}</div>
+                          </n-space>
+                        </n-gi>
+                        <n-gi v-if="schedule.refBlockId != '' && schedule.refBlockId != undefined" :span="3">
+                          <a href="#" @click="handleJumpToBlock">
+                            {{ schedule.refBlockId }}
+                          </a>
+                        </n-gi>
+                        <n-gi :span="3">
+                          <n-ellipsis style="max-width: 100px">
+                            {{ schedule.content }}
+                          </n-ellipsis>
+                        </n-gi>
+                      </n-grid>
+                    </n-card>
+                  </template>
+                </n-space>
+              </n-collapse-item>
+            </n-collapse>
+          </n-gi>
+        </n-grid>
       </n-card>
     </n-gi>
   </n-grid>
@@ -126,19 +240,25 @@
   }
 
   .sm-title1 {
-    background: todoColor;
+    background-color: var(--spsm-color-blue4);
   }
 
   .sm-title2 {
-    background: doingColor;
+    background-color: var(--spsm-color-orange4);
   }
 
   .sm-title3 {
-    background: doneColor;
+    background-color: var(--spsm-color-green4);
   }
 
   .sm-title4 {
-    background: archivedColor;
+    background-color: var(--spsm-color-gray7);
+  }
+
+  .sm-schedule-item-header {
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 5px;
   }
 </style>
 
@@ -148,6 +268,8 @@ import { defineComponent, ref } from 'vue'
 import { useDialog, NCollapse } from 'naive-ui'
 import { SettingOutlined, } from '@vicons/antd'
 import ScheduleEditor from "./ScheduleEditor.vue";
+import EventAggregator from "../utils/EventAggregator";
+import "../index.scss";
 
 export default defineComponent({
   components: {
@@ -162,21 +284,19 @@ export default defineComponent({
       doingText: i18n.doing,
       doneText: i18n.done,
       archiveText: i18n.archive,
+      startTimeText: i18n.startTime,
+      endTimeText: i18n.endTime,
 
       cindex: 0,
       sindex: 0,
       scheduleGap: ref(3),
-      todoColor: smColor.TODO_COLOR,
-      doingColor: smColor.DOING_COLOR,
-      doneColor: smColor.DONE_COLOR,
-      archiveColor: smColor.ARCHIVE_COLOR,
     }
   },
 
   data() {
     return {
       globalData,
-      dialog: useDialog()
+      dialog: useDialog(),
     };
   },
 
@@ -186,7 +306,12 @@ export default defineComponent({
   methods: {
     handleSetSchedule(cindex, sindex) {
      this.$refs.scheduleEditor.updateScheduleKanban(cindex, sindex);
-    }
+    },
+
+    handleJumpToBlock(event) {
+        event.preventDefault();
+        EventAggregator.emit('openBlockFloatLayer', event.target.innerText);
+      }
   }
 })
 </script>
