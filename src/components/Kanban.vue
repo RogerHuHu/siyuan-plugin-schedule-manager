@@ -32,7 +32,7 @@
                       </n-gi>
                       <n-gi :span="3">
                         <n-space>
-                          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
+                          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ endTimeText }}</div>
                           <div style="margin-top: 3px;">{{ schedule.end }}</div>
                         </n-space>
                       </n-gi>
@@ -87,7 +87,7 @@
                       </n-gi>
                       <n-gi :span="3">
                         <n-space>
-                          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
+                          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ endTimeText }}</div>
                           <div style="margin-top: 3px;">{{ schedule.end }}</div>
                         </n-space>
                       </n-gi>
@@ -142,7 +142,7 @@
                         </n-gi>
                         <n-gi :span="3">
                           <n-space>
-                            <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
+                            <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ endTimeText }}</div>
                             <div style="margin-top: 3px;">{{ schedule.end }}</div>
                           </n-space>
                         </n-gi>
@@ -198,7 +198,7 @@
                         </n-gi>
                         <n-gi :span="3">
                           <n-space>
-                            <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
+                            <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ endTimeText }}</div>
                             <div style="margin-top: 3px;">{{ schedule.end }}</div>
                           </n-space>
                         </n-gi>
