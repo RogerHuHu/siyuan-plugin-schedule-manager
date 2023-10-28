@@ -40,17 +40,18 @@
   }
 
   .n-tabs .n-tabs-rail .n-tabs-tab-wrapper .n-tabs-tab.n-tabs-tab--active {
-    background-color: #42C7AB;
+    background-color: var(--spsm-color-green11);
   }
 </style>
 
 <script>
-import { i18n } from "./utils/utils";
+  import { i18n } from "./utils/utils";
   import { defineComponent, ref } from "vue";
   import ScheduleCategory from "./components/ScheduleCategory.vue";
   import Calendar from "./components/Calendar.vue";
   import Kanban from "./components/Kanban.vue";
   import Settings from "./components/Settings.vue";
+  import "./index.scss"
 
   export default defineComponent({
     components: {

@@ -13,9 +13,19 @@
                   <n-card v-if="schedule.status == 1" size="small" hoverable>
                     <n-grid :cols="3" y-gap="2">
                       <n-gi :span="2">
-                        <n-ellipsis :style="{backgroundColor: category.color, color: category.textColor}" style="padding: 5px; border-radius: 5px;">
-                          {{ schedule.title }}
-                        </n-ellipsis>
+                        <n-space>
+                          <n-tooltip v-if="schedule.isRecurringSchedule == true">
+                            <template #trigger>
+                              <n-icon size="20" color="var(--spsm-color-green11)">
+                                <retweet-outlined />
+                              </n-icon>
+                            </template>
+                            {{ recurringText }}
+                          </n-tooltip>
+                          <n-ellipsis :style="{backgroundColor: category.color, color: category.textColor}" style="padding: 5px; border-radius: 5px;">
+                            {{ schedule.title }}
+                          </n-ellipsis>
+                        </n-space>
                       </n-gi>
                       <n-gi align="right">
                         <n-button text style="font-size: 20px;" @click="handleSetSchedule(cindex, sindex)">
@@ -68,9 +78,19 @@
                   <n-card v-if="schedule.status == 2" size="small" hoverable>
                     <n-grid :cols="3" y-gap="2">
                       <n-gi :span="2">
-                        <n-ellipsis :style="{backgroundColor: category.color, color: category.textColor}" style="padding: 5px; border-radius: 5px;">
-                          {{ schedule.title }}
-                        </n-ellipsis>
+                        <n-space>
+                          <n-tooltip v-if="schedule.isRecurringSchedule == true">
+                            <template #trigger>
+                              <n-icon size="20" color="var(--spsm-color-green11)">
+                                <retweet-outlined />
+                              </n-icon>
+                            </template>
+                            {{ recurringText }}
+                          </n-tooltip>
+                          <n-ellipsis :style="{backgroundColor: category.color, color: category.textColor}" style="padding: 5px; border-radius: 5px;">
+                            {{ schedule.title }}
+                          </n-ellipsis>
+                        </n-space>
                       </n-gi>
                       <n-gi align="right">
                         <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
@@ -123,9 +143,19 @@
                     <n-card v-if="schedule.status == 3" :key="sindex" size="small" hoverable>
                       <n-grid :cols="3" y-gap="2">
                         <n-gi :span="2">
-                          <n-ellipsis :style="{backgroundColor: category.color, color: category.textColor}" style="padding: 5px; border-radius: 5px;">
-                            {{ schedule.title }}
-                          </n-ellipsis>
+                          <n-space>
+                            <n-tooltip v-if="schedule.isRecurringSchedule == true">
+                              <template #trigger>
+                                <n-icon size="20" color="var(--spsm-color-green11)">
+                                  <retweet-outlined />
+                                </n-icon>
+                              </template>
+                              {{ recurringText }}
+                            </n-tooltip>
+                            <n-ellipsis :style="{backgroundColor: category.color, color: category.textColor}" style="padding: 5px; border-radius: 5px;">
+                              {{ schedule.title }}
+                            </n-ellipsis>
+                          </n-space>
                         </n-gi>
                         <n-gi align="right">
                           <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
@@ -179,9 +209,19 @@
                     <n-card v-if="schedule.status == 4" size="small" hoverable>
                       <n-grid :cols="3" y-gap="2">
                         <n-gi :span="2">
-                          <n-ellipsis :style="{backgroundColor: category.color, color: category.textColor}" style="padding: 5px; border-radius: 5px;">
-                            {{ schedule.title }}
-                          </n-ellipsis>
+                          <n-space>
+                            <n-tooltip v-if="schedule.isRecurringSchedule == true">
+                              <template #trigger>
+                                <n-icon size="20" color="var(--spsm-color-green11)">
+                                  <retweet-outlined />
+                                </n-icon>
+                              </template>
+                              {{ recurringText }}
+                            </n-tooltip>
+                            <n-ellipsis :style="{backgroundColor: category.color, color: category.textColor}" style="padding: 5px; border-radius: 5px;">
+                              {{ schedule.title }}
+                            </n-ellipsis>
+                          </n-space>
                         </n-gi>
                         <n-gi align="right">
                           <n-button text style="font-size: 20px" @click="handleSetSchedule(cindex, sindex)">
@@ -266,7 +306,7 @@
 import { i18n, globalData, smColor } from "../utils/utils";
 import { defineComponent, ref } from 'vue'
 import { useDialog, NCollapse } from 'naive-ui'
-import { SettingOutlined, } from '@vicons/antd'
+import { SettingOutlined, RetweetOutlined } from '@vicons/antd'
 import ScheduleEditor from "./ScheduleEditor.vue";
 import EventAggregator from "../utils/EventAggregator";
 import "../index.scss";
@@ -274,6 +314,7 @@ import "../index.scss";
 export default defineComponent({
   components: {
     SettingOutlined,
+    RetweetOutlined,
     NCollapse,
     ScheduleEditor
   },
@@ -286,6 +327,7 @@ export default defineComponent({
       archiveText: i18n.archive,
       startTimeText: i18n.startTime,
       endTimeText: i18n.endTime,
+      recurringText: i18n.recurring,
 
       cindex: 0,
       sindex: 0,
