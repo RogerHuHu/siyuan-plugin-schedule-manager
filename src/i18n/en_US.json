@@ -27,6 +27,7 @@
   "archive": "Archive",
   "startTime": "Start Time",
   "endTime": "End Time",
+  "allDay": "All Day",
   "recurring": "Recurring",
   "cycle": "Cycle",
   "interval": "Interval",

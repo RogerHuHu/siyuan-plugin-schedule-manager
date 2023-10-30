@@ -17,10 +17,17 @@
           <n-input v-model:value="scheduleName" size="small" type="text" v-model:placeholder="inputScheduleNameText" />
         </n-gi>
 
-        <n-gi :span="1" style="display: flex; justify-content:right;">
+        <n-gi style="display: flex; justify-content:right;">
+          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ allDayText }}</div>
+        </n-gi>
+        <n-gi>
+          <n-switch v-model:value="isAllDaySchedule" size="small"/>
+        </n-gi>
+
+        <n-gi style="display: flex; justify-content:right;">
           <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ recurringText }}</div>
         </n-gi>
-        <n-gi :span="3">
+        <n-gi>
           <n-switch v-model:value="isRecurringSchedule" size="small"/>
         </n-gi>
 
@@ -42,32 +49,23 @@
           <n-input-number v-model:value="scheduleInterval" size="small"/>
         </n-gi>
 
-        <n-gi :span="1" style="display: flex; justify-content:right;" v-if="isRecurringSchedule">
+        <n-gi :span="1" style="display: flex; justify-content:right;">
           <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
         </n-gi>
-        <n-gi :span="3" v-if="isRecurringSchedule">
+        <n-gi :span="3" v-if="isAllDaySchedule">
+          <n-date-picker v-model:value="startTime" size="small" type="date" clearable />
+        </n-gi>
+        <n-gi :span="3" v-if="!isAllDaySchedule">
           <n-date-picker v-model:value="startTime" size="small" type="datetime" format="yyy-MM-dd HH:mm" clearable />
         </n-gi>
 
-        <n-gi :span="1" style="display: flex; justify-content:right;" v-if="isRecurringSchedule">
+        <n-gi :span="1" style="display: flex; justify-content:right;">
           <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ endTimeText }}</div>
         </n-gi>
-        <n-gi :span="3" v-if="isRecurringSchedule">
-          <n-date-picker v-model:value="endTime" size="small" type="datetime" format="yyy-MM-dd" clearable />
+        <n-gi :span="3" v-if="isAllDaySchedule">
+          <n-date-picker v-model:value="endTime" size="small" type="date" clearable />
         </n-gi>
-
-        <!--非周期性日程参数-->
-        <n-gi :span="1" style="display: flex; justify-content:right;" v-if="!isRecurringSchedule">
-          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ startTimeText }}</div>
-        </n-gi>
-        <n-gi :span="3" v-if="!isRecurringSchedule">
-          <n-date-picker v-model:value="startTime" size="small" type="datetime" format="yyy-MM-dd HH:mm" clearable />
-        </n-gi>
-
-        <n-gi :span="1" style="display: flex; justify-content:right;" v-if="!isRecurringSchedule">
-          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ endTimeText }}</div>
-        </n-gi>
-        <n-gi :span="3" v-if="!isRecurringSchedule">
+        <n-gi :span="3" v-if="!isAllDaySchedule">
           <n-date-picker v-model:value="endTime" size="small" type="datetime" format="yyy-MM-dd HH:mm" clearable />
         </n-gi>
 
@@ -179,6 +177,7 @@ export default defineComponent({
       confirmRemoveScheduleText: i18n.confirmRemoveSchedule,
       startTimeText: i18n.startTime,
       endTimeText: i18n.endTime,
+      allDayText: i18n.allDay,
       recurringText: i18n.recurring,
       cycleText: i18n.cycle,
       intervalText: i18n.interval,
@@ -196,6 +195,7 @@ export default defineComponent({
       scheduleContentBlockId: ref(null),
       scheduleContent: ref(null),
       selectedScheduleStatus: ref(null),
+      isAllDaySchedule: ref(false),
       isRecurringSchedule: ref(null),
       scheduleInterval: ref(1),
       selectedWeekday: ref([]),
@@ -293,12 +293,12 @@ export default defineComponent({
 
     updateSchedule(param) {
       if(param.extendedProps.rrule === undefined) {
-        this.updateScheduleInternal(param.id, param.extendedProps.category, param.title.substring(param.title.indexOf(' ') + 1),
+        this.updateScheduleInternal(param.id, param.extendedProps.category, param.title.substring(param.title.indexOf(' ') + 1), param.allDay,
                                     false, '', [], 1,
                                     param.startStr, param.endStr, param.extendedProps.refBlockId, param.extendedProps.content,
                                     param.extendedProps.status);
       } else {
-        this.updateScheduleInternal(param.id, param.extendedProps.category, param.title.substring(param.title.indexOf(' ') + 1),
+        this.updateScheduleInternal(param.id, param.extendedProps.category, param.title.substring(param.title.indexOf(' ') + 1), param.allDay,
                                     true, param.extendedProps.rrule.freq, param.extendedProps.rrule.byweekday, param.extendedProps.rrule.interval,
                                     param.extendedProps.rrule.dtstart, param.extendedProps.rrule.until, param.extendedProps.refBlockId,
                                     param.extendedProps.content, param.extendedProps.status);
@@ -310,13 +310,13 @@ export default defineComponent({
       this.cindex = cindex;
       this.sindex = sindex;
       let schedule = this.globalData.scheduleCategories.categories[cindex].schedules[sindex];
-      this.updateScheduleInternal(schedule.id, schedule.category, schedule.title,
+      this.updateScheduleInternal(schedule.id, schedule.category, schedule.title, schedule.isAllDay,
                                   schedule.isRecurringSchedule, schedule.frequency, schedule.weekdays, schedule.interval,
                                   schedule.start, schedule.end,
                                   schedule.refBlockId, schedule.content, schedule.status);
     },
 
-    updateScheduleInternal(id, category, title,
+    updateScheduleInternal(id, category, title, isAllDay,
                            isRecurringSchedule, frequency, weekdays, interval,
                            startTime, endTime, refBlockId, content, status) {
       this.isDeleteButtonVisible = true;
@@ -331,29 +331,28 @@ export default defineComponent({
       let date = parseISO(startTime);
       this.startTime = getTime(date);
       date = parseISO(endTime);
-      this.endTime = getTime(date);
+      this.endTime = isAllDay === true ? getTime(date) - 86400000 : getTime(date);
       this.scheduleContentBlockId = refBlockId;
       this.scheduleContent = content;
       this.selectedScheduleStatus = status;
 
       this.category = this.globalData.scheduleCategories.getCategoryByName(this.selectedCategory);
-      //this.scheduleStartTime = format(this.startTime, 'yyyy-MM-dd HH:mm:ss');
-      //this.scheduleEndTime = format(this.endTime, 'yyyy-MM-dd HH:mm:ss'),
       this.scheduleStatus = this.scheduleStatusList[this.selectedScheduleStatus - 1].label;
       
+      this.isAllDaySchedule = isAllDay;
       this.isRecurringSchedule = isRecurringSchedule;
       this.selectedFreq = frequency;
       this.selectedWeekday = weekdays;
       this.scheduleInterval = interval;
-
-      this.selectedSchedule = new Schedule(id, '', isRecurringSchedule, frequency, weekdays, interval, '', '', category, '', '', 1);
+      
+      this.selectedSchedule = new Schedule(id, '', isAllDay, isRecurringSchedule, frequency, weekdays, interval, '', '', category, '', '', 1);
 
       this.showEditModal = true;
     },
 
     handleSubmitSchedule() {
         this.showEditModal = false;
-        if(this.startTime >= this.endTime) {
+        if((this.isAllDaySchedule === true) ? (this.startTime > this.endTime) : (this.startTime >= this.endTime)) {
           showMessage(i18n.scheduleRangeError, 6000, "error");
         } else {
           if(this.isDeleteButtonVisible === false) {
@@ -400,16 +399,16 @@ export default defineComponent({
 
       createSchedule(id) {
         let start = "", end = "";
-        
-        if(this.isRecurringSchedule) {
-          start = format(this.startTime, "yyyy-MM-dd'T'HH:mm:ss");
-          end = format(this.endTime, 'yyyy-MM-dd');
+
+        if(this.isAllDaySchedule) {
+          start = format(this.startTime, "yyyy-MM-dd");
+          end = format(this.endTime + 86400000, 'yyyy-MM-dd');
         } else {
-          start = format(this.startTime, 'yyyy-MM-dd HH:mm:ss');
-          end = format(this.endTime, 'yyyy-MM-dd HH:mm:ss');
+          start = format(this.startTime, "yyyy-MM-dd'T'HH:mm:ss");
+          end = format(this.endTime, "yyyy-MM-dd'T'HH:mm:ss");
         }
-        
-        let newSchedule = new Schedule(id, this.scheduleName,
+
+        let newSchedule = new Schedule(id, this.scheduleName, this.isAllDaySchedule,
                             this.isRecurringSchedule, this.selectedFreq, this.selectedWeekday, this.scheduleInterval,
                             start, end,
                             this.selectedCategory, this.scheduleContentBlockId, this.scheduleContent, this.selectedScheduleStatus

@@ -27,6 +27,7 @@
   "archive": "归档",
   "startTime": "开始时间",
   "endTime": "结束时间",
+  "allDay": "全天",
   "recurring": "重复",
   "cycle": "周期",
   "interval": "间隔",

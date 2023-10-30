@@ -323,7 +323,7 @@ export class ScheduleManager {
             }).then(response => {
             })
 
-            let newSchedule = new Schedule(content.id, content.title,
+            let newSchedule = new Schedule(content.id, content.title, content.isAllDay,
                                            content.isRecurringSchedule, content.frequency, content.weekdays, content.interval,
                                            content.start, content.end,
                                            content.extendedProps.category, content.extendedProps.refBlockId,

@@ -47,27 +47,30 @@ Clicking on a certain schedule will open an update window, where you can modify 
 Clicking the remove schedule button on the above-mentioned window will remove the current schedule, as well as the recored in the corresponding document, **it is non-recoverable**.
 
 ### 7. Recurring schedules
-In the schedule information editing interface, the repeating slider can be used to set whether the current schedule is a repeating schedule，it supports：
+In the schedule information editing interface, the repeating slider can be used to set whether the current schedule is a repeating schedule, it supports：
 - Recurring by day, automatically generates recurring schedules at set intervals (daily intervals) within the selected date range
 - Recurring by week, automatically generates a recurring schedule by selecting "Monday, Tuesday, ..., Sunday" within the selected date range
 - Recurring by month, automatically generates a recurring schedule at the set interval (monthly interval) within the selected date range, **generates a schedule every day of the month**
 - Recurring by year, automatically generates a recurring schedule at the set interval (yearly interval) within the selected date range, **generates a schedule every day of the year**
 
-### 8. Schedule information Edit Window
+### 8.Whole day schedule
+In the schedule information editing interface, the whole day slider can be used to set whether the current schedule is a whole day schedul, the time information will be automatically removed after being set to whole day schedule.
+
+### 9. Schedule information Edit Window
 1. When you click the OK, Update, Remove, or Cancel buttons, the window disappears and the last filled information will be cleared.
 2. When you click on a blank space, the window disappear and will retain the last filled information (to prevent misuse).
 3. You can fill in the block ID in the red box (* * only the ID text of the block can be filled in * *). Clicking the arrow will open a window, displaying the content of the corresponding block.
    
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/blockId.png" alt="">
 
-### 9. Task kanban view
+### 10. Task kanban view
 1. Implemented a relatively rudimentary task kanban.
 2. Adding or dragging a schedule is not supported.
 3. Support for editing schedule information.
 
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/kanban.png" alt="">
 
-### 10. 一键归档
+### 11. One-click archive
 After clicking the archive button，calculate from the time when the schedule is set to completed, and select a schedule that meets the requirements according to the time set on the interface for archiving
 > If the set time is 7 days, the completed schedule of 7 days or more will be archived
 > The schedule that was in a completed state before the update of this feature will be fully archived as there is no completed time

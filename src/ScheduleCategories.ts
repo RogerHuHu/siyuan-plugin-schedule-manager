@@ -45,14 +45,17 @@ export class ScheduleCategories {
                 let content = JSON.parse(elementS.content);
 
                 let schedule = null;
+
+                let isAllDay = (content.isAllDay === undefined || content.isAllDay === null) ? false : content.isAllDay;
+
                 if(content.isRecurringSchedule !== null && content.isRecurringSchedule === true) {
-                    schedule = new Schedule(content.id, content.title,
+                    schedule = new Schedule(content.id, content.title, isAllDay,
                                             true, content.frequency, content.weekdays, content.interval,                   
                                             content.start, content.end,
                                             content.category, content.refBlockId, content.content, content.status);
                     schedule.setDoneTime(content.doneTime);
                 } else {
-                    schedule = new Schedule(content.id, content.title,
+                    schedule = new Schedule(content.id, content.title, isAllDay,
                                             false, '', [], 1,                   
                                             content.start, content.end,
                                             content.category, content.refBlockId, content.content, content.status);
@@ -158,6 +161,7 @@ export class ScheduleCategories {
             newEvent = {
                 id: schedule.id,
                 title: this.getEventName(schedule.title, schedule.status),
+                allDay: schedule.isAllDay,
                 rrule: {
                     freq: schedule.frequency,
                     interval: schedule.interval,
@@ -183,6 +187,7 @@ export class ScheduleCategories {
             newEvent = {
                 id: schedule.id,
                 title: this.getEventName(schedule.title, schedule.status),
+                allDay: schedule.isAllDay,
                 start: schedule.start,
                 end: schedule.end,
                 extendedProps: {
