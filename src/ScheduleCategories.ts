@@ -231,7 +231,7 @@ export class ScheduleCategories {
     archiveSchedules(archiveTime: number): void {
         for(let category of this.categories) {
             for(let schedule of category.schedules) {
-                if(schedule.status === 3 && moment().valueOf() >= (schedule.doneTime + archiveTime * 86400)) {
+                if(schedule.status === 3 && moment().valueOf() >= (schedule.doneTime + archiveTime * 86400000)) {
                     schedule.status = 4;
                     this.updateSchedule(schedule.category, schedule);
                     EventAggregator.emit('updateSchedule', {
