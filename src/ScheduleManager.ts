@@ -53,7 +53,8 @@ export class ScheduleManager {
 
     listenEvents() : void {
         EventAggregator.on('addCategorty', (p) => {
-            this.createDocument(this.noteBookId, p);
+            //this.createDocument(this.noteBookId, p);
+            this.createDocumentAndSetAttributes(this.noteBookId, p);
         });
 
         EventAggregator.on('deleteCategorty', (p: any) => {
@@ -87,6 +88,31 @@ export class ScheduleManager {
         });
     }
 
+    async createDocumentAndSetAttributes(notebookId: string, docProp: any) {
+        await this.createDocument(notebookId, docProp);
+        await this.setDocumentProperty(this.docId, docProp.checked, docProp.color, 7);
+        let document = {
+            id: this.docId,
+            name: docProp.name,
+            checked: docProp.checked,
+            color: docProp.color,
+            schedules: [] as any[]
+        };
+        this.documents.push(document);
+    }
+
+    async createDocument(notebookId: string, docProp: any) {
+        await fetchSyncPost("/api/filetree/createDocWithMd", {
+            "notebook": notebookId,
+            "path": "/" + docProp.name,
+            "markdown": ""
+        }).then(response => {
+            this.docId = response.data;
+            console.log(response);
+        });
+    }
+
+    /*
     createDocument(notebookId: string, docProp: any) : void {
         fetchPost("/api/filetree/createDocWithMd", {
             "notebook": notebookId,
@@ -106,6 +132,7 @@ export class ScheduleManager {
             this.documents.push(document);
         });
     }
+    */
 
     deleteDocument(notebookId: string, docId: string) : void {
         fetchPost("/api/filetree/removeDoc", {
@@ -115,6 +142,21 @@ export class ScheduleManager {
         });
     }
 
+    async setDocumentProperty(docId: string, checked: boolean, color: string, archiveTime: number) {
+        await fetchSyncPost("/api/attr/setBlockAttrs", {
+            "id": docId,
+            "attrs": {
+                "custom-checked": checked ? "true" : "false",
+                "custom-color": color,
+                "custom-version": "1.1.0",
+                "custom-archiveTime": archiveTime.toString()
+            }
+        }).then(response => {
+
+        });
+    }
+
+    /*
     setDocumentProperty(docId: string, checked: boolean, color: string, archiveTime: number) : void {
         fetchPost("/api/attr/setBlockAttrs", {
             "id": docId,
@@ -125,9 +167,10 @@ export class ScheduleManager {
                 "custom-archiveTime": archiveTime
             }
         }, (response) => {
-            
+            console.log(response);
         });
     }
+    */
 
     setDocumentCheckedProperty(name: string, checked: boolean) : void {
         fetchPost("/api/attr/setBlockAttrs", {
