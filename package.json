@@ -40,9 +40,13 @@
     "@fullcalendar/rrule": "^6.1.9",
     "@fullcalendar/timegrid": "^6.1.8",
     "@fullcalendar/vue3": "^6.1.8",
+    "buffer": "^6.0.3",
     "date-fns": "^2.30.0",
     "mitt": "^3.0.1",
     "moment": "^2.29.4",
+    "stream": "^0.0.2",
+    "string_decoder": "^1.3.0",
+    "tsdav": "^2.0.5",
     "vue": "^3.3.4",
     "vue-loader": "^17.2.2"
   }
