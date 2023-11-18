@@ -70,12 +70,16 @@ In the schedule information editing interface, the whole day slider can be used 
 
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/kanban.png" alt="">
 
-### 11. One-click archive
+### 11. One-click archive (Moved to settings tab)
 After clicking the archive button，calculate from the time when the schedule is set to completed, and select a schedule that meets the requirements according to the time set on the interface for archiving
 > If the set time is 7 days, the completed schedule of 7 days or more will be archived
 > The schedule that was in a completed state before the update of this feature will be fully archived as there is no completed time
 
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/oneclick_archive.png" alt="">
+
+### 12.Schedule category collapse
+After clicking the arrow button, you can hide the schedule category view on the left, which is more friendly to small screens.
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/schedule_category_collapse.png" alt="">
 
 ## Todo
 - [x] The internationalization of the interface language and the document

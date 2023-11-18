@@ -1,26 +1,25 @@
 <template>
   <n-card style="border-radius: 10px;" size="small">
-    <n-grid :cols="5" x-gap="5" y-gap="5">
-      <n-gi :span="2">
+    <n-grid :cols="8" x-gap="5" y-gap="5">
+      <n-gi>
         <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ archiveTimeText }}</div>
       </n-gi>
-      <n-gi :span="2">
-        <n-input-number v-model:value="archiveTime" size="small" />
+      <n-gi :span="7">
+        <n-space>
+          <n-input-number v-model:value="archiveTime" size="small"/>
+          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ dayText }}</div>
+          <n-button quaternary circle size="small" @click="handleUpdate()">
+            <template #icon>
+              <n-icon :component="CheckOutlined" color="#18a058" />
+            </template>
+          </n-button>
+          <n-button strong secondary round type="info" @click="handleArchive()">
+            {{ archiveText }}
+          </n-button>
+        </n-space>
       </n-gi>
-      <n-gi>
-        <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ dayText }}</div>
-      </n-gi>
-      <n-gi>
-        <n-button quaternary circle size="small" @click="handleUpdate()">
-          <template #icon>
-            <n-icon :component="CheckOutlined" color="#18a058" />
-          </template>
-        </n-button>
-      </n-gi>
-      <n-gi :span="2" offset="2">
-        <n-button strong secondary round type="info" @click="handleArchive()">
-          {{ archiveText }}
-        </n-button>
+      <n-gi :span="8">
+        <n-divider />
       </n-gi>
     </n-grid>
   </n-card>
@@ -51,7 +50,7 @@ export default defineComponent({
       archiveTimeText: i18n.archiveTime,
       dayText: i18n.day,
       archiveText: i18n.archive,
-      archiveTime: ref(7)
+      archiveTime: ref(7),
     };
   },
 

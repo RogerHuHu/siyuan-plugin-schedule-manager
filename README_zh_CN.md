@@ -2,9 +2,8 @@
 
 # 日程管理
 
-<b><font color="#dd0000">注意：从 1.0.x 版本升级到 1.1.x 版本可能需要重新开关下插件，以更新日程记录的格式</font></b>
 
-<b><font color="#4096ff">下一版本计划实现跨平台日程提醒，目前的思路是通过iCal、CalDav、Google Calendar等连接第三方日历应用（比如可以连接手机自带日历），将日程添加到这些日历应用中，不知道大家有没有更好的想法，可以在链滴上发帖子讨论，或者到github上提issue</font></b>
+<b><font color="#4096ff">最近事情比较多，先更新比较简单的功能吧，正在研究实现跨平台日程提醒，目前的思路是通过iCal、CalDav、Google Calendar等连接第三方日历应用（比如可以连接手机自带日历），将日程添加到这些日历应用中，不知道大家有没有更好的想法，可以在链滴上发帖子讨论，或者到github上提issue</font></b>
 
 ## 简介
 日程管理插件通过日历的形式管理待办事项，目前支持月、周、日、列表多种视图。
@@ -73,12 +72,16 @@
    
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/kanban.png" alt="">
 
-### 11. 一键归档
+### 11. 一键归档（移动至设置标签页）
 点击归档按钮后，从日程设置为已完成的时间计算，按界面上设置的时间选择符合要求的日程进行归档
 > 如设置的时间为7日，则将已完成7日及以上的日程归档
 > 在更新该功能前处于已完成状态的日程，由于无已完成的时间，会全部归档
 
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/oneclick_archive.png" alt="">
+
+### 12.日程分类隐藏
+点击箭头按钮后，可以隐藏左侧的日程分类视图，对小屏幕更友好
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/schedule_category_collapse.png" alt="">
 
 ## Todo
 - [x] 界面语言、文档国际化

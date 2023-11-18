@@ -4,21 +4,42 @@
       <n-notification-provider>
         <n-dialog-provider>
           <n-tabs type="segment" animated style="margin-left:5px; margin-right:5px;">
-            <n-tab-pane name="calendar" v-model:tab="calendarText">
-              <n-grid x-gap="5" :cols="6">
+            <n-tab-pane name="calendar" v-bind:tab="calendarText">
+              <!--n-grid x-gap="5" :cols="6">
                 <n-gi>
                   <n-space vertical>
-                    <settings/>
                     <scheduleCategory/>
                   </n-space>
                 </n-gi>
                 <n-gi span="5">
                   <calendar/>
                 </n-gi>
-              </n-grid>
+              </n-grid-->
+              <n-layout has-sider>
+                <n-layout-sider
+                  collapse-mode="width"
+                  :collapsed-width="20"
+                  :width="240"
+                  show-trigger="arrow-circle"
+                  content-style="padding: 5px;"
+                  bordered
+                  :show-collapsed-content="false"
+                  @update:collapsed="scheduleCategoryCollapseChanged"
+                >
+                  <scheduleCategory/>
+                </n-layout-sider>
+                <n-layout-content content-style="padding: 5px;">
+                  <calendar/>
+                </n-layout-content>
+              </n-layout>
             </n-tab-pane>
-            <n-tab-pane name="kanban" v-model:tab="kanbanText">
+            <n-tab-pane name="kanban" v-bind:tab="kanbanText">
               <kanban/>
+            </n-tab-pane>
+            <n-tab-pane name="setting" v-bind:tab="settingText">
+              <n-space justify="start">
+                <settings/>
+              </n-space>
             </n-tab-pane>
           </n-tabs>
         </n-dialog-provider>
@@ -51,6 +72,7 @@
   import Calendar from "./components/Calendar.vue";
   import Kanban from "./components/Kanban.vue";
   import Settings from "./components/Settings.vue";
+  import EventAggregator from "./utils/EventAggregator";
   import "./index.scss"
 
   export default defineComponent({
@@ -64,7 +86,14 @@
     setup() {
       return {
         calendarText: i18n.calendar,
-        kanbanText: i18n.kanban
+        kanbanText: i18n.kanban,
+        settingText: i18n.setting,
+      }
+    },
+
+    methods: {
+      scheduleCategoryCollapseChanged(value) {
+        EventAggregator.emit("resize")
       }
     }
   });
