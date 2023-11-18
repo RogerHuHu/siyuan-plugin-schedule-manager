@@ -1,31 +1,25 @@
 <template>
   <n-card style="border-radius: 10px;" size="small">
-    <n-grid :cols="5" x-gap="5" y-gap="5">
-      <n-gi :span="2">
+    <n-grid :cols="8" x-gap="5" y-gap="5">
+      <n-gi>
         <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ archiveTimeText }}</div>
       </n-gi>
-      <n-gi :span="2">
-        <n-input-number v-model:value="archiveTime" size="small" />
+      <n-gi :span="7">
+        <n-space>
+          <n-input-number v-model:value="archiveTime" size="small"/>
+          <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ dayText }}</div>
+          <n-button quaternary circle size="small" @click="handleUpdate()">
+            <template #icon>
+              <n-icon :component="CheckOutlined" color="#18a058" />
+            </template>
+          </n-button>
+          <n-button strong secondary round type="info" @click="handleArchive()">
+            {{ archiveText }}
+          </n-button>
+        </n-space>
       </n-gi>
-      <n-gi>
-        <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ dayText }}</div>
-      </n-gi>
-      <n-gi>
-        <n-button quaternary circle size="small" @click="handleUpdate()">
-          <template #icon>
-            <n-icon :component="CheckOutlined" color="#18a058" />
-          </template>
-        </n-button>
-      </n-gi>
-      <n-gi :span="2" offset="2">
-        <n-button strong secondary round type="info" @click="handleArchive()">
-          {{ archiveText }}
-        </n-button>
-      </n-gi>
-      <n-gi :span="2" offset="2">
-        <n-button strong secondary round type="info" @click="handleConnect()">
-          {{ connectText }}
-        </n-button>
+      <n-gi :span="8">
+        <n-divider />
       </n-gi>
     </n-grid>
   </n-card>
@@ -44,7 +38,6 @@
   import { CheckOutlined } from '@vicons/antd'
   import EventAggregator from "../utils/EventAggregator";
   import { showMessage } from "siyuan";
-  import { CalDavClient } from "../ThirdPartyCalendars/CalDav";
 
 export default defineComponent({
   components: {
@@ -58,8 +51,6 @@ export default defineComponent({
       dayText: i18n.day,
       archiveText: i18n.archive,
       archiveTime: ref(7),
-      connectText: "Connect",
-      calDavClient: CalDavClient,
     };
   },
 
@@ -82,14 +73,6 @@ export default defineComponent({
     handleArchive() {
       this.globalData.scheduleCategories.archiveSchedules(this.archiveTime);
     },
-
-    handleConnect() {
-      this.calDavClient = new CalDavClient("https://calendar.dingtalk.com/dav/users/u_oslxrjui", "u_oslxrjui", "ow5kp2zd");
-      //this.calDavClient = new CalDavClient("https://dav.qq.com/dav/users/196550051@qq.com", "196550051@qq.com", "ezgcgtzkjkihbiah");
-      //this.calDavClient = new CalDavClient("https://caldav.mail.qq.com/", "196550051@qq.com", "dream91722");
-      //this.calDavClient = new CalDavClient("https://dida365.com/pub/calendar/feeds/quraph7at8zb/basic.ics", "hujunjie7174@126.com", "hello7109");
-      this.calDavClient.login();
-    }
   }
 })
 </script>

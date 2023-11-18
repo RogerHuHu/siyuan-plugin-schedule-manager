@@ -100,6 +100,7 @@
           // 事件
           select: this.handleDateSelect, // 选中日历格事件
           eventClick: this.handleEventClick, // 点击日历日程事件
+          dateClick: this.handleDatesSet,
           //eventsSet: this.handleEvents,
           //eventDrop: this.eventDrop, // 拖动日历日程事件
           //eventResize: this.eventResize, // 修改日历日程大小事件
@@ -124,6 +125,11 @@
     mounted() {
       setFCApi(this.$refs.fullCalendar.getApi());
       EventAggregator.emit('readCategories');
+      EventAggregator.on('resize', () => {
+          setTimeout(() => {
+            this.$refs.fullCalendar.getApi().updateSize();
+          }, 300);
+      })
     },
 
     methods: {
@@ -137,6 +143,10 @@
 
       handleEventClick(clickInfo) {
         this.$refs.scheduleEditor.updateSchedule(clickInfo.event);
+      },
+
+      handleDatesSet(dateInfo) {
+        console.log(dateInfo)
       },
 
       handleEvents(events) {
