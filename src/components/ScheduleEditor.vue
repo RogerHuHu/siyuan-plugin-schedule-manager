@@ -36,10 +36,16 @@
           <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ cycleText }}</div>
         </n-gi>
         <n-gi :span="3" v-if="isRecurringSchedule">
-          <n-select v-model:value="selectedFreq" size="tiny" :options="freqs" />
+          <n-select v-model:value="selectedFreq" size="tiny" :options="freqs" @update:value="handleUpdateSelectedFreq" />
         </n-gi>
-        <n-gi :span="4" v-if="isRecurringSchedule">
-          <n-select v-model:value="selectedWeekday" multiple :options="weekdays" size="tiny" :disabled="selectedFreq != 'weekly'"/>
+        <n-gi :span="4" v-if="isRecurringSchedule && selectedFreq === 'weekly'">
+          <n-select v-model:value="selectedWeekday" multiple :options="weekdays" size="tiny"/>
+        </n-gi>
+        <n-gi :span="4" v-if="isRecurringSchedule && selectedFreq === 'monthly'">
+          <n-select v-model:value="selectedMonthday" multiple :options="monthdays" size="tiny"/>
+        </n-gi>
+        <n-gi :span="4" v-if="isRecurringSchedule && selectedFreq === 'yearly'">
+          <n-select v-model:value="selectedYearday" multiple :options="yeardays" size="tiny"/>
         </n-gi>
 
         <n-gi :span="1" style="display: flex; justify-content:right;" v-if="isRecurringSchedule">
@@ -199,6 +205,8 @@ export default defineComponent({
       isRecurringSchedule: ref(null),
       scheduleInterval: ref(1),
       selectedWeekday: ref([]),
+      selectedMonthday: ref([]),
+      selectedYearday: ref([]),
       scheduleStatusList: [
         {
           value: 1,
@@ -265,6 +273,8 @@ export default defineComponent({
           label: i18n.sunday
         }
       ],
+      monthdays: ref([]),
+      yeardays: ref([]),
       selectedFreq: ref(null),
       selectedEvent: null,
     };
@@ -280,12 +290,34 @@ export default defineComponent({
     },
 
   methods: {
+    createRecurringDays() {
+      if(this.selectedFreq === 'monthly') {
+        this.monthdays = [];
+        for(let i = 0; i < 31; i++) {
+          let monthday = { value: i+1, label: (i+1).toString() }
+          this.monthdays.push(monthday);
+        }
+      }
+      else if(this.selectedFreq === 'yearly') {
+        this.yeardays = [];
+        for(let i = 0; i < 366; i++) {
+          let yearday = { value: i+1, label: (i+1).toString() }
+          this.yeardays.push(yearday);
+        }
+      }
+    },
+
+    handleUpdateSelectedFreq() {
+      this.createRecurringDays();
+    },
+
     newSchedule(param) {
       if(this.selectedDate !== "" && this.selectedDate === param.startStr) {
           this.selectedDate = "";
           this.selectedScheduleStatus = this.scheduleStatusList[0].value;
           this.isDeleteButtonVisible = false;
           this.showEditModal = true;
+          this.createRecurringDays();
         } else {
           this.selectedDate = param.startStr;
         }
@@ -294,14 +326,14 @@ export default defineComponent({
     updateSchedule(param) {
       if(param.extendedProps.rrule === undefined) {
         this.updateScheduleInternal(param.id, param.extendedProps.category, param.title.substring(param.title.indexOf(' ') + 1), param.allDay,
-                                    false, '', [], 1,
+                                    false, '', [], [], [], 1,
                                     param.startStr, param.endStr, param.extendedProps.refBlockId, param.extendedProps.content,
                                     param.extendedProps.status);
       } else {
         this.updateScheduleInternal(param.id, param.extendedProps.category, param.title.substring(param.title.indexOf(' ') + 1), param.allDay,
-                                    true, param.extendedProps.rrule.freq, param.extendedProps.rrule.byweekday, param.extendedProps.rrule.interval,
-                                    param.extendedProps.rrule.dtstart, param.extendedProps.rrule.until, param.extendedProps.refBlockId,
-                                    param.extendedProps.content, param.extendedProps.status);
+                                    true, param.extendedProps.rrule.freq, param.extendedProps.rrule.byweekday, param.extendedProps.rrule.bymonthday,
+                                    param.extendedProps.rrule.byyearday, param.extendedProps.rrule.interval, param.extendedProps.rrule.dtstart,
+                                    param.extendedProps.rrule.until, param.extendedProps.refBlockId, param.extendedProps.content, param.extendedProps.status);
       }
       
     },
@@ -311,13 +343,13 @@ export default defineComponent({
       this.sindex = sindex;
       let schedule = this.globalData.scheduleCategories.categories[cindex].schedules[sindex];
       this.updateScheduleInternal(schedule.id, schedule.category, schedule.title, schedule.isAllDay,
-                                  schedule.isRecurringSchedule, schedule.frequency, schedule.weekdays, schedule.interval,
-                                  schedule.start, schedule.end,
+                                  schedule.isRecurringSchedule, schedule.frequency, schedule.weekdays, schedule.monthdays, schedule.yeardays,
+                                  schedule.interval, schedule.start, schedule.end,
                                   schedule.refBlockId, schedule.content, schedule.status);
     },
 
     updateScheduleInternal(id, category, title, isAllDay,
-                           isRecurringSchedule, frequency, weekdays, interval,
+                           isRecurringSchedule, frequency, weekdays, monthdays, yeardays, interval,
                            startTime, endTime, refBlockId, content, status) {
       this.isDeleteButtonVisible = true;
       this.selectedCategory = category;
@@ -343,11 +375,14 @@ export default defineComponent({
       this.isRecurringSchedule = isRecurringSchedule;
       this.selectedFreq = frequency;
       this.selectedWeekday = weekdays;
+      this.selectedMonthday = monthdays;
+      this.selectedYearday = yeardays;
       this.scheduleInterval = interval;
       
-      this.selectedSchedule = new Schedule(id, '', isAllDay, isRecurringSchedule, frequency, weekdays, interval, '', '', category, '', '', 1);
+      this.selectedSchedule = new Schedule(id, '', isAllDay, isRecurringSchedule, frequency, weekdays, monthdays, yeardays, interval, '', '', category, '', '', 1);
 
       this.showEditModal = true;
+      this.createRecurringDays();
     },
 
     handleSubmitSchedule() {
@@ -408,9 +443,22 @@ export default defineComponent({
           end = format(this.endTime, "yyyy-MM-dd'T'HH:mm:ss");
         }
 
+        if(this.selectedFreq === 'weekly') {
+          this.selectedMonthday = [];
+          this.selectedYearday = [];
+        }
+        else if(this.selectedFreq === 'monthly') {
+          this.selectedWeekday = [];
+          this.selectedYearday = [];
+        }
+        else if(this.selectedFreq === 'yearly') {
+          this.selectedMonthday = [];
+          this.selectedWeekday = [];
+        }
+
         let newSchedule = new Schedule(id, this.scheduleName, this.isAllDaySchedule,
-                            this.isRecurringSchedule, this.selectedFreq, this.selectedWeekday, this.scheduleInterval,
-                            start, end,
+                            this.isRecurringSchedule, this.selectedFreq, this.selectedWeekday, this.selectedMonthday, this.selectedYearday,
+                            this.scheduleInterval, start, end,
                             this.selectedCategory, this.scheduleContentBlockId, this.scheduleContent, this.selectedScheduleStatus
                            );
         if(this.selectedScheduleStatus == 3)

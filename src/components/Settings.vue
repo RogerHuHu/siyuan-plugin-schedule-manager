@@ -21,6 +21,11 @@
       <n-gi :span="8">
         <n-divider />
       </n-gi>
+      <!--n-gi :span="8">
+        <n-button strong secondary round type="info" @click="handleTest()">
+          {{ archiveText }}
+        </n-button>
+      </n-gi-->
     </n-grid>
   </n-card>
 </template>
@@ -38,6 +43,7 @@
   import { CheckOutlined } from '@vicons/antd'
   import EventAggregator from "../utils/EventAggregator";
   import { showMessage } from "siyuan";
+  import { CalDavClient } from "../ThirdPartyCalendars/CalDav";
 
 export default defineComponent({
   components: {
@@ -51,7 +57,8 @@ export default defineComponent({
       dayText: i18n.day,
       archiveText: i18n.archive,
       archiveTime: ref(7),
-    };
+      calDavClient: CalDavClient,
+    };  
   },
 
   data() {
@@ -73,6 +80,14 @@ export default defineComponent({
     handleArchive() {
       this.globalData.scheduleCategories.archiveSchedules(this.archiveTime);
     },
+
+    handleTest() {
+      this.calDavClient = new CalDavClient("https://calendar.dingtalk.com/dav/users/u_oslxrjui", "u_oslxrjui", "ow5kp2zd");
+      //this.calDavClient = new CalDavClient("https://dav.qq.com/dav/users/196550051@qq.com", "196550051@qq.com", "ezgcgtzkjkihbiah");
+      //this.calDavClient = new CalDavClient("https://caldav.mail.qq.com/", "196550051@qq.com", "dream91722");
+      //this.calDavClient = new CalDavClient("https://dida365.com/pub/calendar/feeds/quraph7at8zb/basic.ics", "hujunjie7174@126.com", "hello7109");
+      this.calDavClient.login();
+    }
   }
 })
 </script>

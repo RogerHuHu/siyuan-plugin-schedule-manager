@@ -50,13 +50,13 @@ export class ScheduleCategories {
 
                 if(content.isRecurringSchedule !== null && content.isRecurringSchedule === true) {
                     schedule = new Schedule(content.id, content.title, isAllDay,
-                                            true, content.frequency, content.weekdays, content.interval,                   
-                                            content.start, content.end,
+                                            true, content.frequency, content.weekdays, content.monthdays, content.yeardays,
+                                            content.interval, content.start, content.end,
                                             content.category, content.refBlockId, content.content, content.status);
                     schedule.setDoneTime(content.doneTime);
                 } else {
                     schedule = new Schedule(content.id, content.title, isAllDay,
-                                            false, '', [], 1,                   
+                                            false, '', [], [], [], 1,                   
                                             content.start, content.end,
                                             content.category, content.refBlockId, content.content, content.status);
                     schedule.setDoneTime(content.doneTime);
@@ -158,6 +158,7 @@ export class ScheduleCategories {
         let newEvent = null;
 
         if(schedule.isRecurringSchedule) {
+            console.log("Schedule byyearday: ", schedule.yeardays);
             newEvent = {
                 id: schedule.id,
                 title: this.getEventName(schedule.title, schedule.status),
@@ -166,6 +167,8 @@ export class ScheduleCategories {
                     freq: schedule.frequency,
                     interval: schedule.interval,
                     byweekday: schedule.weekdays,
+                    bymonthday: schedule.monthdays,
+                    byyearday: schedule.yeardays,
                     dtstart: schedule.start,
                     until: schedule.end
                 },
@@ -178,6 +181,8 @@ export class ScheduleCategories {
                         freq: schedule.frequency,
                         interval: schedule.interval,
                         byweekday: schedule.weekdays,
+                        bymonthday: schedule.monthdays,
+                        byyearday: schedule.yeardays,
                         dtstart: schedule.start,
                         until: schedule.end
                     }

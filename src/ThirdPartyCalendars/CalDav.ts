@@ -28,8 +28,21 @@ export class CalDavClient {
 
     async login() {
         await this.client.login();
+        /*
+        await this.client.makeCalendar({
+            url: 'https://calendar.dingtalk.com/dav/u_oslxrjui/primary/',
+            props: {
+                displayname: '工作',
+                description: ''
+            }
+        });
+        */
         const calendars = await this.client.fetchCalendars();
         console.log("=========================calendars===========================");
         console.log(calendars);
+        const calendarObjects = await this.client.fetchCalendarObjects({
+            calendar: calendars[0],
+          });
+        console.log(calendarObjects);
     }
 }

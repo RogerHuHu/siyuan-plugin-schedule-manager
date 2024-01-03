@@ -367,8 +367,8 @@ export class ScheduleManager {
             })
 
             let newSchedule = new Schedule(content.id, content.title, content.isAllDay,
-                                           content.isRecurringSchedule, content.frequency, content.weekdays, content.interval,
-                                           content.start, content.end,
+                                           content.isRecurringSchedule, content.frequency, content.weekdays, content.monthdays, content.yeardays,
+                                           content.interval, content.start, content.end,
                                            content.extendedProps.category, content.extendedProps.refBlockId,
                                            content.extendedProps.content, content.extendedProps.status);
             //console.log(newSchedule);
