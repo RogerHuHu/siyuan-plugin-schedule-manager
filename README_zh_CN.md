@@ -84,7 +84,7 @@
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/schedule_category_collapse.png" alt="">
 
 ### 13.设置一周开始时间
-在设置界面新增一周从周日还是周一开始的设置
+在设置界面新增一周从周日还是周一开始的设置（设置完成后需要重新打开本插件）
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/set_firstdayofweek.png" alt="">
 
 ## Todo
