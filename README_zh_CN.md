@@ -83,6 +83,10 @@
 点击箭头按钮后，可以隐藏左侧的日程分类视图，对小屏幕更友好
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/schedule_category_collapse.png" alt="">
 
+### 13.设置一周开始时间
+在设置界面新增一周从周日还是周一开始的设置
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/set_firstdayofweek.png" alt="">
+
 ## Todo
 - [x] 界面语言、文档国际化
 - [ ] 日程的拖拽

@@ -21,6 +21,22 @@
       <n-gi :span="8">
         <n-divider />
       </n-gi>
+      <n-gi>
+        <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ firstDayOfWeekText }}</div>
+      </n-gi>
+      <n-gi :span="6">
+        <n-select v-model:value="selectedDay" size="tiny" :options="firstDaysOfWeek" />
+      </n-gi>
+      <n-gi>
+        <n-button quaternary circle size="small" @click="handleUpdateFirstDayOfWeek()">
+          <template #icon>
+            <n-icon :component="CheckOutlined" color="#18a058" />
+          </template>
+        </n-button>
+      </n-gi>
+      <n-gi :span="8">
+        <n-divider />
+      </n-gi>
       <!--n-gi :span="8">
         <n-button strong secondary round type="info" @click="handleTest()">
           {{ archiveText }}
@@ -54,10 +70,23 @@ export default defineComponent({
     return {
       CheckOutlined,
       archiveTimeText: i18n.archiveTime,
+      firstDayOfWeekText: i18n.firstDayOfWeek,
       dayText: i18n.day,
       archiveText: i18n.archive,
       archiveTime: ref(7),
+      selectedDay: ref(1),
       calDavClient: CalDavClient,
+
+      firstDaysOfWeek: [
+        {
+          value: 0,
+          label: i18n.sunday
+        },
+        {
+          value: 1,
+          label: i18n.monday
+        }
+      ],
     };  
   },
 
@@ -74,6 +103,11 @@ export default defineComponent({
   methods: {
     handleUpdate() {
       EventAggregator.emit('updateArchiveTime', this.archiveTime);
+      showMessage(i18n.hasUpdated, 6000, "info");
+    },
+
+    handleUpdateFirstDayOfWeek() {
+      EventAggregator.emit('updateFirstDayOfWeek', this.selectedDay);
       showMessage(i18n.hasUpdated, 6000, "info");
     },
 

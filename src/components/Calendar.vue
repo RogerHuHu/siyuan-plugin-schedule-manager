@@ -124,6 +124,7 @@
 
     mounted() {
       setFCApi(this.$refs.fullCalendar.getApi());
+      this.calendarOptions.firstDay = globalData.selectedFirstDayOfWeek;
       EventAggregator.emit('readCategories');
       EventAggregator.on('resize', () => {
           setTimeout(() => {

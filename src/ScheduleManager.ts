@@ -86,11 +86,15 @@ export class ScheduleManager {
         EventAggregator.on('updateArchiveTime', (p: any) => {
             this.setDocumentArchiveTimeProperty(p);
         });
+
+        EventAggregator.on('updateFirstDayOfWeek', (p: any) => {
+            this.setDocumentFirstDayOfWeekProperty(p);
+        });
     }
 
     async createDocumentAndSetAttributes(notebookId: string, docProp: any) {
         await this.createDocument(notebookId, docProp);
-        await this.setDocumentProperty(this.docId, docProp.checked, docProp.color, 7);
+        await this.setDocumentProperty(this.docId, docProp.checked, docProp.color, 7, 1);
         let document = {
             id: this.docId,
             name: docProp.name,
@@ -142,14 +146,15 @@ export class ScheduleManager {
         });
     }
 
-    async setDocumentProperty(docId: string, checked: boolean, color: string, archiveTime: number) {
+    async setDocumentProperty(docId: string, checked: boolean, color: string, archiveTime: number, firstDayOfWeek: number) {
         await fetchSyncPost("/api/attr/setBlockAttrs", {
             "id": docId,
             "attrs": {
                 "custom-checked": checked ? "true" : "false",
                 "custom-color": color,
                 "custom-version": "1.1.0",
-                "custom-archiveTime": archiveTime.toString()
+                "custom-archiveTime": archiveTime.toString(),
+                "custom-firstDayOfWeek": firstDayOfWeek.toString(),
             }
         }).then(response => {
 
@@ -194,6 +199,17 @@ export class ScheduleManager {
         }
     }
 
+    async setDocumentFirstDayOfWeekProperty(firstDay: number) {
+        for(let document of this.documents) {
+            await fetchSyncPost("/api/attr/setBlockAttrs", {
+                "id": document.id,
+                "attrs": {
+                    "custom-firstDayOfWeek": firstDay.toString()
+                }
+            });
+        }
+    }
+
     async getDocuments(notebookId: string) {
         let query = "SELECT id FROM blocks WHERE type = \'d\' AND box =\'" + notebookId + "\'";
         await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
@@ -218,7 +234,9 @@ export class ScheduleManager {
                 doc.checked = response.data["custom-checked"] === "true" ? true : false;
                 doc.color = response.data["custom-color"];
                 doc.archiveTime = response.data['custom-archiveTime'];
+                doc.firstDayOfWeek = response.data["custom-firstDayOfWeek"];
                 globalData.archiveTime = doc.archiveTime === undefined ? 7 : parseInt(doc.archiveTime, 10);
+                globalData.selectedFirstDayOfWeek = doc.firstDayOfWeek;
             })
         }
     }

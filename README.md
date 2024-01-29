@@ -77,9 +77,13 @@ After clicking the archive button，calculate from the time when the schedule is
 
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/oneclick_archive.png" alt="">
 
-### 12.Schedule category collapse
+### 12. Schedule category collapse
 After clicking the arrow button, you can hide the schedule category view on the left, which is more friendly to small screens.
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/schedule_category_collapse.png" alt="">
+
+### 13. Set the first day of a week
+Added a setting to select whether the week starts on Sunday or Monday in the settings interface.
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/set_firstdayofweek.png" alt="">
 
 ## Todo
 - [x] The internationalization of the interface language and the document
