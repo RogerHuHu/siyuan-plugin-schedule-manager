@@ -58,5 +58,6 @@
   "confirmRemove": "Confirm to delete the data in ${name}?",
   "insertEmoji": "Insert Emoji",
   "archiveTime": "Archive time",
-  "hasUpdated": "Has updated"
+  "hasUpdated": "Has updated",
+  "firstdayOfWeek": "First day of week"
 }

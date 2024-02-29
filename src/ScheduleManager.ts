@@ -236,7 +236,7 @@ export class ScheduleManager {
                 doc.archiveTime = response.data['custom-archiveTime'];
                 doc.firstDayOfWeek = response.data["custom-firstDayOfWeek"];
                 globalData.archiveTime = doc.archiveTime === undefined ? 7 : parseInt(doc.archiveTime, 10);
-                globalData.selectedFirstDayOfWeek = doc.firstDayOfWeek;
+                globalData.selectedFirstDayOfWeek = doc.firstDayOfWeek === undefined ? 0 : doc.firstDayOfWeek;
             })
         }
     }
