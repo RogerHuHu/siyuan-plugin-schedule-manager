@@ -32,6 +32,9 @@ dependencies:
   date-fns:
     specifier: ^2.30.0
     version: 2.30.0
+  js-calendar-converter:
+    specifier: ^0.0.6
+    version: 0.0.6
   mitt:
     specifier: ^3.0.1
     version: 3.0.1
@@ -1771,6 +1774,10 @@ packages:
       '@types/node': 16.11.6
       merge-stream: 2.0.0
       supports-color: 8.1.1
+
+  /js-calendar-converter@0.0.6:
+    resolution: {integrity: sha512-0TRHm2jaGRAbXd1sKvzHSW3hB+oqo2h6EAHMAPpuEj0WYic+KWgsA+41PnNx03ggyGTAHx29diDqFxqHFctAGg==}
+    dev: false
 
   /js-yaml@4.1.0:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}

@@ -47,6 +47,7 @@
   import timeGridPlugin from '@fullcalendar/timegrid';
   import listPlugin from '@fullcalendar/list';
   import rrulePlugin from '@fullcalendar/rrule'
+  import calendarChinese from 'js-calendar-converter'
 
   import ScheduleEditor from "./ScheduleEditor.vue";
 
@@ -97,6 +98,25 @@
             hour12: false // 设置时间为24小时
           },
           
+          views: {
+            dayGridMonth: { // 转农历
+                dayCellContent(item) {
+                    let mark = sessionStorage.getItem('joinholiday')
+                    let _date = new Date(item.date).toLocaleDateString().split('/')
+                    let _dateF = calendarChinese.solar2lunar(_date[0], _date[1], _date[2])
+                    if(item.dayNumerText == mark + '日') {
+                        return {
+                            html: `<p id='selectedHolidy'><label>${_dateF.cDay}</label></p><p><span>${_dateF.IDayCn}</span></p>`
+                        }
+                    } else {
+                        return {
+                            html: `<p><label>${_dateF.cDay}</label></p><p><span>${_dateF.IDayCn}</span></p>`
+                        }
+                    }
+                }
+            }
+          },
+
           // 事件
           select: this.handleDateSelect, // 选中日历格事件
           eventClick: this.handleEventClick, // 点击日历日程事件
@@ -147,7 +167,7 @@
       },
 
       handleDatesSet(dateInfo) {
-        console.log(dateInfo)
+        //console.log(dateInfo)
       },
 
       handleEvents(events) {

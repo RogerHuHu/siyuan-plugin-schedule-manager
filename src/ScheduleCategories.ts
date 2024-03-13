@@ -158,7 +158,7 @@ export class ScheduleCategories {
         let newEvent = null;
 
         if(schedule.isRecurringSchedule) {
-            console.log("Schedule byyearday: ", schedule.yeardays);
+            //console.log("Schedule byyearday: ", schedule.yeardays);
             newEvent = {
                 id: schedule.id,
                 title: this.getEventName(schedule.title, schedule.status),

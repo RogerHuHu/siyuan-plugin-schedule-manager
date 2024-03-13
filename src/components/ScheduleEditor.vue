@@ -189,6 +189,7 @@ export default defineComponent({
       intervalText: i18n.interval,
       onlyAllowNumberText: i18n.onlyAllowNumber,
       selectedDate: "",
+      canNewSchedule: false,
       modalClosable: false,
       modalShowIcon: false,
       isDeleteButtonVisible: false,
@@ -312,14 +313,26 @@ export default defineComponent({
     },
 
     newSchedule(param) {
-      if(this.selectedDate !== "" && this.selectedDate === param.startStr) {
-          this.selectedDate = "";
-          this.selectedScheduleStatus = this.scheduleStatusList[0].value;
-          this.isDeleteButtonVisible = false;
-          this.showEditModal = true;
-          this.createRecurringDays();
+      let diff = 1
+        if(param.view.type == 'dayGridMonth') { // 在月视图单击某个格子，则 end-start 刚好是24小时，由于设计的是双击触发日程新增界面，因此要排除这个情况
+            diff = 86400000
+        }
+
+        if((getTime(param.end) - getTime(param.start)) !== diff || this.selectedDate !== "") {
+            this.canNewSchedule = true;
         } else {
-          this.selectedDate = param.startStr;
+            this.canNewSchedule = false;
+            this.selectedDate = param.startStr;
+        }
+          
+        if(this.canNewSchedule === true) {
+            this.selectedDate = "";
+            this.startTime = getTime(param.start)
+            this.endTime = getTime(param.end)
+            this.selectedScheduleStatus = this.scheduleStatusList[0].value;
+            this.isDeleteButtonVisible = false;
+            this.showEditModal = true;
+            this.createRecurringDays();
         }
     },
 
