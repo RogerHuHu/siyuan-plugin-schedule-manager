@@ -104,14 +104,24 @@
                     let mark = sessionStorage.getItem('joinholiday')
                     let _date = new Date(item.date).toLocaleDateString().split('/')
                     let _dateF = calendarChinese.solar2lunar(_date[0], _date[1], _date[2])
+                    let lunarInfo = ""
                     if(item.dayNumerText == mark + '日') {
-                        return {
-                            html: `<p id='selectedHolidy'><label>${_dateF.cDay}</label></p><p><span>${_dateF.IDayCn}</span></p>`
-                        }
+                        lunarInfo = `<p id='selectedHolidy'>`
                     } else {
-                        return {
-                            html: `<p><label>${_dateF.cDay}</label></p><p><span>${_dateF.IDayCn}</span></p>`
-                        }
+                        lunarInfo = `<p>`
+                    }
+
+                    lunarInfo += `<label>${_dateF.cDay}</label></p><p><span>${_dateF.IDayCn}</span></p>`
+                    if(_dateF.festival != null) {
+                      lunarInfo += `<p><span style="background-color: #F4DED1;">${_dateF.festival}</span>`
+                    }
+
+                    if(_dateF.lunarFestival != null) {
+                      lunarInfo += `<p><span style="background-color: #F4DED1;">${_dateF.lunarFestival}</span>`
+                    }
+
+                    return {
+                      html: lunarInfo
                     }
                 }
             }
