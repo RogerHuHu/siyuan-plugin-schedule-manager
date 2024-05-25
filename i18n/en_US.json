@@ -59,5 +59,7 @@
   "insertEmoji": "Insert Emoji",
   "archiveTime": "Archive time",
   "hasUpdated": "Has updated",
-  "firstdayOfWeek": "First day of week"
+  "firstdayOfWeek": "First day of week",
+  "gregorianCalendar": "Gregorian calendar",
+  "lunarCalendar": "Lunar calendar"
 }

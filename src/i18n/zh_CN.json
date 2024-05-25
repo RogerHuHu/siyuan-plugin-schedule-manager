@@ -59,5 +59,7 @@
   "insertEmoji": "插入表情",
   "archiveTime": "归档时间",
   "hasUpdated": "已更新",
-  "firstDayOfWeek": "一周开始"
+  "firstDayOfWeek": "一周开始",
+  "gregorianCalendar": "公历",
+  "lunarCalendar": "农历"
 }

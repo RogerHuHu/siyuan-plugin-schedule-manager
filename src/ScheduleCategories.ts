@@ -50,13 +50,13 @@ export class ScheduleCategories {
 
                 if(content.isRecurringSchedule !== null && content.isRecurringSchedule === true) {
                     schedule = new Schedule(content.id, content.title, isAllDay,
-                                            true, content.frequency, content.weekdays, content.monthdays, content.yeardays,
+                                            true, content.calendarType, content.frequency, content.weekdays, content.monthdays, content.yeardays,
                                             content.interval, content.start, content.end,
                                             content.category, content.refBlockId, content.content, content.status);
                     schedule.setDoneTime(content.doneTime);
                 } else {
                     schedule = new Schedule(content.id, content.title, isAllDay,
-                                            false, '', [], [], [], 1,                   
+                                            false, '', '', [], [], [], 1,                   
                                             content.start, content.end,
                                             content.category, content.refBlockId, content.content, content.status);
                     schedule.setDoneTime(content.doneTime);

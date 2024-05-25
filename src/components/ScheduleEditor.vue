@@ -32,11 +32,20 @@
         </n-gi>
 
         <!--周期性日程参数-->
+        <!--<n-gi :span="2" style="display: flex; justify-content:right;" v-if="isRecurringSchedule">
+          <n-radio :checked="calendarTypeCheckedValue === 'Gregorian_calendar'" value="Gregorian_calendar" name="basic-demo" @change="handleCalendarTypeChange">{{ gregorianCalendarText }}</n-radio>
+        </n-gi>
+        <n-gi :span="2" style="display: flex; justify-content:right;" v-if="isRecurringSchedule">
+          <n-radio :checked="calendarTypeCheckedValue === 'Lunar_calendar'" value="Lunar_calendar" name="basic-demo" @change="handleCalendarTypeChange">{{ lunarCalendarText }}</n-radio>
+        </n-gi>-->
         <n-gi :span="1" style="display: flex; justify-content:right;" v-if="isRecurringSchedule">
           <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ cycleText }}</div>
         </n-gi>
-        <n-gi :span="3" v-if="isRecurringSchedule">
+        <n-gi :span="3" v-if="isRecurringSchedule && calendarTypeCheckedValue === 'Gregorian_calendar'">
           <n-select v-model:value="selectedFreq" size="tiny" :options="freqs" @update:value="handleUpdateSelectedFreq" />
+        </n-gi>
+        <n-gi :span="3" v-if="isRecurringSchedule && calendarTypeCheckedValue === 'Lunar_calendar'">
+          <n-select v-model:value="selectedFreq" size="tiny" :options="freqsLunar" @update:value="handleUpdateSelectedFreq" />
         </n-gi>
         <n-gi :span="4" v-if="isRecurringSchedule && selectedFreq === 'weekly'">
           <n-select v-model:value="selectedWeekday" multiple :options="weekdays" size="tiny"/>
@@ -44,8 +53,17 @@
         <n-gi :span="4" v-if="isRecurringSchedule && selectedFreq === 'monthly'">
           <n-select v-model:value="selectedMonthday" multiple :options="monthdays" size="tiny"/>
         </n-gi>
-        <n-gi :span="4" v-if="isRecurringSchedule && selectedFreq === 'yearly'">
+        <n-gi :span="4" v-if="isRecurringSchedule && selectedFreq === 'yearly' && calendarTypeCheckedValue === 'Gregorian_calendar'">
           <n-select v-model:value="selectedYearday" multiple :options="yeardays" size="tiny"/>
+        </n-gi>
+        <n-gi :span="1" v-if="isRecurringSchedule && selectedFreq === 'yearly' && calendarTypeCheckedValue === 'Lunar_calendar'">
+          <n-select v-model:value="selectedMonthday" multiple :options="monthdays" size="tiny"/>
+        </n-gi>
+        <n-gi :span="1" v-if="isRecurringSchedule && selectedFreq === 'yearly' && calendarTypeCheckedValue === 'Lunar_calendar'">
+          <div class="sm-schedule-item-header">{{ monthText }}</div>
+        </n-gi>
+        <n-gi :span="1" v-if="isRecurringSchedule && selectedFreq === 'yearly' && calendarTypeCheckedValue === 'Lunar_calendar'">
+          <n-select v-model:value="selectedMonthday" multiple :options="monthdays" size="tiny"/>
         </n-gi>
 
         <n-gi :span="1" style="display: flex; justify-content:right;" v-if="isRecurringSchedule">
@@ -171,6 +189,7 @@ export default defineComponent({
       CheckOutlined,
       ClearOutlined,
       ArrowRightOutlined,
+      monthText: i18n.month,
       scheduleCategoryText: i18n.scheduleCategory,
       selectScheduleCategoryText: i18n.selectScheduleCategory,
       selectScheduleRangeText: i18n.selectScheduleRange,
@@ -188,6 +207,8 @@ export default defineComponent({
       cycleText: i18n.cycle,
       intervalText: i18n.interval,
       onlyAllowNumberText: i18n.onlyAllowNumber,
+      gregorianCalendarText: i18n.gregorianCalendar,
+      lunarCalendarText: i18n.lunarCalendar,
       selectedDate: "",
       canNewSchedule: false,
       modalClosable: false,
@@ -244,6 +265,16 @@ export default defineComponent({
           label: i18n.year
         }
       ],
+      freqsLunar: [
+        {
+          value: 'monthly',
+          label: i18n.month
+        },
+        {
+          value: 'yearly',
+          label: i18n.year
+        }
+      ],
       weekdays: [
         {
           value: 'mo',
@@ -274,10 +305,12 @@ export default defineComponent({
           label: i18n.sunday
         }
       ],
+      months: ref([]),
       monthdays: ref([]),
       yeardays: ref([]),
       selectedFreq: ref(null),
       selectedEvent: null,
+      calendarTypeCheckedValue: ref("Gregorian_calendar"),
     };
   },
 
@@ -312,6 +345,10 @@ export default defineComponent({
       this.createRecurringDays();
     },
 
+    handleCalendarTypeChange(e) {
+      this.calendarTypeCheckedValue = e.target.value;
+    },
+
     newSchedule(param) {
       let diff = 1
         if(param.view.type == 'dayGridMonth') { // 在月视图单击某个格子，则 end-start 刚好是24小时，由于设计的是双击触发日程新增界面，因此要排除这个情况
@@ -339,12 +376,12 @@ export default defineComponent({
     updateSchedule(param) {
       if(param.extendedProps.rrule === undefined) {
         this.updateScheduleInternal(param.id, param.extendedProps.category, param.title.substring(param.title.indexOf(' ') + 1), param.allDay,
-                                    false, '', [], [], [], 1,
+                                    false, '', '', [], [], [], 1,
                                     param.startStr, param.endStr, param.extendedProps.refBlockId, param.extendedProps.content,
                                     param.extendedProps.status);
       } else {
         this.updateScheduleInternal(param.id, param.extendedProps.category, param.title.substring(param.title.indexOf(' ') + 1), param.allDay,
-                                    true, param.extendedProps.rrule.freq, param.extendedProps.rrule.byweekday, param.extendedProps.rrule.bymonthday,
+                                    true, param.extendedProps.calendarType, param.extendedProps.rrule.freq, param.extendedProps.rrule.byweekday, param.extendedProps.rrule.bymonthday,
                                     param.extendedProps.rrule.byyearday, param.extendedProps.rrule.interval, param.extendedProps.rrule.dtstart,
                                     param.extendedProps.rrule.until, param.extendedProps.refBlockId, param.extendedProps.content, param.extendedProps.status);
       }
@@ -356,13 +393,13 @@ export default defineComponent({
       this.sindex = sindex;
       let schedule = this.globalData.scheduleCategories.categories[cindex].schedules[sindex];
       this.updateScheduleInternal(schedule.id, schedule.category, schedule.title, schedule.isAllDay,
-                                  schedule.isRecurringSchedule, schedule.frequency, schedule.weekdays, schedule.monthdays, schedule.yeardays,
+                                  schedule.isRecurringSchedule, schedule.calendarType, schedule.frequency, schedule.weekdays, schedule.monthdays, schedule.yeardays,
                                   schedule.interval, schedule.start, schedule.end,
                                   schedule.refBlockId, schedule.content, schedule.status);
     },
 
     updateScheduleInternal(id, category, title, isAllDay,
-                           isRecurringSchedule, frequency, weekdays, monthdays, yeardays, interval,
+                           isRecurringSchedule, calendarType, frequency, weekdays, monthdays, yeardays, interval,
                            startTime, endTime, refBlockId, content, status) {
       this.isDeleteButtonVisible = true;
       this.selectedCategory = category;
@@ -392,7 +429,7 @@ export default defineComponent({
       this.selectedYearday = yeardays;
       this.scheduleInterval = interval;
       
-      this.selectedSchedule = new Schedule(id, '', isAllDay, isRecurringSchedule, frequency, weekdays, monthdays, yeardays, interval, '', '', category, '', '', 1);
+      this.selectedSchedule = new Schedule(id, '', isAllDay, isRecurringSchedule, calendarType, frequency, weekdays, monthdays, yeardays, interval, '', '', category, '', '', 1);
 
       this.showEditModal = true;
       this.createRecurringDays();
@@ -470,7 +507,7 @@ export default defineComponent({
         }
 
         let newSchedule = new Schedule(id, this.scheduleName, this.isAllDaySchedule,
-                            this.isRecurringSchedule, this.selectedFreq, this.selectedWeekday, this.selectedMonthday, this.selectedYearday,
+                            this.isRecurringSchedule, this.calendarTypeCheckedValue, this.selectedFreq, this.selectedWeekday, this.selectedMonthday, this.selectedYearday,
                             this.scheduleInterval, start, end,
                             this.selectedCategory, this.scheduleContentBlockId, this.scheduleContent, this.selectedScheduleStatus
                            );

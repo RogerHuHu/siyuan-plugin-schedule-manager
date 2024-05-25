@@ -81,6 +81,10 @@ export default class PluginScheduleManager extends Plugin {
         console.log("Schedule Manager unonload");
     }
 
+    onLayoutReady(): void {
+        console.log("Schedule Manager layout ready")
+    }
+
     scheduleNotebookInit() {
         // 获取笔记本列表
         fetchPost("/api/notebook/lsNotebooks", {}, (response) => {
@@ -111,6 +115,7 @@ export default class PluginScheduleManager extends Plugin {
     }
 
     async showCalendar() {
+        console.log("showCalendar")
         let scheduleManagerDiv = document.createElement('div');
         scheduleManagerDiv.setAttribute("class", "schedule-app");
         let sm = this.scheduleManager;

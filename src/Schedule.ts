@@ -4,6 +4,7 @@ export class Schedule {
     title: string;
     isAllDay: boolean; // 是否为全天日程
     isRecurringSchedule: boolean; // 是否为重复性日程
+    calendarType: string; // 公历还是农历
     frequency: string; // 重复频率（日、周、月、年）
     weekdays: string[]; // 如果重复频率为周，则可以选择周几重复
     monthdays: string[]; // 如果重复频率为月，则可以选择当月的哪一天重复
@@ -18,7 +19,7 @@ export class Schedule {
     doneTime: number;
 
     constructor(id?: string, title?: string, isAllDay?: boolean,
-                isRecurringSchedule?: boolean, frequency?: string,
+                isRecurringSchedule?: boolean, calendarType?:string, frequency?: string,
                 weekdays?: string[], monthdays?:string[], yeardays?:string[],
                 interval?: number, start?: string, end?: string, 
                 category?: string, refBlockId?:string, content?: string, status?: number) {
@@ -26,6 +27,7 @@ export class Schedule {
         this.title = title;
         this.isAllDay = isAllDay;
         this.isRecurringSchedule = isRecurringSchedule;
+        this.calendarType = calendarType;
         this.frequency = frequency;
         this.weekdays = weekdays;
         this.monthdays = monthdays;
