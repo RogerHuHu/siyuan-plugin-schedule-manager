@@ -61,5 +61,6 @@
   "hasUpdated": "已更新",
   "firstDayOfWeek": "一周开始",
   "gregorianCalendar": "公历",
-  "lunarCalendar": "农历"
+  "lunarCalendar": "农历",
+  "showLunarCalendar": "显示农历"
 }

@@ -37,6 +37,12 @@
       <n-gi :span="8">
         <n-divider />
       </n-gi>
+      <n-gi :span="6">
+        <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ showLunarCalendarText }}</div>
+      </n-gi>
+      <n-gi>
+        <n-switch v-model:value="isShowLunarCalendar" @update:value="handleUpdateShowLunarCalendar"/>
+      </n-gi>
       <!--n-gi :span="8">
         <n-button strong secondary round type="info" @click="handleTest()">
           {{ archiveText }}
@@ -73,6 +79,7 @@ export default defineComponent({
       firstDayOfWeekText: i18n.firstDayOfWeek,
       dayText: i18n.day,
       archiveText: i18n.archive,
+      showLunarCalendarText: i18n.showLunarCalendar,
       archiveTime: ref(7),
       selectedDay: ref(1),
       calDavClient: CalDavClient,
@@ -87,6 +94,8 @@ export default defineComponent({
           label: i18n.monday
         }
       ],
+
+      isShowLunarCalendar: ref(true)
     };  
   },
 
@@ -98,6 +107,7 @@ export default defineComponent({
 
   mounted() {
     this.archiveTime = globalData.archiveTime;
+    this.isShowLunarCalendar = globalData.showLunarCalendar;
   },
 
   methods: {
@@ -113,6 +123,11 @@ export default defineComponent({
 
     handleArchive() {
       this.globalData.scheduleCategories.archiveSchedules(this.archiveTime);
+    },
+
+    handleUpdateShowLunarCalendar() {
+      EventAggregator.emit('updateShowLunarCalendar', this.isShowLunarCalendar);
+      showMessage(i18n.hasUpdated, 6000, "info");
     },
 
     handleTest() {

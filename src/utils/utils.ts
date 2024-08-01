@@ -30,7 +30,8 @@ export const globalData = {
     scheduleCategories: new ScheduleCategories(),
     scheduleStatusLogo: ['☕', '🏃‍♂️', '✅', '📦'],
     archiveTime: 7,
-    selectedFirstDayOfWeek: 1
+    selectedFirstDayOfWeek: 1,
+    showLunarCalendar: true
 }
 
 export enum smColor {

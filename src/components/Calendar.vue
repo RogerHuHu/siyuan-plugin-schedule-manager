@@ -99,7 +99,7 @@
           },
           
           views: {
-            dayGridMonth: { // 转农历
+            dayGridMonth: globalData.showLunarCalendar ? { // 转农历
                 dayCellContent(item) {
                     let mark = sessionStorage.getItem('joinholiday')
                     let _date = new Date(item.date).toLocaleDateString().split('/')
@@ -124,7 +124,7 @@
                       html: lunarInfo
                     }
                 }
-            }
+            } : {}
           },
 
           // 事件

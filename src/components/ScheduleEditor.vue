@@ -1,6 +1,6 @@
 <template>
   <n-modal v-model:show="showEditModal">
-    <n-card style="width: 280px; border-radius: 10px" :bordered="false" size="small" aria-modal="true">
+    <n-card style="width: 320px; border-radius: 10px" :bordered="false" size="small" aria-modal="true">
       <n-grid :cols="4" y-gap="2">
         <n-gi :span="1" style="display: flex; justify-content:right;">
           <div class="sm-schedule-item-header">{{ scheduleCategoryText }}</div>
