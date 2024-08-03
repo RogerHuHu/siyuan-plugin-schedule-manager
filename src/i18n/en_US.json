@@ -62,5 +62,7 @@
   "firstDayOfWeek": "First day of week",
   "gregorianCalendar": "Gregorian calendar",
   "lunarCalendar": "Lunar calendar",
-  "showLunarCalendar": "Show chinese lunar calendar"
+  "showLunarCalendar": "Show chinese lunar calendar",
+  "selectLocale": "Select your locale",
+  "locales":["en-US","zh-CN"]
 }

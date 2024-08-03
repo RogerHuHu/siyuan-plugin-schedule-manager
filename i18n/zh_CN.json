@@ -62,5 +62,9 @@
   "firstDayOfWeek": "一周开始",
   "gregorianCalendar": "公历",
   "lunarCalendar": "农历",
-  "showLunarCalendar": "显示农历"
+  "showLunarCalendar": "显示农历",
+  "localeOptions": [
+    "zh-CN",
+    "en-US"
+  ]
 }

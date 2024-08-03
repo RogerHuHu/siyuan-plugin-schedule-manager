@@ -31,7 +31,8 @@ export const globalData = {
     scheduleStatusLogo: ['☕', '🏃‍♂️', '✅', '📦'],
     archiveTime: 7,
     selectedFirstDayOfWeek: 1,
-    showLunarCalendar: true
+    showLunarCalendar: true,
+    userLocale: 'zh-CN'
 }
 
 export enum smColor {
