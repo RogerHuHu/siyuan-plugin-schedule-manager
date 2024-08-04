@@ -65,7 +65,7 @@
   "showLunarCalendar": "显示农历",
   "selectLocale": "Select your locale",
   "locales": [
-    "zh-CN",
-    "en-US"
+    "zh-cn",
+    "en-us"
   ]
 }

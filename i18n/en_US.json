@@ -65,7 +65,7 @@
   "showLunarCalendar": "Show chinese lunar calendar",
   "selectLocale": "Select your locale",
   "localeOptions": [
-    "en-US",
-    "zh-CN"
+    "en-us",
+    "zh-cn"
   ]
 }
