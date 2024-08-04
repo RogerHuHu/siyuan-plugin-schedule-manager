@@ -64,7 +64,7 @@
   "lunarCalendar": "农历",
   "showLunarCalendar": "显示农历",
   "selectLocale": "Select your locale",
-  "locales": [
+  "localeOptions": [
     "zh-cn",
     "en-us"
   ]

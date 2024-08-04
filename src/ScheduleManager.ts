@@ -102,7 +102,7 @@ export class ScheduleManager {
 
     async createDocumentAndSetAttributes(notebookId: string, docProp: any) {
         await this.createDocument(notebookId, docProp);
-        await this.setDocumentProperty(this.docId, docProp.checked, docProp.color, 7, 1, true,"zh-CN");
+        await this.setDocumentProperty(this.docId, docProp.checked, docProp.color, 7, 1, true,"zh-cn");
         let document = {
             id: this.docId,
             name: docProp.name,

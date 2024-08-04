@@ -32,7 +32,7 @@ export const globalData = {
     archiveTime: 7,
     selectedFirstDayOfWeek: 1,
     showLunarCalendar: true,
-    userLocale: 'zh-CN'
+    userLocale: 'zh-cn'
 }
 
 export enum smColor {
