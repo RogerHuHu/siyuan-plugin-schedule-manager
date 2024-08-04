@@ -63,6 +63,7 @@
   "gregorianCalendar": "公历",
   "lunarCalendar": "农历",
   "showLunarCalendar": "显示农历",
+  "selectLocale": "Select your locale",
   "localeOptions": [
     "zh-CN",
     "en-US"

@@ -3,7 +3,7 @@
   "calendar": "日历",
   "kanban": "看板",
   "scheduleManager": "日程管理",
-  "addScheduleCategory":"添加日程分类",
+  "addScheduleCategory": "添加日程分类",
   "scheduleCategory": "日程分类",
   "inputScheduleCategoryName": "请输入日程分类名",
   "scheduleCategoryColorError": "日程分类颜色不能重复",
@@ -62,5 +62,10 @@
   "firstDayOfWeek": "一周开始",
   "gregorianCalendar": "公历",
   "lunarCalendar": "农历",
-  "showLunarCalendar": "显示农历"
+  "showLunarCalendar": "显示农历",
+  "selectLocale": "Select your locale",
+  "locales": [
+    "zh-CN",
+    "en-US"
+  ]
 }

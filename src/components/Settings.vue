@@ -96,7 +96,7 @@ export default defineComponent({
       selectLocaleText: i18n.selectLocale,
       archiveTime: ref(7),
       selectedDay: ref(1),
-      selectedLocale: ref(1),
+      selectedLocale: i18n.localeOptions[0],
       calDavClient: CalDavClient,
 
       firstDaysOfWeek: [
@@ -153,8 +153,7 @@ export default defineComponent({
       showMessage(i18n.hasUpdated, 6000, "info");
     },
     handleUpdateLocale() {
-      EventAggregator.emit('updateLocale', this.selectLocale);
-      this.globalData.userLocale = this.selectedLocale;
+      EventAggregator.emit('updateLocale', this.selectedLocale);
       showMessage(i18n.hasUpdated, 6000, "info");
     },
 

@@ -94,11 +94,15 @@ export class ScheduleManager {
         EventAggregator.on('updateShowLunarCalendar', (p:any) => {
             this.setDocumentShowLunarCalendarProperty(p);
         })
+
+        EventAggregator.on('updateLocale', (p:any) => {
+            this.setDocumentUserLocale(p);
+        });
     }
 
     async createDocumentAndSetAttributes(notebookId: string, docProp: any) {
         await this.createDocument(notebookId, docProp);
-        await this.setDocumentProperty(this.docId, docProp.checked, docProp.color, 7, 1, true);
+        await this.setDocumentProperty(this.docId, docProp.checked, docProp.color, 7, 1, true,"zh-CN");
         let document = {
             id: this.docId,
             name: docProp.name,
@@ -150,7 +154,7 @@ export class ScheduleManager {
         });
     }
 
-    async setDocumentProperty(docId: string, checked: boolean, color: string, archiveTime: number, firstDayOfWeek: number, showLunarCalendar: boolean) {
+    async setDocumentProperty(docId: string, checked: boolean, color: string, archiveTime: number, firstDayOfWeek: number, showLunarCalendar: boolean,userLocale:string) {
         await fetchSyncPost("/api/attr/setBlockAttrs", {
             "id": docId,
             "attrs": {
@@ -159,7 +163,8 @@ export class ScheduleManager {
                 "custom-version": "1.1.0",
                 "custom-archiveTime": archiveTime.toString(),
                 "custom-firstDayOfWeek": firstDayOfWeek.toString(),
-                "custom-showLunarCalendar": showLunarCalendar ? "true" : "false"
+                "custom-showLunarCalendar": showLunarCalendar ? "true" : "false",
+                "custom-userLocale": userLocale.toString()
             }
         }).then(response => {
 
@@ -210,6 +215,17 @@ export class ScheduleManager {
                 "id": document.id,
                 "attrs": {
                     "custom-firstDayOfWeek": firstDay.toString()
+                }
+            });
+        }
+    }
+
+    async setDocumentUserLocale(locale: string) {
+        for(let document of this.documents) {
+            await fetchSyncPost("/api/attr/setBlockAttrs", {
+                "id": document.id,
+                "attrs": {
+                    "custom-userLocale": locale.toString()
                 }
             });
         }
