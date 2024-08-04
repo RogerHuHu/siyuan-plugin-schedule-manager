@@ -96,7 +96,7 @@ export default defineComponent({
       selectLocaleText: i18n.selectLocale,
       archiveTime: ref(7),
       selectedDay: ref(1),
-      selectedLocale: i18n.localeOptions[0],
+      selectedLocale: ref(0),
       calDavClient: CalDavClient,
 
       firstDaysOfWeek: [
@@ -130,7 +130,7 @@ export default defineComponent({
   mounted() {
     this.archiveTime = globalData.archiveTime;
     this.isShowLunarCalendar = globalData.showLunarCalendar;
-    this.selectedLocale = globalData.userLocale;
+    // this.selectedLocale = globalData.userLocale;
   },
 
   methods: {

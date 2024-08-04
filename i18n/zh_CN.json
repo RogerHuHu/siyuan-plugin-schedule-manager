@@ -3,7 +3,7 @@
   "calendar": "日历",
   "kanban": "看板",
   "scheduleManager": "日程管理",
-  "addScheduleCategory":"添加日程分类",
+  "addScheduleCategory": "添加日程分类",
   "scheduleCategory": "日程分类",
   "inputScheduleCategoryName": "请输入日程分类名",
   "scheduleCategoryColorError": "日程分类颜色不能重复",
