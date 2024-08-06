@@ -1,6 +1,5 @@
 import { ScheduleCategory } from "./ScheduleCategory";
 import { Schedule } from "./Schedule";
-import { el, tr } from "date-fns/locale";
 import { fcApi, globalData } from "./utils/utils";
 import EventAggregator from "./utils/EventAggregator";
 import { reactive } from "vue"

@@ -94,11 +94,15 @@ export class ScheduleManager {
         EventAggregator.on('updateShowLunarCalendar', (p:any) => {
             this.setDocumentShowLunarCalendarProperty(p);
         })
+
+        EventAggregator.on('updateLocale', (p:any) => {
+            this.setDocumentUserLocale(p);
+        });
     }
 
     async createDocumentAndSetAttributes(notebookId: string, docProp: any) {
         await this.createDocument(notebookId, docProp);
-        await this.setDocumentProperty(this.docId, docProp.checked, docProp.color, 7, 1, true);
+        await this.setDocumentProperty(this.docId, docProp.checked, docProp.color, 7, 1, true,1);
         let document = {
             id: this.docId,
             name: docProp.name,
@@ -150,7 +154,7 @@ export class ScheduleManager {
         });
     }
 
-    async setDocumentProperty(docId: string, checked: boolean, color: string, archiveTime: number, firstDayOfWeek: number, showLunarCalendar: boolean) {
+    async setDocumentProperty(docId: string, checked: boolean, color: string, archiveTime: number, firstDayOfWeek: number, showLunarCalendar: boolean,userLocale:number) {
         await fetchSyncPost("/api/attr/setBlockAttrs", {
             "id": docId,
             "attrs": {
@@ -159,7 +163,8 @@ export class ScheduleManager {
                 "custom-version": "1.1.0",
                 "custom-archiveTime": archiveTime.toString(),
                 "custom-firstDayOfWeek": firstDayOfWeek.toString(),
-                "custom-showLunarCalendar": showLunarCalendar ? "true" : "false"
+                "custom-showLunarCalendar": showLunarCalendar ? "true" : "false",
+                "custom-userLocale": userLocale.toString()
             }
         }).then(response => {
 
@@ -215,6 +220,18 @@ export class ScheduleManager {
         }
     }
 
+    async setDocumentUserLocale(locale: string) {
+        console.log("Set Document User Locale", locale)
+        for(let document of this.documents) {
+            await fetchSyncPost("/api/attr/setBlockAttrs", {
+                "id": document.id,
+                "attrs": {
+                    "custom-userLocale": locale.toString()
+                }
+            });
+        }
+    }
+
     async setDocumentShowLunarCalendarProperty(showLunarCalendar: boolean) {
         for(let document of this.documents) {
             await fetchSyncPost("/api/attr/setBlockAttrs", {
@@ -246,15 +263,18 @@ export class ScheduleManager {
     async getDocumentsName() {
         for(let doc of this.documents) {
             await fetchSyncPost("/api/attr/getBlockAttrs", {"id":doc.id}).then(response => {
+                console.log("Get Document Name",response.data)
                 doc.name = response.data.title;
                 doc.checked = response.data["custom-checked"] === "true" ? true : false;
                 doc.color = response.data["custom-color"];
                 doc.archiveTime = response.data['custom-archiveTime'];
                 doc.firstDayOfWeek = response.data["custom-firstDayOfWeek"];
                 doc.showLunarCalendar = response.data["custom-showLunarCalendar"] == "true" ? true : false;
+                doc.userLocale = response.data["custom-userLocale"];
                 globalData.archiveTime = doc.archiveTime === undefined ? 7 : parseInt(doc.archiveTime, 10);
                 globalData.selectedFirstDayOfWeek = doc.firstDayOfWeek === undefined ? 0 : doc.firstDayOfWeek;
-                globalData.showLunarCalendar = doc.showLunarCalendar
+                globalData.showLunarCalendar = doc.showLunarCalendar;
+                globalData.userLocale = doc.userLocale;
             })
         }
     }

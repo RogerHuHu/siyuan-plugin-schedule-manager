@@ -43,6 +43,19 @@
       <n-gi>
         <n-switch v-model:value="isShowLunarCalendar" @update:value="handleUpdateShowLunarCalendar"/>
       </n-gi>
+      <n-gi :span="6">
+        <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ selectLocaleText }}</div>
+      </n-gi>
+      <n-gi>
+        <n-select :options="localeOptions" size="tiny" v-model:value="selectedLocale" />
+      </n-gi>
+      <n-gi>
+        <n-button quaternary circle size="small" @click="handleUpdateLocale()">
+          <template #icon>
+            <n-icon :component="CheckOutlined" color="#18a058" />
+          </template>
+        </n-button>
+      </n-gi>
       <!--n-gi :span="8">
         <n-button strong secondary round type="info" @click="handleTest()">
           {{ archiveText }}
@@ -80,8 +93,10 @@ export default defineComponent({
       dayText: i18n.day,
       archiveText: i18n.archive,
       showLunarCalendarText: i18n.showLunarCalendar,
+      selectLocaleText: i18n.selectLocale,
       archiveTime: ref(7),
       selectedDay: ref(1),
+      selectedLocale: ref(0),
       calDavClient: CalDavClient,
 
       firstDaysOfWeek: [
@@ -94,6 +109,13 @@ export default defineComponent({
           label: i18n.monday
         }
       ],
+
+      localeOptions: i18n.localeOptions.map((locale,idx)=>{
+        return {
+          value: idx,
+          label: locale
+        }
+      }),
 
       isShowLunarCalendar: ref(true)
     };  
@@ -108,6 +130,7 @@ export default defineComponent({
   mounted() {
     this.archiveTime = globalData.archiveTime;
     this.isShowLunarCalendar = globalData.showLunarCalendar;
+    // this.selectedLocale = globalData.userLocale;
   },
 
   methods: {
@@ -127,6 +150,10 @@ export default defineComponent({
 
     handleUpdateShowLunarCalendar() {
       EventAggregator.emit('updateShowLunarCalendar', this.isShowLunarCalendar);
+      showMessage(i18n.hasUpdated, 6000, "info");
+    },
+    handleUpdateLocale() {
+      EventAggregator.emit('updateLocale', this.selectedLocale);
       showMessage(i18n.hasUpdated, 6000, "info");
     },
 
