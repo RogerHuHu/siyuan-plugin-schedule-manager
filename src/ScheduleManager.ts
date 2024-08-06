@@ -274,7 +274,7 @@ export class ScheduleManager {
                 globalData.archiveTime = doc.archiveTime === undefined ? 7 : parseInt(doc.archiveTime, 10);
                 globalData.selectedFirstDayOfWeek = doc.firstDayOfWeek === undefined ? 0 : doc.firstDayOfWeek;
                 globalData.showLunarCalendar = doc.showLunarCalendar;
-                globalData.userLocale = doc.userLocale;
+                globalData.userLocale = doc.userLocale === undefined ? "zh-cn" : doc.userLocale;
             })
         }
     }

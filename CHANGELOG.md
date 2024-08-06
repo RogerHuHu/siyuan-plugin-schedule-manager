@@ -136,3 +136,8 @@
 ## v1.3.2
 ### feat:
 1. 在设置界面中增加是否显示农历的选项 [#48]
+
+## v1.3.3
+### feat:
+1. Merge PR from rishacha (https://github.com/rishacha)
+2. 在设置界面中增加日历显示语言的选项，目前支持简体中文和英文 [#47]

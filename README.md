@@ -2,6 +2,10 @@
 
 # Schedule Manager
 
+## Updates
+1. Add the lunar calendar display switch in the settings
+2. Add a setting for the calendar local
+
 <b><font color="#dd0000">Note: Upgrading from version "1.0. x" to version "1.1. x" may require reopening the plugin to update the format of the schedule records</font></b>
 
 ## Introduction

@@ -43,10 +43,10 @@
       <n-gi>
         <n-switch v-model:value="isShowLunarCalendar" @update:value="handleUpdateShowLunarCalendar"/>
       </n-gi>
-      <n-gi :span="6">
+      <n-gi :span="2">
         <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ selectLocaleText }}</div>
       </n-gi>
-      <n-gi>
+      <n-gi :span="5">
         <n-select :options="localeOptions" size="tiny" v-model:value="selectedLocale" />
       </n-gi>
       <n-gi>
@@ -110,12 +110,16 @@ export default defineComponent({
         }
       ],
 
-      localeOptions: i18n.localeOptions.map((locale,idx)=>{
-        return {
-          value: idx,
-          label: locale
+      localeOptions: [
+        {
+          label: "简体中文",
+          value: "zh-cn"
+        },
+        {
+          label: "English(US)",
+          value: "en-us"
         }
-      }),
+      ],
 
       isShowLunarCalendar: ref(true)
     };  
@@ -130,7 +134,7 @@ export default defineComponent({
   mounted() {
     this.archiveTime = globalData.archiveTime;
     this.isShowLunarCalendar = globalData.showLunarCalendar;
-    // this.selectedLocale = globalData.userLocale;
+    this.selectedLocale = globalData.userLocale;
   },
 
   methods: {
