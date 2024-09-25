@@ -58,6 +58,7 @@
   "confirmRemove": "确认删除 ${name} 中的数据？",
   "insertEmoji": "插入表情",
   "archiveTime": "归档时间",
+  "showArchivedSchedule": "显示已归档日程",
   "hasUpdated": "已更新",
   "firstDayOfWeek": "一周开始",
   "gregorianCalendar": "公历",

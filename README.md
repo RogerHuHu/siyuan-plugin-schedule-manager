@@ -3,8 +3,8 @@
 # Schedule Manager
 
 ## Updates
-1. Add the lunar calendar display switch in the settings
-2. Add a setting for the calendar local
+1. Add the archived schedule display switch in the settings
+2. Fix the issue where the calendar could not load properly due to language settings
 
 <b><font color="#dd0000">Note: Upgrading from version "1.0. x" to version "1.1. x" may require reopening the plugin to update the format of the schedule records</font></b>
 

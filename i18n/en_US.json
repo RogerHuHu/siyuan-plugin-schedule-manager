@@ -58,6 +58,7 @@
   "confirmRemove": "Confirm to delete the data in ${name}?",
   "insertEmoji": "Insert Emoji",
   "archiveTime": "Archive time",
+  "showArchivedSchedule": "Show archived shedule",
   "hasUpdated": "Has updated",
   "firstDayOfWeek": "First day of week",
   "gregorianCalendar": "Gregorian calendar",

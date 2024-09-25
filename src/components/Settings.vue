@@ -18,6 +18,12 @@
           </n-button>
         </n-space>
       </n-gi>
+      <n-gi :span="6">
+        <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ showArchivedScheduleText }}</div>
+      </n-gi>
+      <n-gi>
+        <n-switch v-model:value="isShowArchivedSchedule" @update:value="handleUpdateShowArchivedSchedule"/>
+      </n-gi>
       <n-gi :span="8">
         <n-divider />
       </n-gi>
@@ -92,11 +98,12 @@ export default defineComponent({
       firstDayOfWeekText: i18n.firstDayOfWeek,
       dayText: i18n.day,
       archiveText: i18n.archive,
+      showArchivedScheduleText: i18n.showArchivedSchedule,
       showLunarCalendarText: i18n.showLunarCalendar,
       selectLocaleText: i18n.selectLocale,
       archiveTime: ref(7),
       selectedDay: ref(1),
-      selectedLocale: ref(0),
+      selectedLocale: ref("zh-cn"),
       calDavClient: CalDavClient,
 
       firstDaysOfWeek: [
@@ -120,7 +127,8 @@ export default defineComponent({
           value: "en-us"
         }
       ],
-
+      
+      isShowArchivedSchedule: ref(true),
       isShowLunarCalendar: ref(true)
     };  
   },
@@ -133,6 +141,7 @@ export default defineComponent({
 
   mounted() {
     this.archiveTime = globalData.archiveTime;
+    this.isShowArchivedSchedule = globalData.showArchivedSchedule;
     this.isShowLunarCalendar = globalData.showLunarCalendar;
     this.selectedLocale = globalData.userLocale;
   },
@@ -150,6 +159,11 @@ export default defineComponent({
 
     handleArchive() {
       this.globalData.scheduleCategories.archiveSchedules(this.archiveTime);
+    },
+
+    handleUpdateShowArchivedSchedule() {
+      EventAggregator.emit('updateShowArchivedSchedule', this.isShowArchivedSchedule);
+      showMessage(i18n.hasUpdated, 6000, "info");
     },
 
     handleUpdateShowLunarCalendar() {

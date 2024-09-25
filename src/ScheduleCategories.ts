@@ -43,6 +43,11 @@ export class ScheduleCategories {
                 }
                 let content = JSON.parse(elementS.content);
 
+                // 判断是否显示已归档日程
+                if(globalData.showArchivedSchedule == false && content.status == 4) {
+                    continue;
+                }
+
                 let schedule = null;
 
                 let isAllDay = (content.isAllDay === undefined || content.isAllDay === null) ? false : content.isAllDay;

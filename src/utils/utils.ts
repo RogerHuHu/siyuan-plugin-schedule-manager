@@ -31,6 +31,7 @@ export const globalData = {
     scheduleStatusLogo: ['☕', '🏃‍♂️', '✅', '📦'],
     archiveTime: 7,
     selectedFirstDayOfWeek: 1,
+    showArchivedSchedule: true,
     showLunarCalendar: true,
     userLocale: 'zh-cn'
 }
