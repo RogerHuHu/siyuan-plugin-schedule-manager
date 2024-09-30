@@ -64,5 +64,13 @@
   "gregorianCalendar": "公历",
   "lunarCalendar": "农历",
   "showLunarCalendar": "显示农历",
-  "selectLocale": "日历语言设置"
+  "selectLocale": "日历语言设置",
+  "thirdpartyCalendars": "第三方日历",
+  "support": "支持",
+  "qqmailCalendar": "QQ邮箱日历",
+  "username": "用户名",
+  "password": "密码",
+  "range": "范围",
+  "last3Month": "近3个月",
+  "calendarName": "日历名"
 }

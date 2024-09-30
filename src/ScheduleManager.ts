@@ -6,12 +6,16 @@ import { fetchPost, fetchSyncPost } from "siyuan";
 import EventAggregator from "./utils/EventAggregator";
 import { Schedule } from "./Schedule";
 import { globalData } from "./utils/utils";
+import { TPCalendarInfo, Config } from "./Config";
+import { tr } from "date-fns/locale";
 
 export class ScheduleManager {
     app : any;
     private noteBookId : string;
     private docId : string;
     private documents: any[];
+    private configDocId: string;
+    private configBlockId: string;
     
     // 构造函数
     constructor() {
@@ -44,8 +48,10 @@ export class ScheduleManager {
 
     async readScheduleCategory() {
         this.documents = [];
+
         await this.getDocuments(this.noteBookId);
         await this.getDocumentsName();
+        await this.loadConfig();
         await this.getSchedules();
        
         globalData.scheduleCategories.init(this.documents);
@@ -84,29 +90,33 @@ export class ScheduleManager {
         });
 
         EventAggregator.on('updateArchiveTime', (p: any) => {
-            this.setDocumentArchiveTimeProperty(p);
+            this.setArchiveTime(p);
         });
 
         EventAggregator.on('updateShowArchivedSchedule', (p: any) => {
-            this.setDocumentShowArchivedScheduleProperty(p);
+            this.setShowArchivedSchedule(p);
         });
 
         EventAggregator.on('updateFirstDayOfWeek', (p: any) => {
-            this.setDocumentFirstDayOfWeekProperty(p);
+            this.setFirstDayOfWeek(p);
         });
 
         EventAggregator.on('updateShowLunarCalendar', (p:any) => {
-            this.setDocumentShowLunarCalendarProperty(p);
+            this.setShowLunarCalendar(p);
         })
 
         EventAggregator.on('updateLocale', (p:any) => {
-            this.setDocumentUserLocale(p);
+            this.setUserLocale(p);
+        });
+
+        EventAggregator.on('updateThirdPartyCalendar', (p:any) => {
+            this.setThirdPartyCalendar(p);
         });
     }
 
     async createDocumentAndSetAttributes(notebookId: string, docProp: any) {
         await this.createDocument(notebookId, docProp);
-        await this.setDocumentProperty(this.docId, docProp.checked, docProp.color, 7, true, 1, true, "zh-cn");
+        await this.setDocumentProperty(this.docId, docProp.checked, docProp.color);
         let document = {
             id: this.docId,
             name: docProp.name,
@@ -124,31 +134,8 @@ export class ScheduleManager {
             "markdown": ""
         }).then(response => {
             this.docId = response.data;
-            console.log(response);
         });
     }
-
-    /*
-    createDocument(notebookId: string, docProp: any) : void {
-        fetchPost("/api/filetree/createDocWithMd", {
-            "notebook": notebookId,
-            "path": "/" + docProp.name,
-            "markdown": ""
-        }, (response) => {
-            let docId = response.data;
-            this.setDocumentProperty(docId, docProp.checked, docProp.color, 7);
-
-            let document = {
-                id: docId,
-                name: docProp.name,
-                checked: docProp.checked,
-                color: docProp.color,
-                schedules: [] as any[]
-            };
-            this.documents.push(document);
-        });
-    }
-    */
 
     deleteDocument(notebookId: string, docId: string) : void {
         fetchPost("/api/filetree/removeDoc", {
@@ -158,40 +145,18 @@ export class ScheduleManager {
         });
     }
 
-    async setDocumentProperty(docId: string, checked: boolean, color: string, archiveTime: number, showArchivedSchedule: boolean, firstDayOfWeek: number, 
-        showLunarCalendar: boolean, userLocale:string) {
+    async setDocumentProperty(docId: string, checked: boolean, color: string) {
         await fetchSyncPost("/api/attr/setBlockAttrs", {
             "id": docId,
             "attrs": {
                 "custom-checked": checked ? "true" : "false",
                 "custom-color": color,
-                "custom-version": "1.1.0",
-                "custom-archiveTime": archiveTime.toString(),
-                "custom-showArchivedSchedule": showArchivedSchedule ? "true" : "false",
-                "custom-firstDayOfWeek": firstDayOfWeek.toString(),
-                "custom-showLunarCalendar": showLunarCalendar ? "true" : "false",
-                "custom-userLocale": userLocale
+                "custom-version": "1.1.0"
             }
         }).then(response => {
 
         });
     }
-
-    /*
-    setDocumentProperty(docId: string, checked: boolean, color: string, archiveTime: number) : void {
-        fetchPost("/api/attr/setBlockAttrs", {
-            "id": docId,
-            "attrs": {
-                "custom-checked": checked ? "true" : "false",
-                "custom-color": color,
-                "custom-version": "1.1.0",
-                "custom-archiveTime": archiveTime
-            }
-        }, (response) => {
-            console.log(response);
-        });
-    }
-    */
 
     setDocumentCheckedProperty(name: string, checked: boolean) : void {
         fetchPost("/api/attr/setBlockAttrs", {
@@ -204,60 +169,76 @@ export class ScheduleManager {
         });
     }
 
-    async setDocumentArchiveTimeProperty(archiveTime: number) {
-        for(let document of this.documents) {
-            await fetchSyncPost("/api/attr/setBlockAttrs", {
-                "id": document.id,
-                "attrs": {
-                    "custom-archiveTime": archiveTime.toString()
-                }
-            });
-        }
+    async setArchiveTime(archiveTime: number) {
+        globalData.schedConfig.archiveTime = archiveTime;
+
+        fetchPost("/api/block/updateBlock", {
+            "data": JSON.stringify(globalData.schedConfig, null, 2).replace(/#/g,""),
+            "dataType": "markdown",
+            "id": this.configBlockId
+        }, (response) => {
+
+        });
     }
 
-    async setDocumentShowArchivedScheduleProperty(showArchivedSchedule: boolean) {
-        for(let document of this.documents) {
-            await fetchSyncPost("/api/attr/setBlockAttrs", {
-                "id": document.id,
-                "attrs": {
-                    "custom-showArchivedSchedule": showArchivedSchedule ? "true" : "false"
-                }
-            });
-        }
+    async setShowArchivedSchedule(showArchivedSchedule: boolean) {
+        globalData.schedConfig.showArchivedSchedule = showArchivedSchedule;
+
+        fetchPost("/api/block/updateBlock", {
+            "data": JSON.stringify(globalData.schedConfig, null, 2).replace(/#/g,""),
+            "dataType": "markdown",
+            "id": this.configBlockId
+        }, (response) => {
+
+        });
     }
 
-    async setDocumentFirstDayOfWeekProperty(firstDay: number) {
-        for(let document of this.documents) {
-            await fetchSyncPost("/api/attr/setBlockAttrs", {
-                "id": document.id,
-                "attrs": {
-                    "custom-firstDayOfWeek": firstDay.toString()
-                }
-            });
-        }
+    async setFirstDayOfWeek(firstDay: number) {
+        globalData.schedConfig.firstDayOfWeek = firstDay;
+
+        fetchPost("/api/block/updateBlock", {
+            "data": JSON.stringify(globalData.schedConfig, null, 2).replace(/#/g,""),
+            "dataType": "markdown",
+            "id": this.configBlockId
+        }, (response) => {
+
+        });
     }
 
-    async setDocumentUserLocale(locale: string) {
-        console.log("Set Document User Locale", locale)
-        for(let document of this.documents) {
-            await fetchSyncPost("/api/attr/setBlockAttrs", {
-                "id": document.id,
-                "attrs": {
-                    "custom-userLocale": locale.toString()
-                }
-            });
-        }
+    async setUserLocale(locale: string) {
+        globalData.schedConfig.userLocale = locale;
+
+        fetchPost("/api/block/updateBlock", {
+            "data": JSON.stringify(globalData.schedConfig, null, 2).replace(/#/g,""),
+            "dataType": "markdown",
+            "id": this.configBlockId
+        }, (response) => {
+
+        });
     }
 
-    async setDocumentShowLunarCalendarProperty(showLunarCalendar: boolean) {
-        for(let document of this.documents) {
-            await fetchSyncPost("/api/attr/setBlockAttrs", {
-                "id": document.id,
-                "attrs": {
-                    "custom-showLunarCalendar": showLunarCalendar ? "true" : "false"
-                }
-            });
-        }
+    async setShowLunarCalendar(showLunarCalendar: boolean) {
+        globalData.schedConfig.showLunarCalendar = showLunarCalendar;
+
+        fetchPost("/api/block/updateBlock", {
+            "data": JSON.stringify(globalData.schedConfig, null, 2).replace(/#/g,""),
+            "dataType": "markdown",
+            "id": this.configBlockId
+        }, (response) => {
+
+        });
+    }
+
+    async setThirdPartyCalendar(calendar: TPCalendarInfo) {
+        globalData.schedConfig.tpCalendars.push(calendar);
+
+        fetchPost("/api/block/updateBlock", {
+            "data": JSON.stringify(globalData.schedConfig, null, 2).replace(/#/g,""),
+            "dataType": "markdown",
+            "id": this.configBlockId
+        }, (response) => {
+
+        });
     }
 
     async getDocuments(notebookId: string) {
@@ -278,33 +259,98 @@ export class ScheduleManager {
     }
 
     async getDocumentsName() {
+        let configExsits = false;
         for(let doc of this.documents) {
             await fetchSyncPost("/api/attr/getBlockAttrs", {"id":doc.id}).then(response => {
-                console.log("Get Document Name",response.data)
-                doc.name = response.data.title;
-                doc.checked = response.data["custom-checked"] === "true" ? true : false;
-                doc.color = response.data["custom-color"];
-                doc.archiveTime = response.data['custom-archiveTime'];
-                doc.showArchivedSchedule = response.data['custom-showArchivedSchedule'] == "true" ? true : false;
-                doc.firstDayOfWeek = response.data["custom-firstDayOfWeek"];
-                doc.showLunarCalendar = response.data["custom-showLunarCalendar"] == "true" ? true : false;
-                doc.userLocale = response.data["custom-userLocale"];
-                globalData.archiveTime = doc.archiveTime === undefined ? 7 : parseInt(doc.archiveTime, 10);
-                globalData.showArchivedSchedule = doc.showArchivedSchedule;
-                globalData.selectedFirstDayOfWeek = doc.firstDayOfWeek === undefined ? 0 : doc.firstDayOfWeek;
-                globalData.showLunarCalendar = doc.showLunarCalendar;
-                globalData.userLocale = doc.userLocale === undefined ? "zh-cn" : doc.userLocale;
+                if(response.data.title != undefined) {
+                    doc.name = response.data.title;
+
+                    // 判断配置文档是否存在
+                    if (this.isConfigDocumentExists("schedconfig", doc.name)) {
+                        configExsits = true;
+                        this.configDocId = doc.id;
+                    } else {
+                        doc.checked = response.data["custom-checked"] === "true" ? true : false;
+                        doc.color = response.data["custom-color"];
+                        doc.archiveTime = response.data['custom-archiveTime'];
+                        doc.showArchivedSchedule = response.data['custom-showArchivedSchedule'] == "true" ? true : false;
+                        doc.firstDayOfWeek = response.data["custom-firstDayOfWeek"];
+                        doc.showLunarCalendar = response.data["custom-showLunarCalendar"] == "true" ? true : false;
+                        doc.userLocale = response.data["custom-userLocale"];
+                        globalData.archiveTime = doc.archiveTime === undefined ? 7 : parseInt(doc.archiveTime, 10);
+                        globalData.showArchivedSchedule = doc.showArchivedSchedule;
+                        globalData.selectedFirstDayOfWeek = doc.firstDayOfWeek === undefined ? 0 : doc.firstDayOfWeek;
+                        globalData.showLunarCalendar = doc.showLunarCalendar;
+                        globalData.userLocale = doc.userLocale === undefined ? "zh-cn" : doc.userLocale;    
+                    }
+                }
             })
+        }
+
+        if (configExsits) {
+            this.documents = this.documents.filter(doc => doc.id !== this.configDocId)
+        } else {
+            // 若配置文档不存在，则新建配置文档
+           await this.createConfigDocument();
         }
     }
 
+    isConfigDocumentExists(nameWanted:string, name: string) :boolean{
+        return nameWanted == name;
+    }
+
+    async createConfigDocument() {
+        await this.createDocument(this.noteBookId, {"name": "schedconfig"})
+        this.configDocId = this.docId;
+
+        let config: Config = {
+            archiveTime: 7,
+            showArchivedSchedule: true,
+            firstDayOfWeek: 1,
+            showLunarCalendar: true,
+            userLocale: "zh-cn",
+            tpCalendars: []
+        };
+
+        if (this.documents.length > 0) {
+            let doc = this.documents[0];
+            config.archiveTime = globalData.archiveTime;
+            config.showArchivedSchedule = globalData.showArchivedSchedule;
+            config.firstDayOfWeek = globalData.selectedFirstDayOfWeek;
+            config.showLunarCalendar = globalData.showLunarCalendar;
+            config.userLocale = globalData.userLocale;
+        }
+
+        fetchPost("/api/block/appendBlock", {
+            "data": JSON.stringify(config, null, 2).replace(/#/g,""),
+            "dataType": "markdown",
+            "parentID": this.configDocId
+        }, (response) => {
+
+        });
+    }
+
+    async loadConfig() {
+        let query = "SELECT id,content FROM blocks WHERE parent_id =\'" + this.configDocId + "\'";
+        await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
+            let res = "";
+            for(let data of response.data) {
+                if(data.content != "") {
+                    res = data.content;
+                    this.configBlockId = data.id;
+                    break;
+                }
+            }
+
+            let config: Config = JSON.parse(res);
+            globalData.schedConfig = config;
+        })
+    }
+
     async getSchedules() {
-        //console.log("**************getSchedules***************");
         for(let doc of this.documents) {
             let query = "SELECT content FROM blocks WHERE parent_id =\'" + doc.id + "\'";
-            //console.log(query);
             await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
-                //console.log(response);
                 doc.schedules = response.data;
             })
         }
@@ -369,9 +415,7 @@ export class ScheduleManager {
         }
 
         for(let doc of documents) {
-            //console.log(doc);
             if(doc.version === "1.0.0") {
-                //console.log("version 1.0.0");
                 await this.updateSchedules1(doc.id, documents);
                 this.setDocumentProperty1(doc.id, doc.checked, doc.color);
             }

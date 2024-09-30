@@ -1,6 +1,7 @@
 import PluginScheduleManager from "../index";
 import { ScheduleCategories } from "../ScheduleCategories";
 import { ScheduleManager } from "../ScheduleManager";
+import { TPCalendarInfo } from "../Config";
 
 // i18n 全局实例
 export let i18n: any;
@@ -33,7 +34,15 @@ export const globalData = {
     selectedFirstDayOfWeek: 1,
     showArchivedSchedule: true,
     showLunarCalendar: true,
-    userLocale: 'zh-cn'
+    userLocale: 'zh-cn',
+    schedConfig: {
+        archiveTime: 7,
+        showArchivedSchedule: true,
+        firstDayOfWeek: 1,
+        showLunarCalendar: true,
+        userLocale: "zh-cn",
+        tpCalendars: [] as TPCalendarInfo[]
+    }
 }
 
 export enum smColor {

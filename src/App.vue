@@ -41,6 +41,11 @@
                 <settings/>
               </n-space>
             </n-tab-pane>
+            <n-tab-pane name="thirdPartyCalendars" v-bind:tab="thirdPartyCalendarsText">
+              <n-space justify="start">
+                <ThirdPartyCalendars/>
+              </n-space>
+            </n-tab-pane>
           </n-tabs>
         </n-dialog-provider>
       </n-notification-provider>
@@ -72,6 +77,7 @@
   import Calendar from "./components/Calendar.vue";
   import Kanban from "./components/Kanban.vue";
   import Settings from "./components/Settings.vue";
+  import ThirdPartyCalendars from "./components/ThirdPartyCalendars.vue";
   import EventAggregator from "./utils/EventAggregator";
   import "./index.scss"
 
@@ -80,7 +86,8 @@
       ScheduleCategory,
       Calendar,
       Kanban,
-      Settings
+      Settings,
+      ThirdPartyCalendars
     },
 
     setup() {
@@ -88,6 +95,7 @@
         calendarText: i18n.calendar,
         kanbanText: i18n.kanban,
         settingText: i18n.setting,
+        thirdPartyCalendarsText: i18n.thirdpartyCalendars
       }
     },
 

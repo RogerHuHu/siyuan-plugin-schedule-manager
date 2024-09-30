@@ -64,5 +64,13 @@
   "gregorianCalendar": "Gregorian calendar",
   "lunarCalendar": "Lunar calendar",
   "showLunarCalendar": "Show chinese lunar calendar",
-  "selectLocale": "Select your calendar locale"
+  "selectLocale": "Select your calendar locale",
+  "thirdpartyCalendars": "Thridparty Calendars",
+  "support": "Support",
+  "qqmailCalendar": "QQ Mail Calendar",
+  "username": "Username",
+  "password": "Password",
+  "range": "Range",
+  "last3Month": "Last 3 month",
+  "calendarName": "Calendar Name"
 }

@@ -40,6 +40,7 @@ module.exports = (env, argv) => {
                 {from: "README*.md", to: "./dist/"},
                 {from: "plugin.json", to: "./dist/"},
                 {from: "src/i18n/", to: "./dist/i18n/"},
+                {from: "src/components/qqmail.png", to: "./dist/"},
             ],
         }));
         plugins.push(new ZipPlugin({
@@ -120,6 +121,10 @@ module.exports = (env, argv) => {
                     options: {
                         appendTsSuffixTo: [/\.vue$/],
                     }
+                },
+                {
+                    test: /\.(jpg|png|svg|ttf)$/,
+                    loader: 'url-loader'
                 }
             ],
         },

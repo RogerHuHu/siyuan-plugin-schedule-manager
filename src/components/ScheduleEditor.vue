@@ -154,7 +154,7 @@
 </template>
 
 <style scoped lang="scss">
-::v-deep .n-input .n-input__border, .n-input .n-input__state-border {
+:deep(.n-input .n-input__border, .n-input .n-input__state-border) {
   border-radius: 0px;
   border: none;
   padding: 0px;

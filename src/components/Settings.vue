@@ -62,11 +62,6 @@
           </template>
         </n-button>
       </n-gi>
-      <!--n-gi :span="8">
-        <n-button strong secondary round type="info" @click="handleTest()">
-          {{ archiveText }}
-        </n-button>
-      </n-gi-->
     </n-grid>
   </n-card>
 </template>
@@ -84,7 +79,6 @@
   import { CheckOutlined } from '@vicons/antd'
   import EventAggregator from "../utils/EventAggregator";
   import { showMessage } from "siyuan";
-  import { CalDavClient } from "../ThirdPartyCalendars/CalDav";
 
 export default defineComponent({
   components: {
@@ -104,7 +98,6 @@ export default defineComponent({
       archiveTime: ref(7),
       selectedDay: ref(1),
       selectedLocale: ref("zh-cn"),
-      calDavClient: CalDavClient,
 
       firstDaysOfWeek: [
         {
@@ -140,10 +133,10 @@ export default defineComponent({
   },
 
   mounted() {
-    this.archiveTime = globalData.archiveTime;
-    this.isShowArchivedSchedule = globalData.showArchivedSchedule;
-    this.isShowLunarCalendar = globalData.showLunarCalendar;
-    this.selectedLocale = globalData.userLocale;
+    this.archiveTime = globalData.schedConfig.archiveTime;
+    this.isShowArchivedSchedule = globalData.schedConfig.showArchivedSchedule;
+    this.isShowLunarCalendar = globalData.schedConfig.showLunarCalendar;
+    this.selectedLocale = globalData.schedConfig.userLocale;
   },
 
   methods: {
@@ -174,14 +167,6 @@ export default defineComponent({
       EventAggregator.emit('updateLocale', this.selectedLocale);
       showMessage(i18n.hasUpdated, 6000, "info");
     },
-
-    handleTest() {
-      this.calDavClient = new CalDavClient("https://calendar.dingtalk.com/dav/users/u_oslxrjui", "u_oslxrjui", "ow5kp2zd");
-      //this.calDavClient = new CalDavClient("https://dav.qq.com/dav/users/196550051@qq.com", "196550051@qq.com", "ezgcgtzkjkihbiah");
-      //this.calDavClient = new CalDavClient("https://caldav.mail.qq.com/", "196550051@qq.com", "dream91722");
-      //this.calDavClient = new CalDavClient("https://dida365.com/pub/calendar/feeds/quraph7at8zb/basic.ics", "hujunjie7174@126.com", "hello7109");
-      this.calDavClient.login();
-    }
   }
 })
 </script>

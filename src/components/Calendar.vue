@@ -74,7 +74,7 @@
           plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin, rrulePlugin],
           initialView: 'dayGridMonth', // 默认为哪个视图（月： dayGridMonth，周：timeGridWeek，日：timeGridDay）
           firstDay: 1, // 设置一周中显示的第一天是哪天，周日是 0，周一是 1， 类推
-          locale: globalData.userLocale, // 切换语言，当前为中文
+          locale: globalData.schedConfig.userLocale, // 切换语言，当前为中文
           eventColor: '#3BB2E3', // 全部日历日程背景色
           initialDate: moment().format('YYYY-MM-DD'), // 自定义设置背景颜色时，一定要初始化日期时间
           //aspectRatio: 1.65, // 设置日历单元格宽度与高度的比例
@@ -100,7 +100,7 @@
           },
           
           views: {
-            dayGridMonth: globalData.showLunarCalendar ? { // 转农历
+            dayGridMonth: globalData.schedConfig.showLunarCalendar ? { // 转农历
                 dayCellContent(item) {
                     let mark = sessionStorage.getItem('joinholiday')
                     let _date = new Date(item.date).toLocaleDateString().split('/')
@@ -155,8 +155,8 @@
 
     mounted() {
       setFCApi(this.$refs.fullCalendar.getApi());
-      this.calendarOptions.firstDay = globalData.selectedFirstDayOfWeek;
-      this.calendarOptions.locale = globalData.userLocale;
+      this.calendarOptions.firstDay = globalData.schedConfig.firstDayOfWeek;
+      this.calendarOptions.locale = globalData.schedConfig.userLocale;
       EventAggregator.emit('readCategories');
       EventAggregator.on('resize', () => {
           setTimeout(() => {
