@@ -109,8 +109,16 @@ export class ScheduleManager {
             this.setUserLocale(p);
         });
 
+        EventAggregator.on('addThirdPartyCalendar', (p:any) => {
+            this.addThirdPartyCalendar(p);
+        });
+
         EventAggregator.on('updateThirdPartyCalendar', (p:any) => {
-            this.setThirdPartyCalendar(p);
+            this.updateThirdPartyCalendar(p);
+        });
+
+        EventAggregator.on('deleteThirdPartyCalendar', (p:any) => {
+            this.delteThirdPartyCalendar(p);
         });
     }
 
@@ -229,9 +237,35 @@ export class ScheduleManager {
         });
     }
 
-    async setThirdPartyCalendar(calendar: TPCalendarInfo) {
+    async addThirdPartyCalendar(calendar: TPCalendarInfo) {
         globalData.schedConfig.tpCalendars.push(calendar);
 
+        fetchPost("/api/block/updateBlock", {
+            "data": JSON.stringify(globalData.schedConfig, null, 2).replace(/#/g,""),
+            "dataType": "markdown",
+            "id": this.configBlockId
+        }, (response) => {
+
+        });
+    }
+
+    async updateThirdPartyCalendar(p: any) {
+        let index = p.index;
+        let calendar = p.tpCal;
+
+        globalData.schedConfig.tpCalendars[index] = calendar;
+
+        fetchPost("/api/block/updateBlock", {
+            "data": JSON.stringify(globalData.schedConfig, null, 2).replace(/#/g,""),
+            "dataType": "markdown",
+            "id": this.configBlockId
+        }, (response) => {
+
+        });
+    }
+
+    async delteThirdPartyCalendar(index: number) {
+        globalData.schedConfig.tpCalendars.splice(index, 1);
         fetchPost("/api/block/updateBlock", {
             "data": JSON.stringify(globalData.schedConfig, null, 2).replace(/#/g,""),
             "dataType": "markdown",

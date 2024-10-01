@@ -58,12 +58,12 @@
       preset="dialog"
       type="warning"
       v-model:title="confirmText"
-      v-model:content="confirmRemoveScheduleText"
+      v-model:content="confirmRemoveCalendarText"
       style="width:600px"
       :closable="modalClosable"
       v-model:positive-text="confirmText"
       v-model:negative-text="cancelText"
-      @positive-click="submitDeleteSchedule"
+      @positive-click="submitDeleteCalendar"
     />
   </template>
   
@@ -117,7 +117,7 @@
         last3MonthText: i18n.last3Month,
         cancelText: i18n.cancel,
         confirmText: i18n.confirm,
-        confirmRemoveScheduleText: i18n.confirmRemoveSchedule,
+        confirmRemoveCalendarText: i18n.confirmRemoveCalendar,
 
         modalClosable: false,
 
@@ -135,7 +135,9 @@
             globalData,
             showEditModal: false,
             isDeleteButtonVisible: false,
-            showDeleteScheduleConfirmModal: false
+            showDeleteScheduleConfirmModal: false,
+            inNewCalendarMode: true,
+            currentCalendarIndex: 0
         }
       },
   
@@ -144,22 +146,60 @@
         this.calendarType = calendarType;
         this.imgPath = imgPath;
         this.showEditModal = true;
+        this.inNewCalendarMode = true;
+      },
+
+      editCalendar(index) {
+        this.calendarName = globalData.schedConfig.tpCalendars[index].name;
+        this.calendarUrl = globalData.schedConfig.tpCalendars[index].url;
+        this.username = globalData.schedConfig.tpCalendars[index].username;
+        this.password = globalData.schedConfig.tpCalendars[index].password;
+        this.showEditModal = true;
+        this.inNewCalendarMode = false;
+        this.currentCalendarIndex = index;
+      },
+
+      deleteCalendar(index) {
+        this.showDeleteScheduleConfirmModal = true;
+        this.currentCalendarIndex = index;
       },
 
       handleSubmitCalendar() {
         this.showEditModal = false;
 
-        EventAggregator.emit('updateThirdPartyCalendar', {
+        let tpCalendar = {
             name: this.calendarName,
             img: this.imgPath,
             url: this.calendarUrl,
             realUrl: "https://" + this.calendarUrl + "/.well-known/caldav",
             username: this.username,
             password: this.password
-        });
+        };
+
+        if(this.inNewCalendarMode) {
+          EventAggregator.emit('addThirdPartyCalendar', tpCalendar);
+        } else {
+          EventAggregator.emit('updateThirdPartyCalendar', {
+            index: this.currentCalendarIndex,
+            tpCal: tpCalendar
+          });
+        }
+        this.inNewCalendarMode = false;
         showMessage(i18n.hasUpdated, 6000, "info");
       },
+
+      submitDeleteCalendar() {
+        EventAggregator.emit('deleteThirdPartyCalendar', this.currentCalendarIndex);
+        this.showDeleteScheduleConfirmModal = false;
+        this.clearCalendarInfo();
+      },
         
+      clearCalendarInfo() {
+        this.calendarName = "";
+        this.calendarUrl = "";
+        this.username = "";
+        this.password = "";
+      },
   
       updateScheduleInternal(id, category, title, isAllDay,
                              isRecurringSchedule, calendarType, frequency, weekdays, monthdays, yeardays, interval,
@@ -229,22 +269,7 @@
           if(this.selectedScheduleStatus == 3)
             newSchedule.setDoneTime(moment().valueOf());
           return newSchedule;
-        },
-  
-        clearEventInfo() {
-          this.selectedCategory = "";
-          this.startTime = null;
-          this.endTime = null;
-          this.scheduleName = null;
-          this.scheduleContent = null;
-          this.selectedScheduleStatus = null;
-        },
-
-        submitDeleteSchedule() {
-            this.globalData.scheduleCategories.removeSchedule(this.selectedSchedule);
-            EventAggregator.emit('deleteSchedule', this.selectedSchedule);
-            this.clearEventInfo();
-        },
+        }
     }
   })
   </script>

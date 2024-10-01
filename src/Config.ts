@@ -1,6 +1,6 @@
 // 第三方日历的信息
 export interface TPCalendarInfo {
-    nane: string;
+    name: string;
     img: string;
     url: string;
     realUrl: string;

@@ -104,15 +104,19 @@
       },
 
       handleEditItem(index) {
-        
+        this.$refs.thirdPartyCalendarEditor.editCalendar(index);
       },
 
       handleDeleteItem(index) {
-        this.calDavClient = new CalDavClient("https://dav.qq.com/.well-known/caldav", "196550051@qq.com", "zotkxjrtmemubgeb");
-        // this.calDavClient = new CalDavClient("https://calendar.dingtalk.com/.well-known/caldav", "u_qgxrcn48", "fgfgrk8h");
-        //this.calDavClient = new CalDavClient("https://calendar.dingtalk.com/dav/users/u_qgxrcn48", "u_qgxrcn48", "fgfgrk8h");
-        this.calDavClient.login();
+        this.$refs.thirdPartyCalendarEditor.deleteCalendar(index);
       }
+
+      // handleDeleteItem(index) {
+      //   this.calDavClient = new CalDavClient("https://dav.qq.com/.well-known/caldav", "196550051@qq.com", "zotkxjrtmemubgeb");
+      //   // this.calDavClient = new CalDavClient("https://calendar.dingtalk.com/.well-known/caldav", "u_qgxrcn48", "fgfgrk8h");
+      //   //this.calDavClient = new CalDavClient("https://calendar.dingtalk.com/dav/users/u_qgxrcn48", "u_qgxrcn48", "fgfgrk8h");
+      //   this.calDavClient.login();
+      // }
     }
   })
   </script>

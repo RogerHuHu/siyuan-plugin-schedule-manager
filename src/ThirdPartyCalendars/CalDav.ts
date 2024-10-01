@@ -29,8 +29,8 @@ export class CalDavClient {
     async login() {
         await this.client.login();
         const calendars = await this.client.fetchCalendars();
-        console.log("=========================calendars===========================");
-        console.log(calendars);
+        // console.log("=========================calendars===========================");
+        // console.log(calendars);
         const calendarObjects = await this.client.fetchCalendarObjects({
             calendar: calendars[0],
             filters: [
@@ -43,6 +43,6 @@ export class CalDavClient {
                 }
             ],
           });
-        console.log(calendarObjects);
+        // console.log(calendarObjects);
     }
 }
