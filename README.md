@@ -6,8 +6,6 @@
 1. Support subscribe Tencent mailbox calendar via caldav protocol (early version). Temporarily, calendar within 3 months can be obtained, and adding and modifying are not supported.
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/qqmailsubs.png" alt="">
 
-<b><font color="#dd0000">Note: Upgrading from version "1.0. x" to version "1.1. x" may require reopening the plugin to update the format of the schedule records</font></b>
-
 ## Introduction
 The schedule management plugin manages to-do items in the form of a calendar, and currently supports multiple views such as month, week, day, and list.
 
