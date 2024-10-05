@@ -2,8 +2,10 @@ import { ScheduleCategory } from "./ScheduleCategory";
 import { Schedule } from "./Schedule";
 import { fcApi, globalData } from "./utils/utils";
 import EventAggregator from "./utils/EventAggregator";
-import { reactive } from "vue"
-import * as moment from "moment";
+import { reactive } from "vue";
+import moment from "moment";
+import { CalDavClient } from "./ThirdPartyCalendars/CalDav";
+import ICAL from "ical.js";
 
 export class ScheduleCategories {
     categories: ScheduleCategory[];
@@ -28,6 +30,9 @@ export class ScheduleCategories {
         } else {
             this.refreshScheduleCategories();
         }
+
+        this.refreshSubscribedCategories();
+
         this.isInit = false;
     }
 
@@ -80,6 +85,56 @@ export class ScheduleCategories {
                 fcApi.addEvent(this.createEvent(schedule), fcApi.getEventSourceById(schedule.category));
             }
         }
+    }
+
+    async refreshSubscribedCategories() {
+        for(let subsCalendar of globalData.schedConfig.subsCalendars) {
+            let calDavClient = new CalDavClient(subsCalendar.realUrl, subsCalendar.username, subsCalendar.password);
+            await calDavClient.login();
+            const calendars = await calDavClient.fetchCalendars();
+            for (let calendar of calendars) {
+                if (calendar.displayName == "好友生日") continue;
+                let eventSource = this.addSubscribeEventSource(calendar);
+                const schedules = await calDavClient.fetchCalendarObjects(calendar);
+                for (let sched of schedules) {
+                    let vCalData = ICAL.parse(sched.data);
+                    let comp = new ICAL.Component(vCalData);
+                    // let timezoneComp = comp.getFirstSubcomponent("vtimezone");
+                    // let tzid = timezoneComp.getFirstPropertyValue('tzid');
+                    // let timezone = new ICAL.Timezone({component: timezoneComp, tzid});
+                    let vevent = comp.getFirstSubcomponent("vevent");
+                    let dtstart = vevent.getFirstPropertyValue("dtstart") as ICAL.Time;
+                    let dtend = vevent.getFirstPropertyValue("dtend") as ICAL.Time;
+                    // 校正时区，TODO 根据实际的时区自动调整
+                    let newdtstart = dtstart.adjust(0, 8, 0, 0);
+                    let newdtend = dtend.adjust(0, 8, 0, 0);
+
+                    let schedule = new Schedule(vevent.getFirstPropertyValue("uid") as string,
+                                                vevent.getFirstPropertyValue("summary") as string,
+                                                false, false, '', '', [], [], [], 1,
+                                                newdtstart.toString().slice(0, 19),
+                                                newdtend.toString().slice(0, 19),
+                                                eventSource.id, '',
+                                                vevent.getFirstPropertyValue("description") as string,
+                                                2);
+                    fcApi.addEvent(this.createEvent(schedule), fcApi.getEventSourceById(eventSource.id));
+                }
+            }
+        }
+    }
+
+    addSubscribeEventSource(calendar: any): any {
+        let category = new ScheduleCategory(calendar.display + "Subs", calendar.calendarColor, true);
+        let eventSource = {
+            events: [] as any[],
+            id: category.name,
+            display: 'block',
+            color: category.color,
+            textColor: category.textColor
+        };
+
+        fcApi.addEventSource(eventSource);
+        return eventSource;
     }
 
     addCategory(category: ScheduleCategory): boolean {

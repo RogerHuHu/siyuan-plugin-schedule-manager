@@ -20,14 +20,14 @@
         </n-gi>
         <n-gi :span="8">
           <n-space vertical>
-            <template v-for="(tpCalendar, sindex) in globalData.schedConfig.tpCalendars" :key="sindex">
+            <template v-for="(subsCalendar, sindex) in globalData.schedConfig.subsCalendars" :key="sindex">
               <n-card size="small" hoverable>
                 <n-grid :cols="7">
                   <n-gi :span="2">
                     <img style="height: 30px; width: auto;" src="./qqmail.png">
                   </n-gi>
                   <n-gi :span="3">
-                    <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ tpCalendar.name }}</div>
+                    <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ subsCalendar.name }}</div>
                   </n-gi>
                   <n-gi>
                     <n-button strong secondary circle @click="handleEditItem(sindex)">
@@ -66,7 +66,6 @@
     import { i18n, globalData } from "../utils/utils";
     import EventAggregator from "../utils/EventAggregator";
     import { showMessage } from "siyuan";
-    import { CalDavClient } from "../ThirdPartyCalendars/CalDav";
     import { DeleteOutlined, EditOutlined, CheckOutlined, ClearOutlined, ArrowRightOutlined } from '@vicons/antd';
     import ThirdPartyCalendarEditor from "./ThirdPartyCalendarEditor.vue";
   
@@ -84,8 +83,7 @@
         DeleteOutlined,
 
         supportText: i18n.support,
-        qqmailCalendarText: i18n.qqmailCalendar,
-        calDavClient: CalDavClient,
+        qqmailCalendarText: i18n.qqmailCalendar
       };  
     },
   

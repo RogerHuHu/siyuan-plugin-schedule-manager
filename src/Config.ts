@@ -1,5 +1,5 @@
 // 第三方日历的信息
-export interface TPCalendarInfo {
+export interface SubsCalendarInfo {
     name: string;
     img: string;
     url: string;
@@ -14,5 +14,5 @@ export interface Config {
     firstDayOfWeek: number;
     showLunarCalendar: boolean;
     userLocale: string;
-    tpCalendars: TPCalendarInfo[];
+    subsCalendars: SubsCalendarInfo[];
 }

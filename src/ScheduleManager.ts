@@ -6,7 +6,7 @@ import { fetchPost, fetchSyncPost } from "siyuan";
 import EventAggregator from "./utils/EventAggregator";
 import { Schedule } from "./Schedule";
 import { globalData } from "./utils/utils";
-import { TPCalendarInfo, Config } from "./Config";
+import { SubsCalendarInfo, Config } from "./Config";
 import { tr } from "date-fns/locale";
 
 export class ScheduleManager {
@@ -237,8 +237,8 @@ export class ScheduleManager {
         });
     }
 
-    async addThirdPartyCalendar(calendar: TPCalendarInfo) {
-        globalData.schedConfig.tpCalendars.push(calendar);
+    async addThirdPartyCalendar(calendar: SubsCalendarInfo) {
+        globalData.schedConfig.subsCalendars.push(calendar);
 
         fetchPost("/api/block/updateBlock", {
             "data": JSON.stringify(globalData.schedConfig, null, 2).replace(/#/g,""),
@@ -251,9 +251,9 @@ export class ScheduleManager {
 
     async updateThirdPartyCalendar(p: any) {
         let index = p.index;
-        let calendar = p.tpCal;
+        let calendar = p.subsCal;
 
-        globalData.schedConfig.tpCalendars[index] = calendar;
+        globalData.schedConfig.subsCalendars[index] = calendar;
 
         fetchPost("/api/block/updateBlock", {
             "data": JSON.stringify(globalData.schedConfig, null, 2).replace(/#/g,""),
@@ -265,7 +265,7 @@ export class ScheduleManager {
     }
 
     async delteThirdPartyCalendar(index: number) {
-        globalData.schedConfig.tpCalendars.splice(index, 1);
+        globalData.schedConfig.subsCalendars.splice(index, 1);
         fetchPost("/api/block/updateBlock", {
             "data": JSON.stringify(globalData.schedConfig, null, 2).replace(/#/g,""),
             "dataType": "markdown",
@@ -343,7 +343,7 @@ export class ScheduleManager {
             firstDayOfWeek: 1,
             showLunarCalendar: true,
             userLocale: "zh-cn",
-            tpCalendars: []
+            subsCalendars: []
         };
 
         if (this.documents.length > 0) {

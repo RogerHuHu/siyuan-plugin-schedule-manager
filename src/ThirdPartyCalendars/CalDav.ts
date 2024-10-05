@@ -1,4 +1,5 @@
-import { DAVClient } from "tsdav";
+import { DAVClient, DAVCalendar, DAVCalendarObject } from "tsdav";
+import { format, parseISO, getTime } from 'date-fns';
 
 export class CalDavClient {
     serverUrl: string;
@@ -28,21 +29,38 @@ export class CalDavClient {
 
     async login() {
         await this.client.login();
-        const calendars = await this.client.fetchCalendars();
-        // console.log("=========================calendars===========================");
-        // console.log(calendars);
+    }
+
+    async fetchCalendars(): Promise<any[]> {
+        let calendars = await this.client.fetchCalendars();
+        return calendars;
+    }
+
+    async fetchCalendarObjects(calendar: DAVCalendar): Promise<DAVCalendarObject[]> {
         const calendarObjects = await this.client.fetchCalendarObjects({
-            calendar: calendars[0],
+            calendar: calendar,
             filters: [
                 {
                     "comp-filter": {
                         _attributes: {
                             name: "VCALENDAR",
+                        },
+                        "comp-filter": {
+                            _attributes: {
+                                name: "VEVENT"
+                            },
+                            "time-range": {
+                                _attributes: {
+                                    start: format(Date.now() - 90*86400*1000, "yyyy-MM-dd'T'HH:mm:ss'Z'").replace(/[-:.]/g, ''), // 当前时间减90天
+                                    end: format(Date.now(), "yyyy-MM-dd'T'HH:mm:ss'Z'").replace(/[-:.]/g, ''), // 当前时间减90天
+                                },
+                            }
                         }
                     }
                 }
             ],
-          });
-        // console.log(calendarObjects);
+        });
+
+        return calendarObjects;
     }
 }

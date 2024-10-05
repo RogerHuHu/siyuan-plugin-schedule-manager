@@ -3,8 +3,8 @@
 # Schedule Manager
 
 ## Updates
-1. Add the archived schedule display switch in the settings
-2. Fix the issue where the calendar could not load properly due to language settings
+1. Support subscribe Tencent mailbox calendar via caldav protocol (early version). Temporarily, calendar within 3 months can be obtained, and adding and modifying are not supported.
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/qqmailsubs.png" alt="">
 
 <b><font color="#dd0000">Note: Upgrading from version "1.0. x" to version "1.1. x" may require reopening the plugin to update the format of the schedule records</font></b>
 

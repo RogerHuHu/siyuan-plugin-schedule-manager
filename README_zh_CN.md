@@ -3,8 +3,8 @@
 # 日程管理
 
 ## 本次更新
-1. 在设置中增加是否显示已归档日程的选项
-2. 修复语言设置导致的日程无法正常加载问题
+1. 支持通过 caldav 协议订阅腾讯邮箱的日历（尝鲜版），暂时支持获取3个月内的日程，暂时不支持新增和修改
+<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/qqmailsubs.png" alt="">
 
 ## 简介
 日程管理插件通过日历的形式管理待办事项，目前支持月、周、日、列表多种视图。

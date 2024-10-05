@@ -41,7 +41,7 @@
                 <settings/>
               </n-space>
             </n-tab-pane>
-            <n-tab-pane name="thirdPartyCalendars" v-bind:tab="thirdPartyCalendarsText">
+            <n-tab-pane name="thirdPartyCalendars" v-bind:tab="subscribeCalendarsText">
               <n-space justify="start">
                 <ThirdPartyCalendars/>
               </n-space>
@@ -95,7 +95,7 @@
         calendarText: i18n.calendar,
         kanbanText: i18n.kanban,
         settingText: i18n.setting,
-        thirdPartyCalendarsText: i18n.thirdpartyCalendars
+        subscribeCalendarsText: i18n.subscribeCalendars
       }
     },
 

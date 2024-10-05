@@ -150,10 +150,10 @@
       },
 
       editCalendar(index) {
-        this.calendarName = globalData.schedConfig.tpCalendars[index].name;
-        this.calendarUrl = globalData.schedConfig.tpCalendars[index].url;
-        this.username = globalData.schedConfig.tpCalendars[index].username;
-        this.password = globalData.schedConfig.tpCalendars[index].password;
+        this.calendarName = globalData.schedConfig.subsCalendars[index].name;
+        this.calendarUrl = globalData.schedConfig.subsCalendars[index].url;
+        this.username = globalData.schedConfig.subsCalendars[index].username;
+        this.password = globalData.schedConfig.subsCalendars[index].password;
         this.showEditModal = true;
         this.inNewCalendarMode = false;
         this.currentCalendarIndex = index;
@@ -167,7 +167,7 @@
       handleSubmitCalendar() {
         this.showEditModal = false;
 
-        let tpCalendar = {
+        let subsCalendar = {
             name: this.calendarName,
             img: this.imgPath,
             url: this.calendarUrl,
@@ -177,11 +177,11 @@
         };
 
         if(this.inNewCalendarMode) {
-          EventAggregator.emit('addThirdPartyCalendar', tpCalendar);
+          EventAggregator.emit('addThirdPartyCalendar', subsCalendar);
         } else {
           EventAggregator.emit('updateThirdPartyCalendar', {
             index: this.currentCalendarIndex,
-            tpCal: tpCalendar
+            subsCal: subsCalendar
           });
         }
         this.inNewCalendarMode = false;
