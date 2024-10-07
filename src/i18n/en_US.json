@@ -73,5 +73,6 @@
   "range": "Range",
   "last3Month": "Last 3 month",
   "calendarName": "Calendar Name",
-  "confirmRemoveCalendar": "Are you sure to remove the calendar?"
+  "confirmRemoveCalendar": "Are you sure to remove the calendar?",
+  "loadConfigFailed": "Load schedule manager plugin configuration failed!"
 }

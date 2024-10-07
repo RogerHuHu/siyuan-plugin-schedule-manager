@@ -3,7 +3,8 @@
 # 日程管理
 
 ## 本次更新
-1. 支持通过 caldav 协议订阅腾讯邮箱的日历（尝鲜版），暂时支持获取3个月内的日程，暂时不支持新增和修改
+1. 修复首次安装插件时，无法正确加载的问题
+2. 支持通过 caldav 协议订阅腾讯邮箱的日历（尝鲜版），暂时支持获取3个月内的日程，暂时不支持新增和修改
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/qqmailsubs.png" alt="">
 
 ## 简介

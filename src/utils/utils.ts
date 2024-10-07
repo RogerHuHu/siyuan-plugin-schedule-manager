@@ -56,3 +56,7 @@ export let fcApi: any;
 export function setFCApi(_fcApi: any) {
     fcApi = _fcApi;
 }
+
+export const Sleep = (ms: number)=> {
+    return new Promise(resolve=>setTimeout(resolve, ms))
+  }

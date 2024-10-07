@@ -5,9 +5,9 @@ import App from "./App.vue";
 import { fetchPost, fetchSyncPost } from "siyuan";
 import EventAggregator from "./utils/EventAggregator";
 import { Schedule } from "./Schedule";
-import { globalData } from "./utils/utils";
+import { globalData, Sleep, i18n } from "./utils/utils";
 import { SubsCalendarInfo, Config } from "./Config";
-import { tr } from "date-fns/locale";
+import { showMessage } from "siyuan";
 
 export class ScheduleManager {
     app : any;
@@ -346,6 +346,8 @@ export class ScheduleManager {
             subsCalendars: []
         };
 
+        globalData.schedConfig = config;
+
         if (this.documents.length > 0) {
             let doc = this.documents[0];
             config.archiveTime = globalData.archiveTime;
@@ -355,30 +357,49 @@ export class ScheduleManager {
             config.userLocale = globalData.userLocale;
         }
 
-        fetchPost("/api/block/appendBlock", {
+        await fetchSyncPost("/api/block/appendBlock", {
             "data": JSON.stringify(config, null, 2).replace(/#/g,""),
             "dataType": "markdown",
             "parentID": this.configDocId
-        }, (response) => {
-
         });
     }
 
     async loadConfig() {
+        let retry = 5;
+
+        while(retry-- > 0) {
+            if(await this.loadConfigJson())
+                break;
+            console.log("load config retry: ", retry);
+            await Sleep(1000);
+        }
+
+        if(retry <= 0)
+            showMessage(i18n.loadConfigFailed, 6000, "error");
+    }
+
+    async loadConfigJson(): Promise<boolean> {
+        let success = false;
         let query = "SELECT id,content FROM blocks WHERE parent_id =\'" + this.configDocId + "\'";
         await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
             let res = "";
-            for(let data of response.data) {
-                if(data.content != "") {
-                    res = data.content;
-                    this.configBlockId = data.id;
-                    break;
-                }
-            }
 
-            let config: Config = JSON.parse(res);
-            globalData.schedConfig = config;
-        })
+            if(response.data != "") {
+                for(let data of response.data) {
+                    if(data.content != "") {
+                        res = data.content;
+                        this.configBlockId = data.id;
+                        break;
+                    }
+                }
+
+                let config: Config = JSON.parse(res);
+                globalData.schedConfig = config;
+                success = true;
+            }
+        });
+
+        return success;
     }
 
     async getSchedules() {

@@ -3,7 +3,8 @@
 # Schedule Manager
 
 ## Updates
-1. Support subscribe Tencent mailbox calendar via caldav protocol (early version). Temporarily, calendar within 3 months can be obtained, and adding and modifying are not supported.
+1. Fix the loading problem when newly installed.
+2. Support subscribe Tencent mailbox calendar via caldav protocol (early version). Temporarily, calendar within 3 months can be obtained, and adding and modifying are not supported.
 <img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/qqmailsubs.png" alt="">
 
 ## Introduction

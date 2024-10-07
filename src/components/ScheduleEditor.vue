@@ -118,12 +118,12 @@
         </n-gi>
         <n-gi :span="4">
           <n-space justify="end" size="small">
-            <n-button quaternary circle size="small" @click="handleSubmitSchedule()">
+            <n-button quaternary circle size="small" v-if="isSubmitButtonVisible" @click="handleSubmitSchedule()">
               <template #icon>
                 <n-icon :component="CheckOutlined" color="#18a058" />
               </template>
             </n-button>
-            <n-button quaternary circle size="small" @click="handleClearInfo()">
+            <n-button quaternary circle size="small" v-if="isClearButtonVisible" @click="handleClearInfo()">
               <template #icon>
                 <n-icon :component="ClearOutlined" color="#D60D0D" />
               </template>
@@ -318,6 +318,8 @@ export default defineComponent({
       return {
         globalData,
         showEditModal: false,
+        isSubmitButtonVisible: true,
+        isClearButtonVisible: true,
         isDeleteButtonVisible: false,
         showDeleteScheduleConfirmModal: false
       }
@@ -367,6 +369,8 @@ export default defineComponent({
             this.startTime = getTime(param.start)
             this.endTime = getTime(param.end)
             this.selectedScheduleStatus = this.scheduleStatusList[0].value;
+            this.isSubmitButtonVisible = true;
+            this.isClearButtonVisible = true;
             this.isDeleteButtonVisible = false;
             this.showEditModal = true;
             this.createRecurringDays();
@@ -401,7 +405,16 @@ export default defineComponent({
     updateScheduleInternal(id, category, title, isAllDay,
                            isRecurringSchedule, calendarType, frequency, weekdays, monthdays, yeardays, interval,
                            startTime, endTime, refBlockId, content, status) {
+      this.isSubmitButtonVisible = true;
+      this.isClearButtonVisible = true;
       this.isDeleteButtonVisible = true;
+      if(category.length >= 4) {
+        let same = category.substring(category.length - 4, category.length) == "Subs";
+        this.isSubmitButtonVisible = !same;
+        this.isClearButtonVisible = !same;
+        this.isDeleteButtonVisible = !same;
+      }
+
       this.selectedCategory = category;
       this.scheduleName = title;
       if (this.startTime == null)

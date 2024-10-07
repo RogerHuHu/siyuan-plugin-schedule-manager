@@ -73,5 +73,6 @@
   "range": "范围",
   "last3Month": "近3个月",
   "calendarName": "日历名",
-  "confirmRemoveCalendar": "确定删除日历？"
+  "confirmRemoveCalendar": "确定删除日历？",
+  "loadConfigFailed": "加载日程管理插件配置失败!"
 }
