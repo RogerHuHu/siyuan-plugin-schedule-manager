@@ -8,6 +8,7 @@
   "add": "Add",
   "inputScheduleCategoryName": "Schedule Category Name",
   "scheduleCategoryColorError": "The schedule category color cannot be duplicated",
+  "updateScheduleCategoryColor": "Update category color",
   "warning": "Warning",
   "confirmRemoveScheduleCategory": "Removing a schedule category will remove the corresponding schedules. Are you sure to remove",
   "confirm": "Confirm",

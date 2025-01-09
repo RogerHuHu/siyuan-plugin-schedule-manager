@@ -161,6 +161,8 @@ export default defineComponent({
     },
 
     handleAddCategory() {
+      this.addScheduleCategoryText = i18n.addScheduleCategory,
+      this.addText = i18n.add,
       this.showName = true;
       this.showModal = true;
     },
@@ -172,6 +174,8 @@ export default defineComponent({
 
     // 更改分类颜色
     handleEditCategoryColor(index) {
+      this.addScheduleCategoryText = i18n.updateScheduleCategoryColor,
+      this.addText = i18n.confirm,
       this.showName = false;
       this.categoryIndex = index;
       this.showModal = true;

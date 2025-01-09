@@ -7,6 +7,7 @@
   "scheduleCategory": "日程分类",
   "inputScheduleCategoryName": "请输入日程分类名",
   "scheduleCategoryColorError": "日程分类颜色不能重复",
+  "updateScheduleCategoryColor": "修改日程分类颜色",
   "add": "添加",
   "warning": "警告",
   "confirmRemoveScheduleCategory": "删除日程分类会导致对应日程丢失，确定删除日程分类",
