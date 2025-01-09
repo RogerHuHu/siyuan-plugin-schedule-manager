@@ -3,9 +3,7 @@
 # Schedule Manager
 
 ## Updates
-1. Fix the loading problem when newly installed.
-2. Support subscribe Tencent mailbox calendar via caldav protocol (early version). Temporarily, calendar within 3 months can be obtained, and adding and modifying are not supported.
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/qqmailsubs.png" alt="">
+1. Support modifying the color of schedule a category (Click the circle)
 
 ## Introduction
 The schedule management plugin manages to-do items in the form of a calendar, and currently supports multiple views such as month, week, day, and list.
