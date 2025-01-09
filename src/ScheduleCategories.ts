@@ -6,6 +6,8 @@ import { reactive } from "vue";
 import moment from "moment";
 import { CalDavClient } from "./ThirdPartyCalendars/CalDav";
 import ICAL from "ical.js";
+import { flatten } from "naive-ui/es/_utils";
+import { co } from "@fullcalendar/core/internal-common";
 
 export class ScheduleCategories {
     categories: ScheduleCategory[];
@@ -150,6 +152,13 @@ export class ScheduleCategories {
 
     getCategory(index: number): ScheduleCategory {
         return this.categories[index];
+    }
+
+    updateCategory(index: number, color: string): boolean {
+        let find = this.categories.find(c => c.color == color);
+        if(find !== undefined) return false;
+        this.categories[index].color = color;
+        return true;
     }
 
     getCategoryByName(name: string): ScheduleCategory {

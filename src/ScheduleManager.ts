@@ -62,6 +62,10 @@ export class ScheduleManager {
             //this.createDocument(this.noteBookId, p);
             this.createDocumentAndSetAttributes(this.noteBookId, p);
         });
+        
+        EventAggregator.on('updateCategory', (p: any) => {
+            this.setDocumentColorProperty(p.name, p.color);
+        });
 
         EventAggregator.on('deleteCategorty', (p: any) => {
             this.deleteDocument(this.noteBookId, this.getDocumentIdByName(p.name));
@@ -171,6 +175,17 @@ export class ScheduleManager {
             "id": this.getDocumentIdByName(name),
             "attrs": {
                 "custom-checked": checked ? "true" : "false"
+            }
+        }, (response) => {
+            
+        });
+    }
+
+    setDocumentColorProperty(name: string, color: string): void {
+        fetchPost("/api/attr/setBlockAttrs", {
+            "id": this.getDocumentIdByName(name),
+            "attrs": {
+                "custom-color": color
             }
         }, (response) => {
             

@@ -6,7 +6,7 @@
           <div class="sm-title">{{ scheduleCategoryText }}</div>
           <n-tooltip>
             <template #trigger>
-              <n-button strong secondary circle type="primary" @click="showModal = true">
+              <n-button strong secondary circle type="primary" @click="handleAddCategory()">
                 <template #icon>
                   <n-icon :component="PlusOutlined" color="#18a058"/>
                 </template>
@@ -24,7 +24,8 @@
                 {{category.name}}
               </n-checkbox>
               <n-space align="center" justify="end">
-                <div class="sm-circle" :style="{backgroundColor:category.color, width:'15px', height:'15px'}"/>
+                <!--div class="sm-circle" :style="{backgroundColor:category.color, width:'15px', height:'15px'}"/-->
+                <n-button quaternary circle :style="{backgroundColor:category.color, width:'15px', height:'15px'}" @click="handleEditCategoryColor(index)"/>
                 <n-button quaternary circle style="padding:0px;" @click="handleDeleteScheduleCategory(index)">
                   <template #icon>
                     <n-icon :component="DeleteOutlined" color="#D60D0D"/>
@@ -48,7 +49,7 @@
   >
     <n-grid :y-gap="3" :cols="1">
       <n-gi>
-        <n-input v-model:placeholder="inputScheduleCategoryNameText" autosize style="min-width: 50%" @update:value="handleNameChange"/>
+        <n-input v-model:placeholder="inputScheduleCategoryNameText" autosize style="min-width: 50%" @update:value="handleNameChange" v-if="showName"/>
       </n-gi>
       <n-gi>
         <n-color-picker v-model:value="scheduleColor" :modes="['hex']" :show-alpha="false"
@@ -94,6 +95,7 @@ import { DeleteOutlined, PlusOutlined } from '@vicons/antd'
 import EventAggregator from "../utils/EventAggregator";
 import { showMessage } from "siyuan";
 import { ScheduleCategory } from "../ScheduleCategory";
+import { tr } from "date-fns/locale";
 
 export default defineComponent({
   components: {
@@ -111,6 +113,8 @@ export default defineComponent({
       inputScheduleCategoryNameText: i18n.inputScheduleCategoryName,
       scheduleColor: ref("#00C9A7"),
       showModal: ref(false),
+      showName: ref(true),
+      categoryIndex: 0,
       cancelCallback () {
         //message.success('Cancel')
       }
@@ -131,21 +135,46 @@ export default defineComponent({
 
   methods: {
     submitCallback() {
-      let newCategory = new ScheduleCategory(this.scheduleName, this.scheduleColor, true);
-      if(this.globalData.scheduleCategories.addCategory(newCategory) === true) {
-        EventAggregator.emit('addCategorty', {
-          "checked": newCategory.checked,
-          "color": this.scheduleColor,
-          "name": this.scheduleName
-        });
+      if (this.showName) {
+        let newCategory = new ScheduleCategory(this.scheduleName, this.scheduleColor, true);
+        if(this.globalData.scheduleCategories.addCategory(newCategory) === true) {
+          EventAggregator.emit('addCategorty', {
+            "checked": newCategory.checked,
+            "color": this.scheduleColor,
+            "name": this.scheduleName
+          });
+        } else {
+          showMessage(i18n.scheduleCategoryColorError, 6000, "error");
+        }
       } else {
-        showMessage(i18n.scheduleCategoryColorError, 6000, "error");
+        let category = this.globalData.scheduleCategories.getCategory(this.categoryIndex);
+        if(this.globalData.scheduleCategories.updateCategory(this.categoryIndex, this.scheduleColor) === true) {
+          EventAggregator.emit('updateCategory', {
+            "checked": category.checked,
+            "color": this.scheduleColor,
+            "name": category.name
+          })
+        } else {
+          showMessage(i18n.scheduleCategoryColorError, 6000, "error");
+        }
       }
+    },
+
+    handleAddCategory() {
+      this.showName = true;
+      this.showModal = true;
     },
 
     // 日程名变更
     handleNameChange(value) {
       this.scheduleName = value
+    },
+
+    // 更改分类颜色
+    handleEditCategoryColor(index) {
+      this.showName = false;
+      this.categoryIndex = index;
+      this.showModal = true;
     },
 
     // 删除日程分类
@@ -163,7 +192,7 @@ export default defineComponent({
       });
     },
 
-    handleUpdateChecked(value) {
+    handleUpdateChecked() {
       this.globalData.scheduleCategories.updateSelection();
     }
   }
