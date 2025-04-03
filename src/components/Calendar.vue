@@ -145,7 +145,7 @@
           selectable: true, // 是否可以选中日历格
           selectMirror: true,
           selectMinDistance: 0, // 选中日历格的最小距离
-          dayMaxEvents: true,
+          dayMaxEvents: 2,
           weekends: true,
           navLinks: true, // 天链接
           slotEventOverlap: false // 相同时间段的多个日程视觉上是否允许重叠，默认true允许
