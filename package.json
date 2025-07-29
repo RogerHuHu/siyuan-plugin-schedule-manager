@@ -24,7 +24,7 @@
     "naive-ui": "^2.40.1",
     "sass": "^1.62.1",
     "sass-loader": "^12.6.0",
-    "siyuan": "0.8.5",
+    "siyuan": "1.1.2",
     "ts-loader": "^9.5.0",
     "tslib": "2.4.0",
     "typescript": "^4.7.4",

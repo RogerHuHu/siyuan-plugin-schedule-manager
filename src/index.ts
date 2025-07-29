@@ -1,4 +1,4 @@
-import { Plugin, getFrontend, IModel, openTab, fetchPost, openWindow } from "siyuan";
+import { Plugin, getFrontend, Custom, openTab, fetchPost, openWindow } from "siyuan";
 import { setI18n, setPlugin, getScheduleManagerLoaded, setScheduleManagerLoaded, mountScheduleManager } from "./utils/utils";
 import { ScheduleManager } from "./ScheduleManager";
 import EventAggregator from "./utils/EventAggregator";
@@ -13,7 +13,7 @@ export default class PluginScheduleManager extends Plugin {
     private isLoaded: boolean = false;
     private scheduleNotebookId: string = "";
     private scheduleDocId: string = "";
-    private customTab: () => IModel;
+    private customTab: () => Custom;
     private scheduleManager = new ScheduleManager();
 
     public isMobile: boolean;
@@ -66,10 +66,10 @@ export default class PluginScheduleManager extends Plugin {
 
         EventAggregator.on('openBlockFloatLayer', (p) => {
             this.addFloatLayer({
-                ids: [p as string],
-                defIds: [],
+                refDefs: [{ refID: p as string, defIDs: [] }],
                 x: window.innerWidth - 768 - 120,
-                y: 32
+                y: 32,
+                isBacklink: false
             });
         });
 

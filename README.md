@@ -3,7 +3,8 @@
 # Schedule Manager
 
 ## Updates
-1. Support modifying the color of schedule a category (Click the circle)
+1. Fixed the issue of unable to jump via block ID when the version of SiYuan Note is 3.1.20 or later.
+2. Fixed the issue of collapsed schedule number is displayed incorrectly.
 
 ## Introduction
 The schedule management plugin manages to-do items in the form of a calendar, and currently supports multiple views such as month, week, day, and list.
