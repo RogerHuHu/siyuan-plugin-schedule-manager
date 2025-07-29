@@ -37,7 +37,7 @@ importers:
         version: 2.30.0
       ical.js:
         specifier: ^2.1.0
-        version: 2.1.0
+        version: 2.2.0
       js-calendar-converter:
         specifier: ^0.0.6
         version: 0.0.6
@@ -103,8 +103,8 @@ importers:
         specifier: ^12.6.0
         version: 12.6.0(sass@1.62.1)(webpack@5.76.0)
       siyuan:
-        specifier: 0.8.5
-        version: 0.8.5
+        specifier: 1.1.2
+        version: 1.1.2
       ts-loader:
         specifier: ^9.5.0
         version: 9.5.0(typescript@4.7.4)(webpack@5.76.0)
@@ -1036,9 +1036,6 @@ packages:
     resolution: {integrity: sha512-fJ7cW7fQGCYAkgv4CPfwFHrfd/cLS4Hau96JuJ+ZTOWhjnhoeN1ub1tFmALm/+lW5z4WCAuAV9bm05AP0mS6Gw==}
     engines: {node: '>=12.0.0'}
 
-  ical.js@2.1.0:
-    resolution: {integrity: sha512-BOVfrH55xQ6kpS3muGvIXIg2l7p+eoe12/oS7R5yrO3TL/j/bLsR0PR+tYQESFbyTbvGgPHn9zQ6tI4FWyuSaQ==}
-
   icss-utils@5.1.0:
     resolution: {integrity: sha512-soFhflCVWLfRNOPU3iv5Z9VUdT44xFRbzjLsEzSr5AQmgqPMTHdU3PMT1Cf1ssx8fLNJDA1juftYl+PUcv3MqA==}
     engines: {node: ^10 || ^12 || >= 14}
@@ -1480,8 +1477,8 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
-  siyuan@0.8.5:
-    resolution: {integrity: sha512-RuGnOsHunMQF588j316xyXfjkvqpS3k//kZqCXAhjq92lopUaizpAYTHQz7YfiywH+wauy2Cv9Z0g3Sm9h/NqQ==}
+  siyuan@1.1.2:
+    resolution: {integrity: sha512-jDwB2LubNPoxzybTmUb33kXTxdMZEQ3VFb7ZAGSBNUoXDDvo6NAPavlcocsBfY3FVeoAzVBx9WcYmn9gAEGmvA==}
 
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
@@ -2689,8 +2686,6 @@ snapshots:
 
   highlight.js@11.9.0: {}
 
-  ical.js@2.1.0: {}
-
   icss-utils@5.1.0(postcss@8.4.23):
     dependencies:
       postcss: 8.4.23
@@ -3070,7 +3065,7 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
-  siyuan@0.8.5: {}
+  siyuan@1.1.2: {}
 
   slash@3.0.0: {}
 
