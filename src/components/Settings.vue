@@ -118,6 +118,10 @@ export default defineComponent({
         {
           label: "English(US)",
           value: "en-us"
+        },
+        {
+          label: "Deutsch",
+          value: "de"
         }
       ],
       
