@@ -3,7 +3,7 @@
 # Schedule Manager
 
 ## Updates
-1. Add German language support (Thanks to the PR from https://github.com/cseyfferth)
+1.  Support dark mode, which can be switched in the settings panel.
 
 ## Introduction
 The schedule management plugin manages to-do items in the form of a calendar, and currently supports multiple views such as month, week, day, and list.

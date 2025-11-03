@@ -66,6 +66,7 @@
   "lunarCalendar": "Lunar calendar",
   "showLunarCalendar": "Show chinese lunar calendar",
   "selectLocale": "Select your calendar locale",
+  "selectThemeMode": "Select theme mode",
   "subscribeCalendars": "Subscribe Calendars",
   "support": "Support",
   "qqmailCalendar": "QQ Mail Calendar",
@@ -75,5 +76,7 @@
   "last3Month": "Last 3 month",
   "calendarName": "Calendar Name",
   "confirmRemoveCalendar": "Are you sure to remove the calendar?",
-  "loadConfigFailed": "Load schedule manager plugin configuration failed!"
+  "loadConfigFailed": "Load schedule manager plugin configuration failed!",
+  "lightMode": "Light",
+  "darkMode": "Dark"
 }

@@ -62,6 +62,22 @@
           </template>
         </n-button>
       </n-gi>
+      <n-gi :span="8">
+        <n-divider />
+      </n-gi>
+      <n-gi>
+        <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ selectedThemeModeText }}</div>
+      </n-gi>
+      <n-gi :span="6">
+        <n-select v-model:value="selectedThemeMode" size="tiny" :options="themeModes" />
+      </n-gi>
+      <n-gi>
+        <n-button quaternary circle size="small" @click="handleUpdateThemeMode()">
+          <template #icon>
+            <n-icon :component="CheckOutlined" color="#18a058" />
+          </template>
+        </n-button>
+      </n-gi>
     </n-grid>
   </n-card>
 </template>
@@ -79,6 +95,7 @@
   import { CheckOutlined } from '@vicons/antd'
   import EventAggregator from "../utils/EventAggregator";
   import { showMessage } from "siyuan";
+import { darkTheme, lightTheme } from 'naive-ui';
 
 export default defineComponent({
   components: {
@@ -95,9 +112,11 @@ export default defineComponent({
       showArchivedScheduleText: i18n.showArchivedSchedule,
       showLunarCalendarText: i18n.showLunarCalendar,
       selectLocaleText: i18n.selectLocale,
+      selectedThemeModeText: i18n.selectThemeMode,
       archiveTime: ref(7),
       selectedDay: ref(1),
       selectedLocale: ref("zh-cn"),
+      selectedThemeMode: ref("Light"),
 
       firstDaysOfWeek: [
         {
@@ -124,6 +143,17 @@ export default defineComponent({
           value: "de"
         }
       ],
+
+      themeModes:[
+        {
+          label: i18n.lightMode,
+          value: 'Light'
+        },
+        {
+          label: i18n.darkMode,
+          value: 'Dark'
+        }
+      ],
       
       isShowArchivedSchedule: ref(true),
       isShowLunarCalendar: ref(true)
@@ -141,6 +171,7 @@ export default defineComponent({
     this.isShowArchivedSchedule = globalData.schedConfig.showArchivedSchedule;
     this.isShowLunarCalendar = globalData.schedConfig.showLunarCalendar;
     this.selectedLocale = globalData.schedConfig.userLocale;
+    this.selectedThemeMode = globalData.schedConfig.themeMode;
   },
 
   methods: {
@@ -167,8 +198,14 @@ export default defineComponent({
       EventAggregator.emit('updateShowLunarCalendar', this.isShowLunarCalendar);
       showMessage(i18n.hasUpdated, 6000, "info");
     },
+
     handleUpdateLocale() {
       EventAggregator.emit('updateLocale', this.selectedLocale);
+      showMessage(i18n.hasUpdated, 6000, "info");
+    },
+
+    handleUpdateThemeMode() {
+      EventAggregator.emit('updateThemeMode', this.selectedThemeMode);
       showMessage(i18n.hasUpdated, 6000, "info");
     },
   }
