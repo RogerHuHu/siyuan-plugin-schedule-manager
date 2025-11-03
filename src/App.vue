@@ -45,15 +45,17 @@
     margin-right: auto;
     margin-top: 5px;
   }
+</style>
 
-  .n-tabs .n-tabs-rail .n-tabs-tab-wrapper .n-tabs-tab {
+
+<!--  .n-tabs .n-tabs-rail .n-tabs-tab-wrapper .n-tabs-tab {
     background-color: #ffffff;
   }
 
   .n-tabs .n-tabs-rail .n-tabs-tab-wrapper .n-tabs-tab.n-tabs-tab--active {
     background-color: var(--spsm-color-green11);
-  }
-</style>
+    --n-tab-color-segment: var(--spsm-color-green11);
+  }-->
 
 <script>
   import { i18n, globalData } from "./utils/utils";
