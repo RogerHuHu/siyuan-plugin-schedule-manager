@@ -15,4 +15,5 @@ export interface Config {
     showLunarCalendar: boolean;
     userLocale: string;
     subsCalendars: SubsCalendarInfo[];
+    themeMode: string;
 }

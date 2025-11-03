@@ -66,6 +66,7 @@
   "lunarCalendar": "农历",
   "showLunarCalendar": "显示农历",
   "selectLocale": "日历语言设置",
+  "selectThemeMode": "外观模式",
   "subscribeCalendars": "订阅日历",
   "support": "支持",
   "qqmailCalendar": "QQ邮箱日历",
@@ -75,5 +76,7 @@
   "last3Month": "近3个月",
   "calendarName": "日历名",
   "confirmRemoveCalendar": "确定删除日历？",
-  "loadConfigFailed": "加载日程管理插件配置失败!"
+  "loadConfigFailed": "加载日程管理插件配置失败!",
+  "lightMode": "明亮",
+  "darkMode": "暗黑"
 }

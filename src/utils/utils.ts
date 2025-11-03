@@ -35,13 +35,15 @@ export const globalData = {
     showArchivedSchedule: true,
     showLunarCalendar: true,
     userLocale: 'zh-cn',
+    themeMode: 'Light',
     schedConfig: {
         archiveTime: 7,
         showArchivedSchedule: true,
         firstDayOfWeek: 1,
         showLunarCalendar: true,
         userLocale: "zh-cn",
-        subsCalendars: [] as SubsCalendarInfo[]
+        subsCalendars: [] as SubsCalendarInfo[],
+        themeMode: "Light"
     }
 }
 

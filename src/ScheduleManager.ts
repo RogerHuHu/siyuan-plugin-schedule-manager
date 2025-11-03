@@ -124,6 +124,10 @@ export class ScheduleManager {
         EventAggregator.on('deleteThirdPartyCalendar', (p:any) => {
             this.delteThirdPartyCalendar(p);
         });
+
+        EventAggregator.on('updateThemeMode', (p:any) => {
+            this.setThemeMode(p);
+        });
     }
 
     async createDocumentAndSetAttributes(notebookId: string, docProp: any) {
@@ -290,6 +294,16 @@ export class ScheduleManager {
         });
     }
 
+    async setThemeMode(themeMode: string) {
+        globalData.schedConfig.themeMode = themeMode;
+
+        fetchPost("/api/block/updateBlock", {
+            "data": JSON.stringify(globalData.schedConfig, null, 2).replace(/#/g,""),
+            "dataType": "markdown",
+            "id": this.configBlockId
+        }, (response) => {});
+    }
+
     async getDocuments(notebookId: string) {
         let query = "SELECT id FROM blocks WHERE type = \'d\' AND box =\'" + notebookId + "\'";
         await fetchSyncPost("/api/query/sql", {"stmt":query}).then(response => {
@@ -326,11 +340,13 @@ export class ScheduleManager {
                         doc.firstDayOfWeek = response.data["custom-firstDayOfWeek"];
                         doc.showLunarCalendar = response.data["custom-showLunarCalendar"] == "true" ? true : false;
                         doc.userLocale = response.data["custom-userLocale"];
+                        doc.themeMode = response.data["custom-themeMode"];
                         globalData.archiveTime = doc.archiveTime === undefined ? 7 : parseInt(doc.archiveTime, 10);
                         globalData.showArchivedSchedule = doc.showArchivedSchedule;
                         globalData.selectedFirstDayOfWeek = doc.firstDayOfWeek === undefined ? 0 : doc.firstDayOfWeek;
                         globalData.showLunarCalendar = doc.showLunarCalendar;
-                        globalData.userLocale = doc.userLocale === undefined ? "zh-cn" : doc.userLocale;    
+                        globalData.userLocale = doc.userLocale === undefined ? "zh-cn" : doc.userLocale;
+                        globalData.themeMode = doc.themeMode === undefined ? "light" : doc.themeMode;
                     }
                 }
             })
@@ -358,7 +374,8 @@ export class ScheduleManager {
             firstDayOfWeek: 1,
             showLunarCalendar: true,
             userLocale: "zh-cn",
-            subsCalendars: []
+            subsCalendars: [],
+            themeMode: "light"
         };
 
         globalData.schedConfig = config;
@@ -370,6 +387,7 @@ export class ScheduleManager {
             config.firstDayOfWeek = globalData.selectedFirstDayOfWeek;
             config.showLunarCalendar = globalData.showLunarCalendar;
             config.userLocale = globalData.userLocale;
+            config.themeMode = globalData.themeMode;
         }
 
         await fetchSyncPost("/api/block/appendBlock", {
