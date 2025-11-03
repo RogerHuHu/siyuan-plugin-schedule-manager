@@ -75,5 +75,7 @@
   "last3Month": "Letzte 3 Monate",
   "calendarName": "Kalendername",
   "confirmRemoveCalendar": "Sind Sie sicher, dass Sie den Kalender entfernen möchten?",
-  "loadConfigFailed": "Laden der Terminplaner-Plugin-Konfiguration fehlgeschlagen!"
+  "loadConfigFailed": "Laden der Terminplaner-Plugin-Konfiguration fehlgeschlagen!",
+  "lightMode": " Licht ",
+  "darkMode": "Dunkel "
 }
