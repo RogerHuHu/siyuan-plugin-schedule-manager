@@ -76,6 +76,6 @@
   "calendarName": "Kalendername",
   "confirmRemoveCalendar": "Sind Sie sicher, dass Sie den Kalender entfernen möchten?",
   "loadConfigFailed": "Laden der Terminplaner-Plugin-Konfiguration fehlgeschlagen!",
-  "lightMode": " Licht ",
-  "darkMode": "Dunkel "
+  "lightMode": "Licht",
+  "darkMode": "Dunkel"
 }
