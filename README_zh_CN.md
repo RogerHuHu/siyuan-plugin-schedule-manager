@@ -10,7 +10,7 @@
 
 日历以标签页的方式显示，首次启动时，会自动在文档树中创建**日程管理笔记本**。
 
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/schedule_manager_notebook.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/schedule_manager_notebook.png" alt="">
 
  >- **介意的谨慎使用！！！**
  >- **请勿删除该笔记本，由于刚接触vue、typescript等，未做很多异常处理，删除可能会带来不必要的麻烦！！！**
@@ -19,7 +19,7 @@
 
 ## 功能
 ### 1. 添加日程分类
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/add_schedule_category.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/add_schedule_category.png" alt="">
 
 点击添加日程分类按钮，会弹出日程分类信息编辑窗口，可以自定义日程分类名和对应颜色。
 
@@ -38,12 +38,12 @@
 
 添加日程时，会在相应名字的文档中创建一条记录，**不要编辑！！！**
 
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/add_schedule.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/add_schedule.png" alt="">
 
 ### 5. 更新日程
 单击某个日程，会弹出更新日程的界面，可以修改日程的各种信息。同时修改对应文档中记录的信息。
 
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/update_schedule.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/update_schedule.png" alt="">
 
 ### 6. 删除日程
 在上述日程更新界面，点击删除日程按钮，会删除当前日程，以及对应文档中的记录，**不可恢复**。
@@ -63,29 +63,29 @@
 2. 点击空白处，界面会消失，会保留上次填写的信息（防止误操作）。
 3. 红框处可以填写块ID（**只能填写块的ID文本**），点击箭头会打开窗口，显示对应块的内容。
    
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/blockId.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/blockId.png" alt="">
 
 ### 10. 任务看板界面
 1. 实现了比较简陋的任务看板界面。
 2. 不支持日程的新增、拖拽。
 3. 支持日程信息的更新。
    
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/kanban.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/kanban.png" alt="">
 
 ### 11. 一键归档（移动至设置标签页）
 点击归档按钮后，从日程设置为已完成的时间计算，按界面上设置的时间选择符合要求的日程进行归档
 > 如设置的时间为7日，则将已完成7日及以上的日程归档
 > 在更新该功能前处于已完成状态的日程，由于无已完成的时间，会全部归档
 
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/oneclick_archive.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/oneclick_archive.png" alt="">
 
 ### 12.日程分类隐藏
 点击箭头按钮后，可以隐藏左侧的日程分类视图，对小屏幕更友好
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/schedule_category_collapse.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/schedule_category_collapse.png" alt="">
 
 ### 13.设置一周开始时间
 在设置界面新增一周从周日还是周一开始的设置（设置完成后需要重新打开本插件）
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/set_firstdayofweek.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/set_firstdayofweek.png" alt="">
 
 ## Todo
 - [x] 界面语言、文档国际化
@@ -107,7 +107,7 @@
 ## 捐赠
 开发不易，如果你喜欢本插件，欢迎给作者发电。
 
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/code.png" alt="" width="653" height="360" align="center">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/code.png" alt="" width="653" height="360" align="center">
 
 ## 更新日志
 [CHANGELOG](https://github.com/RogerHuHu/siyuan-plugin-schedule-manager/blob/main/CHANGELOG.md)

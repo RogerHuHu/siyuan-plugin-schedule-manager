@@ -10,7 +10,7 @@ The schedule management plugin manages to-do items in the form of a calendar, an
 
 The calendar is displayed as a tab and automatically creates a **Schedule Manager Notebook** in the document tree when first launched.
 
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/schedule_manager_notebook.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/schedule_manager_notebook.png" alt="">
 
  >- **Mind using with caution!!!**
  >- **Please do not remove the notebook. I'm new to Vue, Typescript, etc., and have not added enough exception handling, removing the notebook may cause unnecessary trouble !!!**
@@ -19,7 +19,7 @@ The icons of schedule statuses：☕ Todo, 🏃‍♂️ Doing, ✅ Done, 📦 A
 
 ## Function
 ### 1. Add Schedule Category
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/add_schedule_category.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/add_schedule_category.png" alt="">
 
 Clicking the add schedule category button to open the schedule category information editing window, where you can customize the schedule category name and corresponding color.
 
@@ -38,11 +38,11 @@ Double-click a calendar grid to open a schedule adding window, where you can cus
 
 When adding a schedule, a record will be created in the corresponding document, **do not edit it!!!**.
 
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/add_schedule.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/add_schedule.png" alt="">
 
 ### 5. Update Schedule
 Clicking on a certain schedule will open an update window, where you can modify the information of the schedule. Simultaneously, the information recoreded in the corresponding document will be modified.
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/update_schedule.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/update_schedule.png" alt="">
 
 ### 6. Remove Schedule
 Clicking the remove schedule button on the above-mentioned window will remove the current schedule, as well as the recored in the corresponding document, **it is non-recoverable**.
@@ -62,29 +62,29 @@ In the schedule information editing interface, the whole day slider can be used 
 2. When you click on a blank space, the window disappear and will retain the last filled information (to prevent misuse).
 3. You can fill in the block ID in the red box (* * only the ID text of the block can be filled in * *). Clicking the arrow will open a window, displaying the content of the corresponding block.
    
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/blockId.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/blockId.png" alt="">
 
 ### 10. Task kanban view
 1. Implemented a relatively rudimentary task kanban.
 2. Adding or dragging a schedule is not supported.
 3. Support for editing schedule information.
 
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/kanban.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/kanban.png" alt="">
 
 ### 11. One-click archive (Moved to settings tab)
 After clicking the archive button，calculate from the time when the schedule is set to completed, and select a schedule that meets the requirements according to the time set on the interface for archiving
 > If the set time is 7 days, the completed schedule of 7 days or more will be archived
 > The schedule that was in a completed state before the update of this feature will be fully archived as there is no completed time
 
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/oneclick_archive.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/oneclick_archive.png" alt="">
 
 ### 12. Schedule category collapse
 After clicking the arrow button, you can hide the schedule category view on the left, which is more friendly to small screens.
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/schedule_category_collapse.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/schedule_category_collapse.png" alt="">
 
 ### 13. Set the first day of a week
 Added a setting to select whether the week starts on Sunday or Monday in the settings interface (After the setting is completed, you need to re-open the plug-in.).
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/set_firstdayofweek.png" alt="">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/set_firstdayofweek.png" alt="">
 
 ## Todo
 - [x] The internationalization of the interface language and the document
@@ -104,7 +104,7 @@ Thank you for the support of the following framework for this project (in no par
 - FullCalendar
 
 ## By me a cup of coffee
-<img src="https://raw.gitmirror.com/RogerHuHu/siyuan-plugin-schedule-manager/master/asset/code.png" alt="" width="653" height="360" align="center">
+<img src="https://raw.githubusercontent.com/RogerHuHu/siyuan-plugin-schedule-manager/main/asset/code.png" alt="" width="653" height="360" align="center">
 
 ## Changelog
 [CHANGELOG](https://github.com/RogerHuHu/siyuan-plugin-schedule-manager/blob/main/CHANGELOG.md)
