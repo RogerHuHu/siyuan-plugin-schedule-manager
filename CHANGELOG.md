@@ -168,6 +168,11 @@
 ## v1.4.4
 ### feat:
 1. 增加德语的支持（感谢 https://github.com/cseyfferth 提交的PR）
+   
 ## v1.5.0
 ### feat:
 1. 支持深色模式 [#19]
+
+## v1.5.1
+### docs:
+1.修复readme中图片无法显示的问题 [#74]
