@@ -6,8 +6,7 @@ import { reactive } from "vue";
 import moment from "moment";
 import { CalDavClient } from "./ThirdPartyCalendars/CalDav";
 import ICAL from "ical.js";
-import { flatten } from "naive-ui/es/_utils";
-import { co } from "@fullcalendar/core/internal-common";
+import { showMessage } from "siyuan";
 
 export class ScheduleCategories {
     categories: ScheduleCategory[];
@@ -94,9 +93,12 @@ export class ScheduleCategories {
             let calDavClient = new CalDavClient(subsCalendar.realUrl, subsCalendar.username, subsCalendar.password);
             await calDavClient.login();
             const calendars = await calDavClient.fetchCalendars();
+            let remoteCategoryNames: string[] = [];
             for (let calendar of calendars) {
-                if (calendar.displayName == "好友生日") continue;
-                let eventSource = this.addSubscribeEventSource(calendar);
+                // 跳过不支持 VEVENT 的日历（如 Tasks/VTODO）
+                if (!this.supportsVEvent(calendar)) continue;
+                let eventSource = this.addSubscribeEventSource(calendar, subsCalendar.name);
+                remoteCategoryNames.push(eventSource.id);
                 const schedules = await calDavClient.fetchCalendarObjects(calendar);
                 for (let sched of schedules) {
                     let vCalData = ICAL.parse(sched.data);
@@ -122,21 +124,183 @@ export class ScheduleCategories {
                     fcApi.addEvent(this.createEvent(schedule), fcApi.getEventSourceById(eventSource.id));
                 }
             }
+            // 清理远端已删除的分类
+            this.removeStaleSubscribedCategories(subsCalendar.name, remoteCategoryNames);
         }
     }
 
-    addSubscribeEventSource(calendar: any): any {
-        let category = new ScheduleCategory(calendar.display + "Subs", calendar.calendarColor, true);
+    /**
+     * 手动同步单个订阅日历
+     */
+    async syncSingleSubscribedCalendar(index: number) {
+        let subsCalendar = globalData.schedConfig.subsCalendars[index];
+        if (!subsCalendar) {
+            EventAggregator.emit('caldavSyncDone');
+            return;
+        }
+
+        try {
+            let calDavClient = new CalDavClient(subsCalendar.realUrl, subsCalendar.username, subsCalendar.password);
+            await calDavClient.login();
+            const calendars = await calDavClient.fetchCalendars();
+            let remoteCategoryNames: string[] = [];
+            let eventCount = 0;
+
+            for (let calendar of calendars) {
+                // 跳过不支持 VEVENT 的日历（如 Tasks/VTODO）
+                if (!this.supportsVEvent(calendar)) continue;
+                let eventSource = this.addSubscribeEventSource(calendar, subsCalendar.name);
+                remoteCategoryNames.push(eventSource.id);
+                const schedules = await calDavClient.fetchCalendarObjects(calendar);
+                for (let sched of schedules) {
+                    let vCalData = ICAL.parse(sched.data);
+                    let comp = new ICAL.Component(vCalData);
+                    let vevent = comp.getFirstSubcomponent("vevent");
+                    let dtstart = vevent.getFirstPropertyValue("dtstart") as ICAL.Time;
+                    let dtend = vevent.getFirstPropertyValue("dtend") as ICAL.Time;
+                    let newdtstart = dtstart.adjust(0, 8, 0, 0);
+                    let newdtend = dtend.adjust(0, 8, 0, 0);
+
+                    let schedule = new Schedule(vevent.getFirstPropertyValue("uid") as string,
+                                                vevent.getFirstPropertyValue("summary") as string,
+                                                false, false, '', '', [], [], [], 1,
+                                                newdtstart.toString().slice(0, 19),
+                                                newdtend.toString().slice(0, 19),
+                                                eventSource.id, '',
+                                                vevent.getFirstPropertyValue("description") as string,
+                                                2);
+                    fcApi.addEvent(this.createEvent(schedule), fcApi.getEventSourceById(eventSource.id));
+                    eventCount++;
+                }
+            }
+
+            // 清理远端已删除的分类
+            this.removeStaleSubscribedCategories(subsCalendar.name, remoteCategoryNames);
+
+            showMessage("同步完成，共 " + eventCount + " 个事件", 5000, "info");
+        } catch (error) {
+            console.error("同步订阅日历失败:", error);
+            showMessage("同步失败: " + error.message, 6000, "error");
+        } finally {
+            EventAggregator.emit('caldavSyncDone');
+        }
+    }
+
+    /**
+     * 判断日历是否支持 VEVENT（排除 VTODO/Tasks 等）
+     */
+    private supportsVEvent(calendar: any): boolean {
+        let compSet = calendar.supportedCalendarComponentSet;
+        if (!compSet) return true; // 没有该属性时默认包含
+        // supportedCalendarComponentSet 可能是字符串或对象
+        let compStr = typeof compSet === 'string' ? compSet : JSON.stringify(compSet);
+        return compStr.indexOf('VEVENT') !== -1;
+    }
+
+    /**
+     * 删除远端已不存在的订阅分类
+     * @param subsCalendarName 订阅日历名称（用于匹配分类后缀）
+     * @param remoteCategoryNames 远端当前存在的分类名列表
+     */
+    private removeStaleSubscribedCategories(subsCalendarName: string, remoteCategoryNames: string[]): void {
+        let suffix = "-" + subsCalendarName;
+        // 倒序遍历，避免 splice 时索引错乱
+        for (let i = this.categories.length - 1; i >= 0; i--) {
+            let cat = this.categories[i];
+            // 只处理属于当前订阅的分类（以 -订阅名 结尾）
+            if (cat.name.indexOf(suffix) !== cat.name.length - suffix.length) continue;
+            // 远端仍存在则跳过
+            if (remoteCategoryNames.indexOf(cat.name) !== -1) continue;
+            // 远端已删除，同步删除本地
+            let eventSource = fcApi.getEventSourceById(cat.name);
+            if (eventSource) eventSource.remove();
+            this.categories.splice(i, 1);
+            EventAggregator.emit('deleteCategorty', { name: cat.name });
+        }
+    }
+
+    addSubscribeEventSource(calendar: any, subsCalendarName: string): any {
+        let displayName = (calendar.displayName as string) || (calendar.url as string) || "未命名日历";
+        let categoryName = displayName + "-" + subsCalendarName;
+        let color = (calendar.calendarColor as string) || "#3BB2E3";
+
+        // 如果分类已存在则复用，否则创建新分类并持久化到本地文档
+        let existing = this.categories.find(c => c.name === categoryName);
+        if (!existing) {
+            let category = new ScheduleCategory(categoryName, color, true);
+            this.categories.push(category);
+            // 通知 ScheduleManager 创建对应的思源文档，实现离线可用
+            EventAggregator.emit('addCategorty', {
+                name: categoryName,
+                checked: true,
+                color: color
+            });
+        }
+
+        // 创建或复用 FullCalendar 事件源
+        let existingSource = fcApi.getEventSourceById(categoryName);
+        if (existingSource) {
+            return existingSource;
+        }
+
         let eventSource = {
             events: [] as any[],
-            id: category.name,
+            id: categoryName,
             display: 'block',
-            color: category.color,
-            textColor: category.textColor
+            color: color,
+            textColor: "#ffffff"
         };
 
         fcApi.addEventSource(eventSource);
         return eventSource;
+    }
+
+    /**
+     * 将本地分类推送到远端订阅日历，创建对应的远程日历
+     * @param categoryName 分类名称（不含后缀）
+     * @param color 分类颜色
+     * @param subsIndex 目标订阅日历的索引
+     */
+    async pushCategoryToRemote(categoryName: string, color: string, subsIndex: number): Promise<boolean> {
+        let subsCalendar = globalData.schedConfig.subsCalendars[subsIndex];
+        if (!subsCalendar) return false;
+
+        try {
+            let calDavClient = new CalDavClient(subsCalendar.realUrl, subsCalendar.username, subsCalendar.password);
+            await calDavClient.login();
+            await calDavClient.makeCalendar(categoryName, color);
+            showMessage("已推送到远端: " + categoryName, 5000, "info");
+            return true;
+        } catch (error) {
+            console.error("推送分类到远端失败:", error);
+            showMessage("推送失败: " + error.message, 6000, "error");
+            return false;
+        }
+    }
+
+    /**
+     * 删除本地分类时，同步删除远端对应的日历
+     * 通过匹配分类名后缀 -订阅名 来定位远端日历
+     * @param categoryName 本地分类名
+     */
+    async deleteCategoryFromRemote(categoryName: string): Promise<void> {
+        let subsCalendars = globalData.schedConfig.subsCalendars || [];
+        for (let subsCalendar of subsCalendars) {
+            let suffix = "-" + subsCalendar.name;
+            if (categoryName.indexOf(suffix) !== categoryName.length - suffix.length) continue;
+            // 匹配到订阅，提取远端日历名
+            let remoteName = categoryName.substring(0, categoryName.length - suffix.length);
+            try {
+                let calDavClient = new CalDavClient(subsCalendar.realUrl, subsCalendar.username, subsCalendar.password);
+                await calDavClient.login();
+                await calDavClient.deleteRemoteCalendar(remoteName);
+                showMessage("已同步删除远端: " + remoteName, 5000, "info");
+            } catch (error) {
+                console.error("同步删除远端日历失败:", error);
+                showMessage("删除远端失败: " + error.message, 6000, "error");
+            }
+            break;
+        }
     }
 
     addCategory(category: ScheduleCategory): boolean {

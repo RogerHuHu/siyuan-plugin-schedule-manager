@@ -21,7 +21,7 @@
           <n-list-item v-for="(category,index) in globalData.scheduleCategories.categories" :key="index" style="padding:0px; margin:0px;">
             <n-space align="center" justify="space-between">
               <n-checkbox v-model:checked="category.checked" style="min-width:70px" @update:checked="handleUpdateChecked">
-                {{category.name}}
+                <n-ellipsis style="max-width: 80px;">{{category.name}}</n-ellipsis>
               </n-checkbox>
               <n-space align="center" justify="end">
                 <!--div class="sm-circle" :style="{backgroundColor:category.color, width:'15px', height:'15px'}"/-->
@@ -60,6 +60,14 @@
           '#F0A020'
         ]"
       />
+      </n-gi>
+      <n-gi v-if="showName && subsOptions.length > 0">
+        <n-select
+          v-model:value="pushTarget"
+          :options="subsOptions"
+          :placeholder="pushToRemoteText"
+          clearable
+        />
       </n-gi>
     </n-grid>
   </n-modal>
@@ -111,6 +119,7 @@ export default defineComponent({
       addText: i18n.add,
       cancelText: i18n.cancel,
       inputScheduleCategoryNameText: i18n.inputScheduleCategoryName,
+      pushToRemoteText: i18n.pushToRemote,
       scheduleColor: ref("#00C9A7"),
       showModal: ref(false),
       showName: ref(true),
@@ -125,9 +134,17 @@ export default defineComponent({
     return {
       globalData,
       scheduleName: '',
+      pushTarget: null,
       message: useMessage(),
       dialog: useDialog()
     };
+  },
+
+  computed: {
+    subsOptions() {
+      let subs = this.globalData.schedConfig.subsCalendars || [];
+      return subs.map((s, i) => ({ label: s.name, value: i }));
+    }
   },
 
   mounted() {
@@ -136,13 +153,25 @@ export default defineComponent({
   methods: {
     submitCallback() {
       if (this.showName) {
-        let newCategory = new ScheduleCategory(this.scheduleName, this.scheduleColor, true);
+        let categoryName = this.scheduleName;
+        let subsCalendars = this.globalData.schedConfig.subsCalendars || [];
+
+        // 如果选择了推送到远端，本地分类名加后缀以匹配同步命名规则
+        if (this.pushTarget !== null && this.pushTarget !== undefined && subsCalendars[this.pushTarget]) {
+          categoryName = this.scheduleName + "-" + subsCalendars[this.pushTarget].name;
+        }
+
+        let newCategory = new ScheduleCategory(categoryName, this.scheduleColor, true);
         if(this.globalData.scheduleCategories.addCategory(newCategory) === true) {
           EventAggregator.emit('addCategorty', {
             "checked": newCategory.checked,
             "color": this.scheduleColor,
-            "name": this.scheduleName
+            "name": categoryName
           });
+          // 推送到远端创建日历
+          if (this.pushTarget !== null && this.pushTarget !== undefined && subsCalendars[this.pushTarget]) {
+            this.globalData.scheduleCategories.pushCategoryToRemote(this.scheduleName, this.scheduleColor, this.pushTarget);
+          }
         } else {
           showMessage(i18n.scheduleCategoryColorError, 6000, "error");
         }
@@ -164,6 +193,7 @@ export default defineComponent({
       this.addScheduleCategoryText = i18n.addScheduleCategory,
       this.addText = i18n.add,
       this.showName = true;
+      this.pushTarget = null;
       this.showModal = true;
     },
 
@@ -192,6 +222,8 @@ export default defineComponent({
         onPositiveClick: () => {
           this.globalData.scheduleCategories.removeCategory(index);
           EventAggregator.emit('deleteCategorty', category);
+          // 同步删除远端日历（仅对订阅分类生效）
+          this.globalData.scheduleCategories.deleteCategoryFromRemote(category.name);
         }
       });
     },

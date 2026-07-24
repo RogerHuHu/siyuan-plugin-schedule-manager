@@ -78,5 +78,8 @@
   "confirmRemoveCalendar": "确定删除日历？",
   "loadConfigFailed": "加载日程管理插件配置失败!",
   "lightMode": "明亮",
-  "darkMode": "暗黑"
+  "darkMode": "暗黑",
+  "syncNow": "同步",
+  "pushToRemote": "推送到远端",
+  "noPush": "不推送"
 }

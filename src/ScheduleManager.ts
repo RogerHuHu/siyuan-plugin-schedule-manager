@@ -125,6 +125,10 @@ export class ScheduleManager {
             this.delteThirdPartyCalendar(p);
         });
 
+        EventAggregator.on('syncSubscribedCalendar', (index:any) => {
+            globalData.scheduleCategories.syncSingleSubscribedCalendar(index);
+        });
+
         EventAggregator.on('updateThemeMode', (p:any) => {
             this.setThemeMode(p);
         });

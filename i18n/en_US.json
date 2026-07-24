@@ -78,5 +78,8 @@
   "confirmRemoveCalendar": "Are you sure to remove the calendar?",
   "loadConfigFailed": "Load schedule manager plugin configuration failed!",
   "lightMode": "Light",
-  "darkMode": "Dark"
+  "darkMode": "Dark",
+  "syncNow": "Sync",
+  "pushToRemote": "Push to remote",
+  "noPush": "No push"
 }

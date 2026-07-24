@@ -22,12 +22,19 @@
           <n-space vertical>
             <template v-for="(subsCalendar, sindex) in globalData.schedConfig.subsCalendars" :key="sindex">
               <n-card size="small" hoverable>
-                <n-grid :cols="7">
+                <n-grid :cols="8">
                   <n-gi :span="2">
                     <img style="height: 30px; width: auto;" src="./qqmail.png">
                   </n-gi>
                   <n-gi :span="3">
                     <div class="sm-schedule-item-header" style="margin-top: 3px;">{{ subsCalendar.name }}</div>
+                  </n-gi>
+                  <n-gi>
+                    <n-button strong secondary circle :loading="syncingIndex === sindex" @click="handleSyncItem(sindex)">
+                      <template #icon>
+                        <n-icon :component="SyncOutlined" color="#18a058" />
+                      </template>
+                    </n-button>
                   </n-gi>
                   <n-gi>
                     <n-button strong secondary circle @click="handleEditItem(sindex)">
@@ -66,14 +73,11 @@
     import { i18n, globalData } from "../utils/utils";
     import EventAggregator from "../utils/EventAggregator";
     import { showMessage } from "siyuan";
-    import { DeleteOutlined, EditOutlined, CheckOutlined, ClearOutlined, ArrowRightOutlined } from '@vicons/antd';
+    import { DeleteOutlined, EditOutlined, SyncOutlined } from '@vicons/antd';
     import ThirdPartyCalendarEditor from "./ThirdPartyCalendarEditor.vue";
   
   export default defineComponent({
     components: {
-      CheckOutlined,
-      ClearOutlined,
-      ArrowRightOutlined,
       ThirdPartyCalendarEditor,
     },
   
@@ -81,6 +85,7 @@
       return {
         EditOutlined,
         DeleteOutlined,
+        SyncOutlined,
 
         supportText: i18n.support,
         qqmailCalendarText: i18n.qqmailCalendar
@@ -89,16 +94,26 @@
   
     data() {
       return {
-        globalData
+        globalData,
+        syncingIndex: -1
       }
     },
   
     mounted() {
+      EventAggregator.on('caldavSyncDone', () => {
+        this.syncingIndex = -1;
+      });
     },
   
     methods: {
       handleAddQQCalendar() {
         this.$refs.thirdPartyCalendarEditor.newCalendar(this.qqmailCalendarText, "./qqmail.png");
+      },
+
+      handleSyncItem(index) {
+        if (this.syncingIndex !== -1) return;
+        this.syncingIndex = index;
+        EventAggregator.emit('syncSubscribedCalendar', index);
       },
 
       handleEditItem(index) {
@@ -108,13 +123,6 @@
       handleDeleteItem(index) {
         this.$refs.thirdPartyCalendarEditor.deleteCalendar(index);
       }
-
-      // handleDeleteItem(index) {
-      //   this.calDavClient = new CalDavClient("https://dav.qq.com/.well-known/caldav", "196550051@qq.com", "zotkxjrtmemubgeb");
-      //   // this.calDavClient = new CalDavClient("https://calendar.dingtalk.com/.well-known/caldav", "u_qgxrcn48", "fgfgrk8h");
-      //   //this.calDavClient = new CalDavClient("https://calendar.dingtalk.com/dav/users/u_qgxrcn48", "u_qgxrcn48", "fgfgrk8h");
-      //   this.calDavClient.login();
-      // }
     }
   })
   </script>
