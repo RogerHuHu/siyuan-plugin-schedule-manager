@@ -38,7 +38,10 @@
       </n-gi>
       <n-gi v-if="subsList.length > 0">
         <n-space align="center" :size="8" style="margin-top: 4px;">
-          <n-button v-for="sub in subsList" :key="sub.index" size="tiny" secondary @click="handleSyncSubs(sub.index)">
+          <n-button v-for="sub in subsList" :key="sub.index" size="tiny" secondary
+            :loading="syncingIndex === sub.index"
+            :disabled="syncingIndex !== -1 && syncingIndex !== sub.index"
+            @click="handleSyncSubs(sub.index)">
             <template #icon>
               <n-icon :component="SyncOutlined" color="#2080F0"/>
             </template>
@@ -146,6 +149,7 @@ export default defineComponent({
       globalData,
       scheduleName: '',
       pushTarget: null,
+      syncingIndex: -1,
       message: useMessage(),
       dialog: useDialog()
     };
@@ -163,6 +167,9 @@ export default defineComponent({
   },
 
   mounted() {
+    EventAggregator.on('caldavSyncDone', () => {
+      this.syncingIndex = -1;
+    });
   },
 
   methods: {
@@ -244,7 +251,9 @@ export default defineComponent({
     },
 
     handleSyncSubs(subsIndex) {
-      EventAggregator.emit('caldavSync', subsIndex);
+      if (this.syncingIndex !== -1) return;
+      this.syncingIndex = subsIndex;
+      EventAggregator.emit('syncSubscribedCalendar', subsIndex);
     },
 
     handleUpdateChecked() {

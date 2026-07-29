@@ -3,7 +3,8 @@
 # Schedule Manager
 
 ## Updates
-1.  Support dark mode, which can be switched in the settings panel.
+1. Support the synchronization of schedule categories with thirdparty calendars via CalDAV.
+2. Support the synchronization of schedules with thirdparty calendars via CalDAV.
 
 ## Introduction
 The schedule management plugin manages to-do items in the form of a calendar, and currently supports multiple views such as month, week, day, and list.
