@@ -1,5 +1,6 @@
 import { DAVClient, DAVCalendar, DAVCalendarObject } from "tsdav";
 import { format, parseISO, getTime } from 'date-fns';
+import { i18n } from "../utils/utils";
 
 export class CalDavClient {
     serverUrl: string;
@@ -36,7 +37,7 @@ export class CalDavClient {
         return calendars;
     }
 
-    async fetchCalendarObjects(calendar: DAVCalendar): Promise<DAVCalendarObject[]> {
+    async fetchCalendarObjects(calendar: DAVCalendar, pastDays: number = 90, futureDays: number = 30): Promise<DAVCalendarObject[]> {
         const calendarObjects = await this.client.fetchCalendarObjects({
             calendar: calendar,
             filters: [
@@ -51,8 +52,8 @@ export class CalDavClient {
                             },
                             "time-range": {
                                 _attributes: {
-                                    start: format(Date.now() - 90*86400*1000, "yyyy-MM-dd'T'HH:mm:ss'Z'").replace(/[-:.]/g, ''), // 当前时间减90天
-                                    end: format(Date.now(), "yyyy-MM-dd'T'HH:mm:ss'Z'").replace(/[-:.]/g, ''), // 当前时间减90天
+                                    start: format(Date.now() - pastDays*86400*1000, "yyyy-MM-dd'T'HH:mm:ss'Z'").replace(/[-:.]/g, ''),
+                                    end: format(Date.now() + futureDays*86400*1000, "yyyy-MM-dd'T'HH:mm:ss'Z'").replace(/[-:.]/g, ''),
                                 },
                             }
                         }
@@ -80,7 +81,7 @@ export class CalDavClient {
                 homeUrl = url.substring(0, url.lastIndexOf('/', url.length - 2) + 1);
             }
         }
-        if (!homeUrl) throw new Error("无法获取日历主目录");
+        if (!homeUrl) throw new Error(i18n.cannotGetCalendarHome);
 
         // 生成安全的日历路径名
         let safeName = encodeURIComponent(name);
@@ -111,11 +112,97 @@ export class CalDavClient {
             return typeof dn === 'string' ? dn === name : false;
         });
         if (!target) {
-            throw new Error("远端未找到日历: " + name);
+            throw new Error(i18n.remoteCalendarNotFound.replace('{0}', name));
         }
         let resp = await this.client.deleteObject({ url: target.url });
         if (!resp.ok) {
-            throw new Error("删除远端日历失败: HTTP " + resp.status);
+            throw new Error(i18n.deleteRemoteCalendarFailed.replace('{0}', String(resp.status)));
         }
+    }
+
+    /**
+     * 在指定日历上创建日程
+     * @param calendar 目标日历对象
+     * @param icsData iCalendar 字符串
+     * @param filename 文件名（通常为 uid.ics）
+     */
+    async createEventOnCalendar(calendar: DAVCalendar, icsData: string, filename: string): Promise<void> {
+        let resp = await this.client.createCalendarObject({
+            calendar: calendar,
+            iCalString: icsData,
+            filename: filename
+        });
+        if (!resp.ok) {
+            throw new Error(i18n.createRemoteEventFailed.replace('{0}', String(resp.status)));
+        }
+    }
+
+    /**
+     * 按 UID 删除远端日程（直接拼接 URL 删除，兼容性更好）
+     * @param calendar 目标日历对象
+     * @param uid 日程 UID
+     */
+    async deleteEventByUid(calendar: DAVCalendar, uid: string): Promise<void> {
+        let objectUrl = calendar.url.replace(/\/$/, '') + '/' + encodeURIComponent(uid) + '.ics';
+        let resp = await this.client.deleteObject({ url: objectUrl });
+        if (!resp.ok) {
+            throw new Error(i18n.deleteRemoteEventFailed.replace('{0}', String(resp.status)));
+        }
+    }
+
+    /**
+     * 按 UID 更新远端日程
+     * @param calendar 目标日历对象
+     * @param uid 日程 UID
+     * @param icsData 新的 iCalendar 字符串
+     */
+    async updateEventByUid(calendar: DAVCalendar, uid: string, icsData: string): Promise<void> {
+        let objectUrl = calendar.url.replace(/\/$/, '') + '/' + encodeURIComponent(uid) + '.ics';
+        // 先获取 etag
+        let objects = await this.client.fetchCalendarObjects({
+            calendar: calendar,
+            objectUrls: [objectUrl]
+        });
+        if (objects.length === 0) {
+            throw new Error(i18n.remoteEventNotFound.replace('{0}', uid));
+        }
+        let resp = await this.client.updateCalendarObject({
+            calendarObject: {
+                url: objects[0].url,
+                etag: objects[0].etag,
+                data: icsData
+            }
+        });
+        if (!resp.ok) {
+            throw new Error(i18n.updateRemoteEventFailed.replace('{0}', String(resp.status)));
+        }
+    }
+
+    /**
+     * 将日程数据转换为 iCalendar 格式
+     */
+    static scheduleToIcs(uid: string, title: string, start: string, end: string, description: string): string {
+        // 本地时间直接作为浮动时间写入，不追加 Z（Z 表示 UTC，会导致远端多偏移时区差）
+        let dtStart = start.replace(/[-:]/g, '').replace(' ', 'T');
+        let dtEnd = end.replace(/[-:]/g, '').replace(' ', 'T');
+        let now = format(Date.now(), "yyyy-MM-dd'T'HH:mm:ss'Z'").replace(/[-:.]/g, '');
+        // 转义 ICS 特殊字符
+        let escapedTitle = title.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+        let escapedDesc = description.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+
+        return [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//SiYuan//ScheduleManager//CN',
+            'BEGIN:VEVENT',
+            'UID:' + uid,
+            'DTSTART:' + dtStart,
+            'DTEND:' + dtEnd,
+            'DTSTAMP:' + now,
+            'SUMMARY:' + escapedTitle,
+            'DESCRIPTION:' + escapedDesc,
+            'END:VEVENT',
+            'END:VCALENDAR'
+        ].join('\r\n');
     }
 }

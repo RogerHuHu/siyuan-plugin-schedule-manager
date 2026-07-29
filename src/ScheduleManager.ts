@@ -81,6 +81,24 @@ export class ScheduleManager {
             });
         });
 
+        EventAggregator.on('addScheduleFromRemote', (p: any) => {
+            fetchPost("/api/block/appendBlock", {
+                "data": JSON.stringify(p).replace(/#/g,""),
+                "dataType": "markdown",
+                "parentID": this.getDocumentIdByName(p.category)
+            }, (response) => {
+
+            });
+        });
+
+        EventAggregator.on('deleteScheduleFromRemote', (p: any) => {
+            this.deleteSchedule(p);
+        });
+
+        EventAggregator.on('updateScheduleFromRemote', (p: any) => {
+            this.updateSchedule(p);
+        });
+
         EventAggregator.on('updateSchedule', (p) => {
             this.updateSchedule(p);
         });
@@ -127,6 +145,10 @@ export class ScheduleManager {
 
         EventAggregator.on('syncSubscribedCalendar', (index:any) => {
             globalData.scheduleCategories.syncSingleSubscribedCalendar(index);
+        });
+
+        EventAggregator.on('clearCategorySchedules', (p:any) => {
+            this.clearCategorySchedules(p.name);
         });
 
         EventAggregator.on('updateThemeMode', (p:any) => {
@@ -461,6 +483,20 @@ export class ScheduleManager {
             "id": id
         }).then(response => {
         })
+    }
+
+    /**
+     * 清空指定分类文档下的所有日程块（用于重新同步前清除旧数据）
+     */
+    async clearCategorySchedules(categoryName: string) {
+        let docId = this.getDocumentIdByName(categoryName);
+        if (!docId) return;
+        let query = "SELECT id FROM blocks WHERE parent_id ='" + docId + "'";
+        await fetchSyncPost("/api/query/sql", {"stmt": query}).then(async response => {
+            for (let block of response.data) {
+                await fetchSyncPost("/api/block/deleteBlock", { "id": block.id });
+            }
+        });
     }
 
     async updateSchedule(schedule: any) {

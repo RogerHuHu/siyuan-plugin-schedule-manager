@@ -36,6 +36,16 @@
           </n-list-item>
         </n-list>
       </n-gi>
+      <n-gi v-if="subsList.length > 0">
+        <n-space align="center" :size="8" style="margin-top: 4px;">
+          <n-button v-for="sub in subsList" :key="sub.index" size="tiny" secondary @click="handleSyncSubs(sub.index)">
+            <template #icon>
+              <n-icon :component="SyncOutlined" color="#2080F0"/>
+            </template>
+            {{ sub.name }}
+          </n-button>
+        </n-space>
+      </n-gi>
     </n-grid>
   </n-card>
   <n-modal
@@ -99,7 +109,7 @@
 import { i18n, globalData } from "../utils/utils";
 import { defineComponent, ref } from 'vue'
 import { useMessage, useDialog } from 'naive-ui'
-import { DeleteOutlined, PlusOutlined } from '@vicons/antd'
+import { DeleteOutlined, PlusOutlined, SyncOutlined } from '@vicons/antd'
 import EventAggregator from "../utils/EventAggregator";
 import { showMessage } from "siyuan";
 import { ScheduleCategory } from "../ScheduleCategory";
@@ -114,6 +124,7 @@ export default defineComponent({
     return {
       DeleteOutlined,
       PlusOutlined,
+      SyncOutlined,
       scheduleCategoryText: i18n.scheduleCategory,
       addScheduleCategoryText: i18n.addScheduleCategory,
       addText: i18n.add,
@@ -144,6 +155,10 @@ export default defineComponent({
     subsOptions() {
       let subs = this.globalData.schedConfig.subsCalendars || [];
       return subs.map((s, i) => ({ label: s.name, value: i }));
+    },
+    subsList() {
+      let subs = this.globalData.schedConfig.subsCalendars || [];
+      return subs.map((s, i) => ({ name: s.name, index: i }));
     }
   },
 
@@ -216,7 +231,7 @@ export default defineComponent({
       let category = this.globalData.scheduleCategories.getCategory(index);
       this.dialog.warning({
         title: i18n.warning,
-        content: i18n.confirmRemoveScheduleCategory + '【' + category.name + '】？',
+        content: i18n.confirmRemoveScheduleCategory + ' ' + i18n.categoryNameFormat.replace('{0}', category.name),
         positiveText: i18n.confirm,
         negativeText: i18n.cancel,
         onPositiveClick: () => {
@@ -226,6 +241,10 @@ export default defineComponent({
           this.globalData.scheduleCategories.deleteCategoryFromRemote(category.name);
         }
       });
+    },
+
+    handleSyncSubs(subsIndex) {
+      EventAggregator.emit('caldavSync', subsIndex);
     },
 
     handleUpdateChecked() {

@@ -6,6 +6,9 @@ export interface SubsCalendarInfo {
     realUrl: string;
     username: string;
     password: string;
+    syncPastDays: number;
+    syncFutureDays: number;
+    autoSync: boolean;
 }
 
 export interface Config {

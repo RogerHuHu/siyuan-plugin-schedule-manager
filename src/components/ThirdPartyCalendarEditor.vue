@@ -35,10 +35,28 @@
           </n-gi>
 
           <n-gi :span="1" style="display: flex; justify-content:left;">
-            <div class="sm-schedule-item-header">{{ rangeText }}</div>
+            <div class="sm-schedule-item-header">{{ pastRangeText }}</div>
             </n-gi>
           <n-gi :span="3">
-            <div class="sm-schedule-item-body">{{ last3MonthText }}</div>
+            <n-input-number v-model:value="syncPastDays" :min="0" :max="365" size="small">
+              <template #suffix>{{ syncRangeDaysText }}</template>
+            </n-input-number>
+          </n-gi>
+
+          <n-gi :span="1" style="display: flex; justify-content:left;">
+            <div class="sm-schedule-item-header">{{ futureRangeText }}</div>
+            </n-gi>
+          <n-gi :span="3">
+            <n-input-number v-model:value="syncFutureDays" :min="0" :max="365" size="small">
+              <template #suffix>{{ syncRangeDaysText }}</template>
+            </n-input-number>
+          </n-gi>
+
+          <n-gi :span="1" style="display: flex; justify-content:left;">
+            <div class="sm-schedule-item-header">{{ syncModeText }}</div>
+            </n-gi>
+          <n-gi :span="3">
+            <n-select v-model:value="autoSync" :options="syncModeOptions" size="small" />
           </n-gi>
           <n-gi :span="4">
             <n-space justify="end" size="small">
@@ -113,8 +131,10 @@
         calendarNameText: i18n.calendarName,
         usernameText: i18n.username,
         passwordText: i18n.password,
-        rangeText: i18n.range,
-        last3MonthText: i18n.last3Month,
+        pastRangeText: i18n.pastRange,
+        futureRangeText: i18n.futureRange,
+        syncRangeDaysText: i18n.syncRangeDays,
+        syncModeText: i18n.syncMode,
         cancelText: i18n.cancel,
         confirmText: i18n.confirm,
         confirmRemoveCalendarText: i18n.confirmRemoveCalendar,
@@ -127,6 +147,13 @@
         calendarUrl: ref(""),
         username: ref(""),
         password: ref(""),
+        syncPastDays: ref(90),
+        syncFutureDays: ref(30),
+        autoSync: ref(true),
+        syncModeOptions: [
+          { label: i18n.autoSync, value: true },
+          { label: i18n.manualSync, value: false }
+        ],
       };
     },
   
@@ -154,6 +181,9 @@
         this.calendarUrl = globalData.schedConfig.subsCalendars[index].url;
         this.username = globalData.schedConfig.subsCalendars[index].username;
         this.password = globalData.schedConfig.subsCalendars[index].password;
+        this.syncPastDays = globalData.schedConfig.subsCalendars[index].syncPastDays || 90;
+        this.syncFutureDays = globalData.schedConfig.subsCalendars[index].syncFutureDays || 30;
+        this.autoSync = globalData.schedConfig.subsCalendars[index].autoSync !== false;
         this.showEditModal = true;
         this.inNewCalendarMode = false;
         this.currentCalendarIndex = index;
@@ -173,7 +203,10 @@
             url: this.calendarUrl,
             realUrl: "https://" + this.calendarUrl + "/.well-known/caldav",
             username: this.username,
-            password: this.password
+            password: this.password,
+            syncPastDays: this.syncPastDays || 90,
+            syncFutureDays: this.syncFutureDays || 30,
+            autoSync: this.autoSync !== false
         };
 
         if(this.inNewCalendarMode) {
@@ -199,6 +232,9 @@
         this.calendarUrl = "";
         this.username = "";
         this.password = "";
+        this.syncPastDays = 90;
+        this.syncFutureDays = 30;
+        this.autoSync = true;
       },
   
       updateScheduleInternal(id, category, title, isAllDay,
